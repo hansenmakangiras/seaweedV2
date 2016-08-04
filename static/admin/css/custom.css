@@ -1,0 +1,112 @@
+/**
+ *
+ * Apply Here your Custom CSS
+ *
+*/
+
+@font-face
+{
+	font-family:'Montserrat';
+	src:url('/static/admin/fonts/Montserrat-Regular.woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face
+{
+	font-family:'Montserrat-Bold';
+	src:url('/static/admin/fonts/Montserrat-Bold.woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+.profile-info.dropdown.pull-right > a img {
+	width: 30px;
+}
+
+body .page-container .sidebar-menu .logo-env > div.sidebar-collapse a, body .page-container .sidebar-menu .logo-env > div.sidebar-mobile-menu a {
+	border-color: #229acb !important;
+}
+
+#content h2 {
+	font-family: montserrat;
+	color: #fff;
+	padding-left: 20px;
+}
+
+body .page-container .sidebar-menu {
+	background: #0e6385 !important;
+	color: #084184;
+}
+
+body .page-container .sidebar-menu #main-menu li a {
+	color: #b1d2e0;
+}
+
+body .page-container .sidebar-menu #main-menu li ul > li > a {
+	/*background-color: #104256 !important;*/
+	background: #144f67 !important;
+}
+
+body .page-container .sidebar-menu #main-menu li.active > a {
+	background: #0e6385 !important;
+}
+
+#search {
+	display: none !important;
+}
+
+.page-container .sidebar-menu #main-menu li.opened {
+	background: #0e6385 !important;
+}
+
+.page-container .sidebar-menu #main-menu li ul > li > a {
+	padding-left: 48px;
+}
+
+.headline {
+	background: url(/static/admin/images/bg.jpg) center no-repeat;
+	-webkit-background-size: cover;
+	background-size: cover;
+	margin-left: -20px;
+	margin-right: -20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+	border-bottom: 5px solid #ececec;
+}
+
+.breadcrumb {
+	padding-left: 20px !important;
+	padding-top: 10px;
+}
+
+.breadcrumb > li i {
+	color: #a0ccde !important;
+}
+
+.breadcrumb > li a {
+	color: #a0ccde !important;
+}
+
+.breadcrumb > .active {
+	color: #fff !important;
+}
+
+.nav-custom {
+	margin-bottom: -50px;
+}
+
+.nav-custom .user strong {
+	color: #fff;
+	padding-left: 5px;
+}
+
+.error {
+	color: #e74c3c;
+	font-size: 11px !important;
+}
+
+.pagination-custom {
+	padding-bottom: 50px !important;
+}

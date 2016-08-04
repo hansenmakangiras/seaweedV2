@@ -1,0 +1,101 @@
+html, body {
+	font-family: 'Montserrat';
+	width: 100%;
+	height: 100%;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	color: #333;
+	letter-spacing: 1px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
+}
+
+b {
+	font-family:'Montserrat-Bold';
+}
+
+a,
+a:hover,
+a:focus,
+a:active,
+a:visited {
+	text-decoration: none;
+	outline: none;
+}
+
+.ellipsis {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.clearfix {
+	clear: both;
+}
+
+.bg {
+	background: url("../img/bg.jpg") no-repeat center;
+	-webkit-background-size: cover;
+	background-size: cover;
+}
+
+nav {
+	margin-top: 50px;
+}
+
+nav ul {
+	padding: 0;
+	margin: 0;
+}
+
+nav ul li {
+	list-style: none;
+}
+
+nav ul li a, nav ul li a:hover, nav ul li a:focus {
+	color: #fff;
+}
+
+.logo {
+	height: 40px;
+}
+
+.content {
+	height: calc(100vh - 150px);
+	color: #fff;
+}
+
+.content h1 {
+	padding-top: 100px;
+	font-family:'PlayfairDisplay-BoldItalic';
+	font-size: 48px;
+}
+
+.content a {
+	margin-top: 20px;
+	color: #fff;
+	display: inline-block;
+	font-size: 60px;
+}
+
+footer {
+	color: #fff;
+	text-align: center;
+}
+
+.fancybox-overlay {
+	overflow: hidden !important;
+}
+
+@media (max-width: 500px) {
+	.content {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	.content h1 {
+		font-size: 30px;
+	}
+}
