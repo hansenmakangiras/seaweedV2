@@ -29,28 +29,32 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <form action="/kospermindo/gudang" method="POST" class="form-horizontal validate">
-          <div class="form-group">
-            <div class="col-md-6">
-              <input id="lokasi" type="text" placeholder="Lokasi Gudang" name="lokasi" class="form-control input-lg" data-validate="required">
-            </div>
-            <div class="col-md-6">
-              <button id="submit" type="submit" class="btn btn-info btn-lg"><i class="entypo-plus"></i>&nbsp;Tambah</button>
-            </div>
-          </div>
-        </form>
+        <a href="/kospermindo/gudang/tambah" class="btn btn-info btn-lg"><i class="entypo-plus"></i>&nbsp;Tambah</a>
+<!--        <form action="/kospermindo/gudang" method="POST" class="form-horizontal validate">-->
+<!--          <div class="form-group">-->
+<!--            <div class="col-md-6">-->
+<!--              <input id="lokasi" type="text" placeholder="Lokasi Gudang" name="lokasi" class="form-control input-lg" data-validate="required">-->
+<!--            </div>-->
+<!--            <div class="col-md-6">-->
+<!--              <button id="submit" type="submit" class="btn btn-info btn-lg"><i class="entypo-plus"></i>&nbsp;Tambah</button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </form>-->
       </div>
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <table id="tblwarehouse" class="table table-bordered table-responsive table-hover">
           <thead>
           <tr>
             <th class="text-center" width="5%">No</th>
             <th class="text-center">Lokasi Gudang</th>
-<!--            <th class="text-center">Deskripsi</th>-->
-<!--            <th class="text-center" width="15%">Jumlah Stok</th>-->
+            <th class="text-center">Provinsi</th>
+            <th class="text-center">Kabupaten</th>
+            <th class="text-center">Titik Koordinat</th>
+            <th class="text-center" width="15%">Jumlah Stok</th>
+            <th class="text-center">Deskripsi</th>
             <th class="text-center" width="200px">Aksi</th>
             <!-- <th width="20%">Action</th> -->
           </tr>
@@ -62,8 +66,11 @@
                 <?php if ($value['status'] == 1) { ?>
                   <td class="text-center"><?= $value['id']; ?></td>
                   <td><?= $value['lokasi']; ?></td>
-<!--                  <td>--><?//= $value['deskripsi']; ?><!--</td>-->
-<!--                  <td class="text-center">--><?//= Helper::_format_number(isset($value['jumlah_stok']) ? $value['jumlah_stok']." Ton": 0,true); ?><!--</td>-->
+                  <td><?= $value['provinsi']; ?></td>
+                  <td><?= $value['kabupaten']; ?></td>
+                  <td><?= $value['titik_koordinat']; ?></td>
+                  <td class="text-center"><?= Helper::_format_number(isset($value['jumlah_stok']) ? $value['jumlah_stok']." Ton": 0,true); ?></td>
+                  <td><?= $value['deskripsi']; ?></td>
                   <td>
                     <a class="btn btn-default btn-sm btn-icon icon-left"
                        href="<?= Yii::app()->createUrl('/kospermindo/gudang/ubah',array('id' => strtolower($value['id']))) ; ?>"><i

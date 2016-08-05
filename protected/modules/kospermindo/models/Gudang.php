@@ -7,6 +7,10 @@
  * @property integer $id
  * @property string $deskripsi
  * @property string $lokasi
+ * @property string $kabupaten
+ * @property string $provinsi
+ * @property string $titik_koordinat
+ * @property double $luas_gudang
  * @property double $stok_masuk
  * @property double $stok_keluar
  * @property double $jumlah_stok
@@ -34,15 +38,16 @@ class Gudang extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('lokasi, stok_masuk, stok_keluar', 'required'),
+			array('lokasi, kabupaten, provinsi, titik_koordinat, luas_gudang, stok_masuk, stok_keluar', 'required'),
 			array('status', 'numerical', 'integerOnly'=>true),
-			array('stok_masuk, stok_keluar, jumlah_stok', 'numerical'),
+			array('luas_gudang, stok_masuk, stok_keluar, jumlah_stok', 'numerical'),
 			array('deskripsi', 'length', 'max'=>100),
 			array('lokasi, created_by, updated_by', 'length', 'max'=>150),
+			array('kabupaten, provinsi', 'length', 'max'=>255),
 			array('created_date, updated_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, deskripsi, lokasi, stok_masuk, stok_keluar, jumlah_stok, created_date, updated_date, created_by, updated_by, status', 'safe', 'on'=>'search'),
+			array('id, deskripsi, lokasi, kabupaten, provinsi, titik_koordinat, luas_gudang, stok_masuk, stok_keluar, jumlah_stok, created_date, updated_date, created_by, updated_by, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,9 +59,6 @@ class Gudang extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-      'kelompok' => array(self::HAS_MANY, 'KelompokTani', 'id'),
-      'seaweed' => array(self::HAS_MANY, 'Seaweed', 'id'),
-      'pengguna' => array(self::HAS_MANY, 'Pengguna', 'id'),
 		);
 	}
 
@@ -69,6 +71,10 @@ class Gudang extends CActiveRecord
 			'id' => 'ID',
 			'deskripsi' => 'Deskripsi',
 			'lokasi' => 'Lokasi',
+			'kabupaten' => 'Kabupaten',
+			'provinsi' => 'Provinsi',
+			'titik_koordinat' => 'Titik Koordinat',
+			'luas_gudang' => 'Luas Gudang',
 			'stok_masuk' => 'Stok Masuk',
 			'stok_keluar' => 'Stok Keluar',
 			'jumlah_stok' => 'Jumlah Stok',
@@ -101,6 +107,10 @@ class Gudang extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('deskripsi',$this->deskripsi,true);
 		$criteria->compare('lokasi',$this->lokasi,true);
+		$criteria->compare('kabupaten',$this->kabupaten,true);
+		$criteria->compare('provinsi',$this->provinsi,true);
+		$criteria->compare('titik_koordinat',$this->titik_koordinat,true);
+		$criteria->compare('luas_gudang',$this->luas_gudang);
 		$criteria->compare('stok_masuk',$this->stok_masuk);
 		$criteria->compare('stok_keluar',$this->stok_keluar);
 		$criteria->compare('jumlah_stok',$this->jumlah_stok);

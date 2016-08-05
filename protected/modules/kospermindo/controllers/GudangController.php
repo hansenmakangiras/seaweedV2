@@ -2,35 +2,27 @@
 
   class GudangController extends KController
   {
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
-    //public $layout = '//layouts/column2';
-//    public function filters(){
-//      return array(
-//        'rights'
-//      );
-//    }
-  private function addData($data){
-    if($data || is_array($data)){
-      $dataProvider = new Gudang;
-      $gudang = Gudang::model()->findByAttributes(array('lokasi' => ucfirst($lokasi)));
-      $gudang = !empty($gudang) ? $gudang : array();
+    private function addData($data)
+    {
+      if ($data || is_array($data)) {
+        $dataProvider = new Gudang;
+        $gudang = Gudang::model()->findByAttributes(array('lokasi' => ucfirst($lokasi)));
+        $gudang = !empty($gudang) ? $gudang : array();
 
-      if($gudang && is_array($gudang) || is_object($gudang) && $gudang->lokasi !== ucfirst($lokasi)) {
-        $dataProvider->lokasi = ucfirst($lokasi);
-        $dataProvider->deskripsi = '';
-        $dataProvider->stok_masuk = 0;
-        $dataProvider->stok_keluar = 0;
-        $dataProvider->jumlah_stok = 0;
-        $dataProvider->status = 1;
-        if ($dataProvider->save()) {
-          Yii::app()->user->setFlash('success', 'Data berhasil disimpan');
+        if ($gudang && is_array($gudang) || is_object($gudang) && $gudang->lokasi !== ucfirst($lokasi)) {
+          $dataProvider->lokasi = ucfirst($lokasi);
+          $dataProvider->deskripsi = '';
+          $dataProvider->stok_masuk = 0;
+          $dataProvider->stok_keluar = 0;
+          $dataProvider->jumlah_stok = 0;
+          $dataProvider->status = 1;
+          if ($dataProvider->save()) {
+            Yii::app()->user->setFlash('success', 'Data berhasil disimpan');
+          }
         }
       }
     }
-  }
+
     public function actionIndex()
     {
       if (Yii::app()->user->isGuest) {
@@ -39,42 +31,42 @@
 
       $pesan = '';
 
-      if(isset($_POST['lokasi'])){
+      if (isset($_POST['lokasi'])) {
         $lokasi = Yii::app()->request->getPost('lokasi');
         $lokasi = Helper::cleanString($lokasi);
         $dataProvider = new Gudang;
         $gudang = Gudang::model()->findByAttributes(array('lokasi' => ucfirst($lokasi)));
         $gudang = !empty($gudang) ? $gudang : array();
 
-        if($gudang !== null || is_array($gudang) || is_object($gudang) && $gudang->lokasi !== ucfirst($lokasi)){
+        if ($gudang !== null || is_array($gudang) || is_object($gudang) && $gudang->lokasi !== ucfirst($lokasi)) {
           $dataProvider->lokasi = ucfirst($lokasi);
           $dataProvider->deskripsi = '';
           $dataProvider->stok_masuk = 0;
           $dataProvider->stok_keluar = 0;
           $dataProvider->jumlah_stok = 0;
           $dataProvider->status = 1;
-          if($dataProvider->save()){
-            Yii::app()->user->setFlash('success','Data berhasil disimpan');
+          if ($dataProvider->save()) {
+            Yii::app()->user->setFlash('success', 'Data berhasil disimpan');
           }
-        }else{
-          Yii::app()->user->setFlash('error', 'Data gudang : ' .$lokasi. ' sudah terdaftar');
-          $pesan = "Data gudang : " .$lokasi. " sudah terdaftar";
+        } else {
+          Yii::app()->user->setFlash('error', 'Data gudang : ' . $lokasi . ' sudah terdaftar');
+          $pesan = "Data gudang : " . $lokasi . " sudah terdaftar";
         }
       }
 
       $dataProvider = new CActiveDataProvider('Gudang', array(
-        'criteria' => array(
+        'criteria'      => array(
           'condition' => 'status=1',
-          'order' => 'id ASC'
+          'order'     => 'id ASC',
         ),
         'countCriteria' => array(
-          'condition' => 'status=1'
+          'condition' => 'status=1',
         ),
-        'pagination' => array(
+        'pagination'    => array(
           'pageSize' => 10,
-          'pageVar' => 'page',
-          'route' => $this->createUrl('/kospermindo/gudang')
-        )
+          'pageVar'  => 'page',
+          'route'    => $this->createUrl('/kospermindo/gudang'),
+        ),
       ));
 
       $this->render('index', array(
@@ -95,75 +87,79 @@
     }
 
     //Simpan data
-    public function actionCreate()
+    public function actionTambah()
     {
       $pesan = '';
-      $model = new Warehouse;
+      $model = new Gudang;
       $admin = Yii::app()->user->isAdmin;
-      if($admin){
-        if(isset($_POST['Warehouse'])){
-//          Helper::dd($_POST['Warehouse']);
-          $findWarehouse = Warehouse::model()->findByAttributes(array('nama' => ucfirst($_POST['Warehouse']['nama'])));
-          //Helper::dd($findWarehouse);
-          if(empty($findWarehouse)){
-            if($findWarehouse['nama'] !== ucfirst($_POST['Warehouse']['nama'])){
-              $model->attributes = $_POST['Warehouse'];
-              $model->nama = ucfirst($_POST['Warehouse']['nama']);
-              $model->lokasi = ucfirst($_POST['Warehouse']['lokasi']);
-              $model->penanggungjawab = ucfirst($_POST['Warehouse']['penanggungjawab']);
-              $model->deskripsi = $_POST['Warehouse']['deskripsi'];
-              $model->created_by = Yii::app()->user->getName();
-              $model->status = 1;
-              if($model->save()){
+      if ($admin) {
+        if (isset($_POST['Gudang'])) {
+//          Helper::dd($_POST['Gudang']);
+          $findGudang = Gudang::model()->findByAttributes(array('nama' => ucfirst($_POST['Gudang']['nama'])));
+          //Helper::dd($findGudang);
+          if (empty($findGudang)) {
+            if ($findGudang['nama'] !== ucfirst($_POST['Gudang']['nama'])) {
+              $model->attributes = $_POST['Gudang'];
+//              $model->nama = ucfirst($_POST['Gudang']['nama']);
+//              $model->lokasi = ucfirst($_POST['Gudang']['lokasi']);
+//              $model->penanggungjawab = ucfirst($_POST['Gudang']['penanggungjawab']);
+//              $model->deskripsi = $_POST['Gudang']['deskripsi'];
+//              $model->created_by = Yii::app()->user->getName();
+//              $model->status = 1;
+              if ($model->save()) {
                 $pesan = "Gudang berhasil disimpan";
+                Yii::app()->user->setFlash('error','Data gudang berhasil disimpan');
                 $this->redirect("/kospermindo/warehouse");
-              }else{
-                Helper::dd($model->errors);
+              } else {
+                Yii::app()->user->setFlash('error','Data gudang tidak gagal menyimpan ke database');
+                //Helper::dd($model->errors);
               }
-            }else{
+            } else {
               $pesan = "Gudang sudah terdaftar";
+              Yii::app()->user->setFlash('error','Gudang sudah terdaftar');
             }
           }
         }
-      }else{
+      } else {
         throw new CHttpException(403, 'You are not authorize to this');
       }
-      $this->render('create',array(
-        'model'=>$model,
-        'pesan' =>$pesan,
+      $this->render('tambah', array(
+        'model' => $model,
+        'pesan' => $pesan,
       ));
     }
 
-    public function actionTambah(){
+    public function actionTambahAjax()
+    {
       $request = Yii::app()->request->getIsPostRequest();
       $dataProvider = new Gudang;
       $pesan = 'invalid';
       $resp = array();
-      if($request){
+      if ($request) {
         $lokasi = Yii::app()->request->getPost('lokasi');
-        if(isset($lokasi)){
+        if (isset($lokasi)) {
           $gudang = Gudang::model()->findByAttributes(array('lokasi' => ucfirst($lokasi)));
           $gudang = !empty($gudang) ? $gudang : array();
-          if(is_array($gudang) || is_object($gudang) && $gudang->lokasi !== ucfirst($lokasi)){
+          if (is_array($gudang) || is_object($gudang) && $gudang->lokasi !== ucfirst($lokasi)) {
             $dataProvider->lokasi = ucfirst($lokasi);
             $dataProvider->deskripsi = '';
             $dataProvider->stok_masuk = 0;
             $dataProvider->stok_keluar = 0;
             $dataProvider->jumlah_stok = 0;
             $dataProvider->status = 1;
-            if($dataProvider->save()){
+            if ($dataProvider->save()) {
               $pesan = 'success';
               $msg = 'Data berhasil disimpan';
               $resp['redirect_url'] = "/kospermindo/warehouse";
               //Yii::app()->user->setFlash('success','Data berhasil disimpan');
-            }else{
+            } else {
               $msg = "Data gagal disimpan";
               Helper::dd($dataProvider->errors);
               //Yii::app()->user->setFlash('error','Data gagal disimpan');
             }
 
-          }else{
-            $msg = "Data gudang : " .$lokasi. " sudah terdaftar";
+          } else {
+            $msg = "Data gudang : " . $lokasi . " sudah terdaftar";
           }
 
           $resp['login_status'] = $pesan;
@@ -174,6 +170,7 @@
         echo CJSON::encode($resp);
       }
     }
+
     public function actionLihatkelompok($id)
     {
       $this->redirect(array('kelompok/lihatkelompok', 'id_koordinator' => $id));
@@ -184,26 +181,26 @@
       $pesan = '';
       $admin = Yii::app()->user->isAdmin;
       $id = Yii::app()->request->getParam('id');
-      $id = !empty($id) ? (int) $id : 0;
-      $model = Warehouse::model()->findByPk($id);
-      if($admin){
-        if(isset($_POST['Warehouse'])){
-          $model->attributes = $_POST['Warehouse'];
-          $model->nama = ucfirst($_POST['Warehouse']['nama']);
-          $model->lokasi = ucfirst($_POST['Warehouse']['lokasi']);
-          $model->penanggungjawab = ucfirst($_POST['Warehouse']['penanggungjawab']);
-          $model->deskripsi = $_POST['Warehouse']['deskripsi'];
+      $id = !empty($id) ? (int)$id : 0;
+      $model = Gudang::model()->findByPk($id);
+      if ($admin) {
+        if (isset($_POST['Gudang'])) {
+          $model->attributes = $_POST['Gudang'];
+          $model->nama = ucfirst($_POST['Gudang']['nama']);
+          $model->lokasi = ucfirst($_POST['Gudang']['lokasi']);
+          $model->penanggungjawab = ucfirst($_POST['Gudang']['penanggungjawab']);
+          $model->deskripsi = $_POST['Gudang']['deskripsi'];
           $model->created_by = Yii::app()->user->getName();
           $model->status = 1;
-          if($model->save()){
+          if ($model->save()) {
             $pesan = "Gudang berhasil disimpan";
             $this->redirect("/kospermindo/warehouse");
-          }else{
+          } else {
             Helper::dd($model->errors);
           }
         }
 
-      }else{
+      } else {
         //Helper::dd($admin);
         throw new CHttpException(403, 'You are not authorize to this');
       }
@@ -266,7 +263,7 @@
       //if (empty($koordinator)) {
       if ($req && $ajax) {
         if ($id) {
-          $warehouse = Warehouse::model()->findByPk($id);
+          $warehouse = Gudang::model()->findByPk($id);
           //$koordinatorku = Gudang::model()->findByAttributes(array('id_user' => $id));
           //Helper::dd($pengguna);
           $status = 0;
@@ -451,36 +448,38 @@
         }
       }
     }
-    
-    public function actionUbah($id){
+
+    public function actionUbah($id)
+    {
       $id = Yii::app()->request->getParam('id');
-      if($id){
+      if ($id) {
         //check in coordinator table
-        $isGudang = Gudang::model()->findByAttributes(array('id'=>$id));
-        if(!empty($isGudang)){
-            $pesan = '';
-            if ((isset($_POST['Gudang']))) {
-              $isGudang->attributes = $_POST['Gudang'];
-              $isGudang->id = $id;
-              if ($isGudang->save()) {
-                $pesan = 'Data berhasil disimpan';
-                Yii::app()->user->setFlash('success','Data berhasil di perbaharui');
-                $this->redirect('/kospermindo/gudang');
-              } else {
-                //Helper::dd($isGudang);
-                Yii::app()->user->setFlash('success','Data gagal di perbaharui');
-                $pesan = 'Data Gagal disimpan';
-              }
+        $isGudang = Gudang::model()->findByAttributes(array('id' => $id));
+        if (!empty($isGudang)) {
+          $pesan = '';
+          if ((isset($_POST['Gudang']))) {
+            $isGudang->attributes = $_POST['Gudang'];
+            $isGudang->id = $id;
+            if ($isGudang->save()) {
+              $pesan = 'Data berhasil disimpan';
+              Yii::app()->user->setFlash('success', 'Data berhasil di perbaharui');
+              $this->redirect('/kospermindo/gudang');
+            } else {
+              //Helper::dd($isGudang);
+              Yii::app()->user->setFlash('success', 'Data gagal di perbaharui');
+              $pesan = 'Data Gagal disimpan';
             }
-            $this->render('update', array(
-              'model_koordinator' => $isGudang,
-              'pesan'=> $pesan,
-            ));  
+          }
+          $this->render('update', array(
+            'model_koordinator' => $isGudang,
+            'pesan'             => $pesan,
+          ));
         }
       }
     }
 
-    public function actionHapus(){
+    public function actionHapus()
+    {
       $req = Yii::app()->request->getIsPostRequest();
       $ajax = Yii::app()->request->getIsAjaxRequest();
       $id = Yii::app()->request->getPost('id');
@@ -489,28 +488,28 @@
       $redirectUrl = "/user";
       $status = 0;
       if ($req && $ajax) {
-        if($id){
-          $isGudang = Gudang::model()->findByAttributes(array('id'=>$id));
-          if(!empty($isGudang)){
-                $isGudang->status = $status;
-                $isGudang->id = $id;
-                if($isGudang->save()){
-                  $pesan = 'success';
-                  Yii::app()->user->setFlash('success','Data berhasil Dihapus');
-                  $redirectUrl = "/kospermindo/gudang";
-                }else{
-                  Yii::app()->user->setFlash('error','Data Gagal disimpan');
-                  $pesan = 'invalid';
-                }
+        if ($id) {
+          $isGudang = Gudang::model()->findByAttributes(array('id' => $id));
+          if (!empty($isGudang)) {
+            $isGudang->status = $status;
+            $isGudang->id = $id;
+            if ($isGudang->save()) {
+              $pesan = 'success';
+              Yii::app()->user->setFlash('success', 'Data berhasil Dihapus');
+              $redirectUrl = "/kospermindo/gudang";
+            } else {
+              Yii::app()->user->setFlash('error', 'Data Gagal disimpan');
+              $pesan = 'invalid';
+            }
             $data = array('message' => $pesan, 'redirect_url' => $redirectUrl);
             echo CJSON::encode($data);
           }
 
-          }
-      }else{
+        }
+      } else {
         echo CJSON::encode(array('message' => 'Your request is invalid'));
       }
-      
+
     }
 
     public function actionlihatkontroller()

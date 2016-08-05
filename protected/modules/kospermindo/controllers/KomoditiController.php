@@ -1,6 +1,6 @@
 <?php
 
-class CommodityController extends KController
+class KomoditiController extends KController
 {
   /**
    * Lists all models.
