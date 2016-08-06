@@ -24,19 +24,16 @@
         </div>
       </div>
       <div class="form-group">
-        <?php echo $form->labelEx($model, 'Provinsi', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'provinsi', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
-          <?php echo CHtml::dropDownList('provinsi', '', array('prompt' => 'Pilih Provinsi'),
-            array('class' => 'form-control input-lg', 'data-validate' => 'required')); ?>
-          <?php echo $form->error($model, 'provinsi'); ?>
+          <?php echo CHtml::activeDropDownList($model, 'provinsi', $provinsi, array('class' => 'form-control input-lg','empty' => 'Pilih Provinsi')); ?>
         </div>
       </div>
       <div class="form-group">
         <?php echo $form->labelEx($model, 'Kabupaten', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php //echo $form->dropDownList($model,'idkelompok',  array(),array('class'=>'form-control')); ?>
-          <?php echo CHtml::dropDownList('kabupaten', '', array('prompt' => 'Pilih Kabupaten'),
-            array('class' => 'form-control input-lg', 'data-validate' => 'required')); ?>
+          <?php echo CHtml::activeDropDownList($model, 'provinsi', $kabupaten, array('class' => 'form-control input-lg','data-validate' => 'required','empty' => 'Pilih Kabupaten')); ?>
           <?php echo $form->error($model, 'kabupaten'); ?>
         </div>
       </div>

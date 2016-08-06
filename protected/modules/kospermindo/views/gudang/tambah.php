@@ -14,9 +14,8 @@
 </div>
 <div class="row">
   <?php echo $this->renderPartial('_form', array(
-    //'model_koordinator' => $model_koordinator,
     'model'             => $model,
-    //'pesan'             => $pesan,
-    //'update'            => $update,
+    'provinsi'             => $provinsi,
+    'kabupaten'             => $kabupaten,
   )); ?>
 </div>

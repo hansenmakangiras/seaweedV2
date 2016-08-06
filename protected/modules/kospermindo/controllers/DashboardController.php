@@ -11,9 +11,9 @@
         $this->redirect('/kospermindo/login');
       }
 
-      $allFarmers = TabelPetani::model()->countByAttributes(array('status' => 1));
-      $allGroups = TabelKelompok::model()->countByAttributes(array('status' => 1));
-      $allWarehouses = TabelKoordinator::model()->countByAttributes(array('status' => 1));
+      $allFarmers = Petani::model()->countByAttributes(array('status' => 1));
+      $allGroups = KelompokTani::model()->countByAttributes(array('status' => 1));
+      $allWarehouses = Gudang::model()->countByAttributes(array('status' => 1));
       $summary = Komoditi::model()->getSummarySeaweedAll();
       $allPanen = Komoditi::model()->getSumPanen();
       $this->render('index', array(
@@ -77,9 +77,7 @@
     }
 
     public function actionLogout(){
-//      Yii::app()->user->logout();
       Yii::app()->user->logout(false);
       $this->redirect('/kospermindo/login');
-      //$this->redirect(Yii::app()->homeUrl);
     }
   }

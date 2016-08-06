@@ -31,6 +31,7 @@
 
       $pesan = '';
 
+
       if (isset($_POST['lokasi'])) {
         $lokasi = Yii::app()->request->getPost('lokasi');
         $lokasi = Helper::cleanString($lokasi);
@@ -70,7 +71,7 @@
       ));
 
       $this->render('index', array(
-        'data' => $dataProvider,
+        'data' => $dataProvider
       ));
     }
 
@@ -92,6 +93,18 @@
       $pesan = '';
       $model = new Gudang;
       $admin = Yii::app()->user->isAdmin;
+      $provinsi = array(
+        1 => 'Sulawesi Selatan',
+        2 => 'Sulawesi Utara',
+        3 => 'Sulawesi Barat',
+      );
+      $kabupaten = array(
+        1 => 'Barru',
+        2 => 'Bone',
+        3 => 'Takalar',
+        3 => 'Sinjai',
+      );
+
       if ($admin) {
         if (isset($_POST['Gudang'])) {
 //          Helper::dd($_POST['Gudang']);
@@ -100,16 +113,20 @@
           if (empty($findGudang)) {
             if ($findGudang['nama'] !== ucfirst($_POST['Gudang']['nama'])) {
               $model->attributes = $_POST['Gudang'];
-//              $model->nama = ucfirst($_POST['Gudang']['nama']);
-//              $model->lokasi = ucfirst($_POST['Gudang']['lokasi']);
-//              $model->penanggungjawab = ucfirst($_POST['Gudang']['penanggungjawab']);
-//              $model->deskripsi = $_POST['Gudang']['deskripsi'];
-//              $model->created_by = Yii::app()->user->getName();
-//              $model->status = 1;
+              $model->lokasi = ucfirst($_POST['Gudang']['lokasi']);
+              $model->kabupaten = ucfirst($_POST['Gudang']['kabupaten']);
+              $model->provinsi = ucfirst($_POST['Gudang']['provinsi']);
+              $model->titik_koordinat = $_POST['Gudang']['latlon'];
+              $model->luas_gudang = $_POST['Gudang']['luas_gudang'];
+              $model->stok_masuk = $_POST['Gudang']['stok_masuk'];
+              $model->stok_keluar = $_POST['Gudang']['stok_keluar'];
+              $model->deskripsi = $_POST['Gudang']['deskripsi'];
+              $model->created_by = Yii::app()->user->getName();
+              $model->status = 1;
               if ($model->save()) {
                 $pesan = "Gudang berhasil disimpan";
                 Yii::app()->user->setFlash('error','Data gudang berhasil disimpan');
-                $this->redirect("/kospermindo/warehouse");
+                $this->redirect("/kospermindo/gudang");
               } else {
                 Yii::app()->user->setFlash('error','Data gudang tidak gagal menyimpan ke database');
                 //Helper::dd($model->errors);
@@ -126,6 +143,8 @@
       $this->render('tambah', array(
         'model' => $model,
         'pesan' => $pesan,
+        'provinsi' => $provinsi,
+        'kabupaten' => $kabupaten
       ));
     }
 
@@ -150,7 +169,7 @@
             if ($dataProvider->save()) {
               $pesan = 'success';
               $msg = 'Data berhasil disimpan';
-              $resp['redirect_url'] = "/kospermindo/warehouse";
+              $resp['redirect_url'] = "/kospermindo/gudang";
               //Yii::app()->user->setFlash('success','Data berhasil disimpan');
             } else {
               $msg = "Data gagal disimpan";
@@ -194,7 +213,7 @@
           $model->status = 1;
           if ($model->save()) {
             $pesan = "Gudang berhasil disimpan";
-            $this->redirect("/kospermindo/warehouse");
+            $this->redirect("/kospermindo/gudang");
           } else {
             Helper::dd($model->errors);
           }
@@ -263,18 +282,18 @@
       //if (empty($koordinator)) {
       if ($req && $ajax) {
         if ($id) {
-          $warehouse = Gudang::model()->findByPk($id);
+          $gudang = Gudang::model()->findByPk($id);
           //$koordinatorku = Gudang::model()->findByAttributes(array('id_user' => $id));
           //Helper::dd($pengguna);
           $status = 0;
-          $warehouse->status = $status;
+          $gudang->status = $status;
           //$pengguna->status = $status;
           //$koordinatorku->id_user = $id;
           //$pengguna->username = $id;
 
-          if ($warehouse->saveAttributes(array('status'))) {
+          if ($gudang->saveAttributes(array('status'))) {
             $pesan = 'success';
-            $redirectUrl = "/kospermindo/warehouse";
+            $redirectUrl = "/kospermindo/gudang";
           } else {
             $pesan = 'failed';
           }
@@ -332,7 +351,7 @@
     //       $koordinator = Gudang::model()->findByAttributes(array('id_user' => $id));
     //       // if (($pengguna->delete()) && ($koordinator->delete())) {
     //       //   Yii::app()->user->setFlash('success', "Form Posted!");
-    //       //   $this->redirect('/warehouse');
+    //       //   $this->redirect('/gudang');
     //       // } else {
     //       //   Yii::app()->user->setFlash('error', "Error text");
     //       // }
@@ -344,7 +363,7 @@
     //         $koordinator->status = $status;
     //         if (($koordinator->save()) && ($pengguna->save())) {
     //           $pesan = 'Data berhasil disimpan';
-    //           $this->redirect('/warehouse');
+    //           $this->redirect('/gudang');
     //           } else {
     //           Helper::dd($koordinator);
     //           $pesan = 'Data Gagal disimpan';
@@ -375,7 +394,7 @@
     //         $koordinator->status = $status;
     //         if (($koordinator->save()) && ($pengguna->save())) {
     //           $pesan = 'Data berhasil disimpan';
-    //           $this->redirect('/warehouse');
+    //           $this->redirect('/gudang');
     //           } else {
     //           Helper::dd($koordinator);
     //           $pesan = 'Data Gagal disimpan';
@@ -398,7 +417,7 @@
         $koordinator = Gudang::model()->findByAttributes(array('id_user' => $id));
         // if (($pengguna->delete()) && ($koordinator->delete())) {
         //   Yii::app()->user->setFlash('success', "Form Posted!");
-        //   $this->redirect('/warehouse');
+        //   $this->redirect('/gudang');
         // } else {
         //   Yii::app()->user->setFlash('error', "Error text");
         // }
@@ -410,7 +429,7 @@
           $koordinator->status = $status;
           if (($koordinator->save()) && ($pengguna->save())) {
             $pesan = 'Data berhasil disimpan';
-            $this->redirect('/warehouse');
+            $this->redirect('/gudang');
           } else {
             Helper::dd($koordinator);
             $pesan = 'Data Gagal disimpan';
@@ -441,7 +460,7 @@
         $koordinator->status = $status;
         if (($koordinator->save()) && ($pengguna->save())) {
           $pesan = 'Data berhasil disimpan';
-          $this->redirect('/warehouse');
+          $this->redirect('/gudang');
         } else {
           Helper::dd($koordinator);
           $pesan = 'Data Gagal disimpan';
