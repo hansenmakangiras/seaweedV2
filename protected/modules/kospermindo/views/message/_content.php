@@ -10,7 +10,7 @@
     <!-- search -->
     <form method="get" role="form" action="/kospermindo/message/search" class="mail-search">
       <div class="input-group">
-        <input type="text" class="form-control" name="q" placeholder="Search for mail..."/>
+        <input type="text" class="form-control" name="q" placeholder="Cari pesan..."/>
 
         <div class="input-group-addon">
           <i class="entypo-search"></i>

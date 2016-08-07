@@ -16,10 +16,10 @@
         <i class="entypo-trash"></i>
       </a>
 
-<!--      <a href="--><?php //echo Yii::app()->createUrl("/kospermindo/message/reply", array("id" => $model['userid']))?><!--" class="btn btn-primary btn-icon">-->
-<!--        Reply-->
-<!--        <i class="entypo-reply"></i>-->
-<!--      </a>-->
+      <a href="<?php echo Yii::app()->createUrl("/kospermindo/message/reply", array("id" => $model['userid']))?>" class="btn btn-primary btn-icon">
+        Reply
+        <i class="entypo-reply"></i>
+      </a>
 
     </div>
   </div>
@@ -34,28 +34,27 @@
         to <span>me</span>
       </a>
 
-<!--      <ul class="dropdown-menu dropdown-red">-->
-<!---->
-<!--        <li>-->
-<!--          <a href="#">-->
-<!--            <i class="entypo-user"></i>-->
-<!--            Add to Contacts-->
-<!--          </a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a href="#">-->
-<!--            <i class="entypo-menu"></i>-->
-<!--            Show other messages-->
-<!--          </a>-->
-<!--        </li>-->
-<!--        <li class="divider"></li>-->
-<!--        <li>-->
-<!--          <a href="/kospermindo/message/create">-->
-<!--            <i class="entypo-reply"></i>-->
-<!--            Reply-->
-<!--          </a>-->
-<!--        </li>-->
-<!--      </ul>-->
+      <ul class="dropdown-menu dropdown-blue">
+        <li>
+          <a href="/kospermindo/message/addcontact">
+            <i class="entypo-user"></i>
+            Tambahkan Kontak
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="entypo-menu"></i>
+            Lihat Pesan Lainnya
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="/kospermindo/message/create">
+            <i class="entypo-reply"></i>
+            Balas
+          </a>
+        </li>
+      </ul>
 
     </div>
 
@@ -73,14 +72,14 @@
 
 
 
-<!--  <div class="mail-reply">-->
-<!---->
-<!--    <div class="fake-form">-->
-<!--      <div>-->
-<!--        <a href="/kospermindo/message/create">Reply</a> or <a href="/kospermindo/message/create">Forward</a> this message...-->
-<!--      </div>-->
-<!--    </div>-->
-<!---->
-<!--  </div>-->
+  <div class="mail-reply">
+
+    <div class="fake-form">
+      <div>
+        <a href="<?php echo Yii::app()->createUrl("/kospermindo/message/reply", array("id" => $model['userid']))?>">Balas</a> atau <a href="<?php echo Yii::app()->createUrl("/kospermindo/message/forward", array("id" => $model['userid']))?>">Balas Ke</a> pesan ini...
+      </div>
+    </div>
+
+  </div>
 
 </div>

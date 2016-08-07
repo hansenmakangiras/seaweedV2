@@ -1,7 +1,11 @@
 <div class="col-md-12">
+  <div class="alert alert-info">
+    <p class="text-danger">Field bertanda <strong>(*)</strong> harus diisi.</p>
+  </div>
   <div class="panel minimal minimal-gray">
     <div class="panel-heading">
       <div class="panel-title">
+
       </div>
 
     </div>
@@ -17,7 +21,7 @@
       )); ?>
 
       <div class="form-group">
-        <label class="col-sm-3 control-label">Nama Gudang</label>
+        <?php echo $form->labelEx($model, 'lokasi', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php echo $form->textField($model, 'lokasi',
             array('class' => 'form-control input-lg', 'data-validate' => 'required')); ?>
@@ -30,15 +34,15 @@
         </div>
       </div>
       <div class="form-group">
-        <?php echo $form->labelEx($model, 'Kabupaten', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'kabupaten', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php //echo $form->dropDownList($model,'idkelompok',  array(),array('class'=>'form-control')); ?>
-          <?php echo CHtml::activeDropDownList($model, 'provinsi', $kabupaten, array('class' => 'form-control input-lg','data-validate' => 'required','empty' => 'Pilih Kabupaten')); ?>
+          <?php echo CHtml::activeDropDownList($model, 'kabupaten', $kabupaten, array('class' => 'form-control input-lg','data-validate' => 'required','empty' => 'Pilih Kabupaten')); ?>
           <?php echo $form->error($model, 'kabupaten'); ?>
         </div>
       </div>
       <div class="form-group">
-        <?php echo $form->labelEx($model, 'Titik Koordinat', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'titik_koordinat', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php echo $form->textField($model, 'titik_koordinat',
             array('size' => 50, 'maxlength' => 250, 'class' => 'form-control input-lg','data-mask' => 'decimal','data-validate' => 'required')); ?>
@@ -46,7 +50,7 @@
         </div>
       </div>
       <div class="form-group">
-        <?php echo $form->labelEx($model, 'Luas Gudang', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'luas_gudang', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php echo $form->textField($model, 'luas_gudang',
             array('class' => 'form-control input-lg', 'data-mask' => 'decimal', 'data-validate' => 'required')); ?>
@@ -54,7 +58,7 @@
         </div>
       </div>
       <div class="form-group">
-        <?php echo $form->labelEx($model, 'Stok Masuk', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'stok_masuk', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php echo $form->textField($model, 'stok_masuk',
             array('class' => 'form-control input-lg', 'data-mask' => 'decimal', 'data-validate' => 'required')); ?>
@@ -62,7 +66,7 @@
         </div>
       </div>
       <div class="form-group">
-        <?php echo $form->labelEx($model, 'Stok Keluar', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'stok_keluar', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php echo $form->textField($model, 'stok_keluar',
             array('class' => 'form-control input-lg', 'data-mask' => 'decimal', 'data-validate' => 'required')); ?>
@@ -70,23 +74,19 @@
         </div>
       </div>
       <div class="form-group">
-        <?php echo $form->labelEx($model, 'Jumlah Stok', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'jumlah_stok', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-6">
           <?php echo $form->textField($model, 'jumlah_stok',
             array('class' => 'form-control input-lg', 'data-mask' => 'decimal', 'data-validate' => 'required')); ?>
           <?php echo $form->error($model, 'jumlah_stok'); ?>
         </div>
       </div>
-
-      <div class="hr-dashed"></div><br><hr>
+      <div class="hr-dashed"></div><br>
       <div class="form-group">
         <div class="col-sm-8 col-sm-offset-2">
           <?php echo CHtml::submitButton('S I M P A N', array("class" => "btn btn-success btn-lg")); ?>
         </div>
       </div>
-
-      <br>
-      <br>
       <?php $this->endWidget(); ?>
     </div>
   </div>

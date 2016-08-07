@@ -121,7 +121,17 @@
       if ($id !== 0) {
 
       }
-      $this->render('index', array('model' => $this->loadModel(), 'view' => 'reply', 'tags' => $this->loadTags()));
+      $this->render('index', array('model' => $this->loadModel(), 'view' => '_reply', 'tags' => $this->loadTags()));
+    }
+
+    public function actionForward()
+    {
+      $id = Yii::app()->request->getPost('id');
+      $id = isset($id) ? (int)$id : 0;
+      if ($id !== 0) {
+        $model = Messages::model()->findByPk($id);
+      }
+      $this->render('index', array('model' => $this->loadModel(), 'view' => 'create', 'tags' => $this->loadTags()));
     }
 
     public function actionDraft()
@@ -195,6 +205,22 @@
       return $model;
     }
 
+    public function loadInboxModel($id, $msgType = 1){
+      $criteria = new CDbCriteria();
+      if($msgType = 1){
+        $criteria->addCondition("sent_status = 0");
+      }elseif ($msgType = 2){
+        $criteria->addCondition("sent_status = 1 and ");
+      }
+
+
+    }
+    public function loadSentModel(){
+
+    }
+    public function loadTrashModel(){
+
+    }
     // Uncomment the following methods and override them if needed
     /*
     public function filters()
