@@ -1,5 +1,5 @@
 <div class="headline">
-  <ol class="breadcrumb bc-3">
+  <ol class="breadcrumb bc-3 hidden-print">
     <li>
       <a href="<?= Kospermindo::getBaseUrl(); ?>"><i class="entypo-home"></i>Beranda</a>
     </li>
@@ -7,7 +7,7 @@
       <strong><?php echo 'Laporan Komoditi'; ?></strong>
     </li>
   </ol>
-  <h2>Laporan Komoditi</h2><br/>
+  <h2>Laporan Komoditi</h2><br class="hidden-print" />
 </div>
 
 <div class="col-md-12">
@@ -16,7 +16,7 @@
       <div class="panel-title">
         <h4>Komoditi Statistik</h4>
       </div>
-      <div class="panel-options">
+      <div class="panel-options hidden-print">
         <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
         <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
       </div>
@@ -61,12 +61,9 @@
     <!--      </div>-->
     <!--    </div>-->
     <!--  </div>-->
-    <br/>
-    <hr/>
+    <hr class="hidden-print"/>
     <?php $this->renderPartial('/widget/search-filter'); ?>
-
-    <br>
-    <br/>
+    <br class="hidden-print">
     <table id="tblpetani" class="table table-hover table-responsive table-bordered" cellspacing="0" width="100%">
       <thead>
       <tr>
@@ -177,46 +174,46 @@
         </td>
 
       </tr>
-      <tr>
-        <td>
+      <tr class="hidden-print">
+        <td class="hidden-print">
           <center>Aksi</center>
         </td>
-        <td>
+        <td class="hidden-print">
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=1"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td>
+        <td class="hidden-print">
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=2"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td>
+        <td class="hidden-print">
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=3"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td>
+        <td class="hidden-print">
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=4"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td>
+        <td class="hidden-print">
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=5"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td>
+        <td class="hidden-print">
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=6"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>

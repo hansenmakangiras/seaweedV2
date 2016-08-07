@@ -48,6 +48,7 @@
                 //console.log(resp.message);
                 if (resp.message === 'success') {
                     window.location = resp.redirect_url;
+                    show_loading_bar(100);
                 } else {
                     setTimeout(function () {
                         // var opts = {
@@ -82,6 +83,7 @@
 
                         toastr.error(resp.alert, resp.status, opts);
                     }, 3000);
+                    show_loading_bar(100);
                 }
 
                 $modalDiv.modal('hide').removeClass('loading');

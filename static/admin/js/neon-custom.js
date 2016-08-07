@@ -1094,8 +1094,7 @@ var sign = attrDefault($this, 'sign', '$');
 						}
 					}
 				});
-				
-				console.log( opts );
+
 				$this.validate(opts);
 			});
 		}

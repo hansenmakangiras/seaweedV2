@@ -28,7 +28,7 @@
         'superadmin.modules.rights.components.*',
         'superadmin.modules.rights.components.dataproviders.*',
       ));
-      parent::init();
+
       Yii::app()->setComponents(array(
         'errorHandler' => array(
           // use 'site/error' action to display errors
@@ -38,13 +38,14 @@
           'class'          => 'SAdminWebUser',
           // enable cookie-based authentication
           'allowAutoLogin'      => true,
-          'loginUrl'            => '/superadmin/login',
+          'loginUrl'            => Yii::app()->createUrl('superadmin/login'),
           'authTimeout'         => 2592000,
           'absoluteAuthTimeout' => 2592000,
           //'baseUrl'=>Yii::app()->createUrl("/kospermindo/login"),
           'stateKeyPrefix' => '_superadmin',
         ),
       ));
+      parent::init();
 //      $this->setComponents(array(
 //       'rights' => array(
 //         'class' => 'superadmin.components.SWebUser',
@@ -62,7 +63,9 @@
         // this method is called before any module controller action is performed
         // you may place customized code here
         //if(Yii::app()->user->isSuperUser){
-
+//        if(Yii::app()->getModule('superadmin')->user->isGuest){
+//          Yii::app()->getModule('superadmin')->user->setReturnUrl('superadmin/login');
+//        }
           return true;
         //}
         //Yii::app()->request->redirect('/superadmin/login');

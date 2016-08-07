@@ -1,12 +1,12 @@
-<div class="row nav-custom">
+<div class="row nav-custom hidden-print">
   <!-- Profile Info and Notifications -->
-  <div class="col-md-12 col-sm-8 clearfix">
+  <div class="col-md-12 col-sm-8 clearfix hidden-print">
 
-    <ul class="user-info pull-right pull-none-xsm">
+    <ul class="user-info pull-right pull-none-xsm hidden-print">
       <!-- Profile Info -->
-      <li class="profile-info dropdown pull-right">
+      <li class="profile-info dropdown pull-right hidden-print">
         <!-- add class "pull-right" if you want to place this from right -->
-        <a href="#" class="dropdown-toggle user" data-toggle="dropdown">
+        <a href="#" class="dropdown-toggle user hidden-print" data-toggle="dropdown">
           <img src="" data-name="<?php echo (!empty(Yii::app()->user->getName())) ? strtoupper(Yii::app()->user->getName()): "Guest" ?>" id="profile" alt="" class="img-circle profile" width="44"/>
           <strong style="color: #ffffff"><?php echo (!empty(Yii::app()->user->getName())) ? strtoupper(Yii::app()->user->getName()): "Guest" ?></strong>
         </a>

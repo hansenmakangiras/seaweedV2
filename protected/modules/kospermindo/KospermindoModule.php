@@ -30,8 +30,6 @@
         'kospermindo.components.*',
         'application.models.*',
       ));
-
-      parent::init();
       Yii::app()->setComponents(array(
         'errorHandler' => array(
           // use 'site/error' action to display errors
@@ -41,12 +39,14 @@
           'class'          => 'SWebUser',
           // enable cookie-based authentication
           'allowAutoLogin'      => true,
-          'loginUrl'            => '/kospermindo/login',
+          'loginUrl'            => Yii::app()->createUrl('kospermindo/login'),
           'authTimeout'         => 2592000,
           'absoluteAuthTimeout' => 2592000,
           'autoUpdateFlash' => true,
         ),
       ));
+      Yii::app()->user->setStateKeyPrefix('_kospermindo');
+      parent::init();
     }
 
     public function beforeControllerAction($controller, $action)
@@ -54,6 +54,9 @@
       if (parent::beforeControllerAction($controller, $action)) {
         // this method is called before any module controller action is performed
         // you may place customized code here
+//        if(Yii::app()->getModule('kospermindo')->user->isGuest){
+//          Yii::app()->getModule('kospermindo')->user->setReturnUrl('kospermindo/login');
+//        }
         return true;
       } else {
         return false;

@@ -4,22 +4,6 @@
  *
 */
 
-@font-face
-{
-	font-family:'Montserrat';
-	src:url('/static/admin/fonts/Montserrat-Regular.woff');
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face
-{
-	font-family:'Montserrat-Bold';
-	src:url('/static/admin/fonts/Montserrat-Bold.woff');
-	font-weight: bold;
-	font-style: normal;
-}
-
 .profile-info.dropdown.pull-right > a img {
 	width: 30px;
 }
