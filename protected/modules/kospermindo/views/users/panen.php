@@ -1,9 +1,9 @@
 <?php
 	Yii::app()->clientScript->registerScript('search', "
-		var element = $('#main-menu li[data-nav=\"manage-user\"]');
+		var element = $('#main-menu li[data-nav=\"report\"]');
 		element.addClass('active opened');
-		element.find('ul').addClass('visible').removeAttr('style');
-		element.find('ul').find('li:nth-child(3)').addClass('active');
+		element.find('ul').addClass('visible');
+		element.find('ul li:nth-child(5)').addClass('active');
 ");
 ?>
 <div class="headline">
@@ -12,10 +12,10 @@
 			<a href="<?= Kospermindo::getBaseUrl(); ?>"><i class="entypo-home"></i>Beranda</a>
 		</li>
 		<li class="active">
-			<strong><?php echo 'Manajemen Komoditi'; ?></strong>
+			<strong><?php echo 'Data Produksi'; ?></strong>
 		</li>
 	</ol>
-	<h2>Manajemen Komoditi</h2><br/>
+	<h2>Data Produksi</h2><br/>
 </div>
 
 <div class="row">
@@ -87,7 +87,7 @@
 				</tbody>
 			</table>
 		<?php } else { ?>
-			<a class="btn btn-info btn-lg" href="<?php echo $this->baseUrl; ?>/kospermindo/users/tambahkomoditi" class="btn btn-default">+ &nbsp;Tambah</a>
+			<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modal-insert"><i class="entypo-plus"></i>&nbsp;Tambah</button>
 			<br/>
 			<br/>
 			<br/>
@@ -95,7 +95,7 @@
 			<table id="tblpetani" class="table table-responsive table-hover table-bordered">
 				<thead>
 				<tr>
-					<th width="5%">ID</th>
+					<th width="5%">No</th>
 					<th>Nama Petani</th>
 					<th>Kelompok</th>
 					<th>Lokasi</th>
@@ -107,10 +107,10 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?php foreach ($komoditi as $value) { ?>
+				<?php $i=1; foreach ($komoditi as $value) {  ?>
 					<?php if($value['status']==1) { ?>
 						<tr>
-							<td><?= $value['id']; ?></td>
+							<td><?= $i; ?></td>
 							<td><?= $value['nama_petani']; ?></td>
 							<td><?= $value['nama_kelompok'];?></td>
 							<td><?= $value['lokasi'];?></td>
@@ -119,11 +119,11 @@
 							<td><?= $value['kadar_air'] ?></td>
 							<td><?= $value['jumlah_bentangan'] ?></td>
 							<td>
-								<a class="btn btn-default btn-sm btn-icon icon-left" href=<?= $this->baseUrl; ?>/kospermindo/users/update?id=<?= strtolower($value['id']); ?>"><i class="entypo-pencil"></i>Sunting</a>
+								<a class="btn btn-default btn-sm btn-icon icon-left" href=<?= $this->baseUrl; ?>/kospermindo/users/update?id=<?= strtolower($value['id']); ?>><i class="entypo-pencil"></i>Sunting</a>
 								<a href="#" data-record-id="<?= $value['id_user']; ?>" data-record-title="Confirmation" data-href="<?php echo $this->baseUrl; ?>/kospermindo/users/delete" data-record-body="Apakah anda yakin ingin menghapus data ini?" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger btn-sm btn-icon icon-left">Hapus <i class="entypo-cancel"></i></a>
 							</td>
 						</tr>
-					<?php } ?>
+					<?php  } $i++;?>
 				<?php } ?>
 				</tbody>
 			</table>
@@ -131,15 +131,74 @@
 
 	</div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-insert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Tambah Data Produksi</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form action="/kospermindo/gudang" method="POST" class="form-horizontal">
+							<div class="form-group">
+
+								<div class="col-md-12">
+									
+									<select name="" class="form-control input-lg" required>
+										<option value="">Pilih Kelompok</option>
+									</select>
+									<br>
+
+									<select name="" class="form-control input-lg" required>
+										<option value="">Pilih Petani</option>
+									</select>
+									<br>
+
+									<select name="" class="form-control input-lg" required>
+										<option value="">Jenis Komoditi</option>
+									</select>
+									<br>
+								</div>
+
+								<div class="col-md-6">
+									<input type="number" placeholder="Total Panen" name="" class="form-control input-lg" required>
+								</div>
+
+								<div class="col-md-6">
+									<input type="number" placeholder="Kadar Air" name="" class="form-control input-lg" required>
+								</div>
+
+								<div class="clearfix"></div>
+
+								<div class="col-md-12">
+									<hr>
+									<div class="pull-right">
+										<button id="submit" type="submit" class="btn btn-info btn-lg"><i class="entypo-plus"></i>&nbsp;Tambah</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
   var baseurl;
 </script>
 <?php
-  Yii::app()->clientScript->registerScript('close-alert', '
-  setTimeout(function () {
-    $("#pesan").addClass("hidden");
-  }, 5000); 
-   
+	Yii::app()->clientScript->registerScript('close-alert', '
+		setTimeout(function () {
+			$("#pesan").addClass("hidden");
+		}, 5000); 
+
+		$("#modal-insert").prependTo("#modal-view");
   ', CClientScript::POS_END);
 ?>
 	

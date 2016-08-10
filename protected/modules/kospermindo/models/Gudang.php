@@ -4,24 +4,27 @@
    * This is the model class for table "gudang".
    *
    * The followings are the available columns in table 'gudang':
-   * @property integer $id
-   * @property string  $deskripsi
-   * @property string  $lokasi
-   * @property string  $kabupaten
-   * @property string  $provinsi
-   * @property string  $titik_koordinat
-   * @property double  $luas_gudang
-   * @property double  $stok_masuk
-   * @property double  $stok_keluar
-   * @property double  $jumlah_stok
-   * @property string  $created_date
-   * @property string  $updated_date
-   * @property string  $created_by
-   * @property string  $updated_by
+   * @property integer $id_gudang
+   * @property string  $nama
+   * @property string  $alamat
+   * @property integer $kabupaten
+   * @property integer $provinsi
+   * @property string  $latitude
+   * @property string  $longitude
+   * @property string  $koordinator
+   * @property integer $luas
+   * @property string  $telp
    * @property integer $status
    */
   class Gudang extends CActiveRecord
   {
+//    public function behaviors()
+//    {
+//      return array(
+//        'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
+//      );
+//    }
+
     /**
      * @return string the associated database table name
      */
@@ -38,17 +41,15 @@
       // NOTE: you should only define rules for those attributes that
       // will receive user inputs.
       return array(
-        array('lokasi, kabupaten, provinsi, titik_koordinat, luas_gudang, stok_masuk, stok_keluar', 'required'),
-        array('status', 'numerical', 'integerOnly' => true),
-        array('luas_gudang, stok_masuk, stok_keluar, jumlah_stok', 'numerical'),
-        array('deskripsi', 'length', 'max' => 100),
-        array('lokasi, created_by, updated_by', 'length', 'max' => 150),
-        array('kabupaten, provinsi', 'length', 'max' => 255),
-        array('created_date, updated_date', 'safe'),
+        //array('nama, alamat, kabupaten, provinsi, latitude, longitude, luas, telp, koordinator', 'required'),
+        array('kabupaten, provinsi, luas, status', 'numerical', 'integerOnly' => true),
+        array('nama', 'length', 'max' => 75),
+        array('latitude, longitude, telp', 'length', 'max' => 25),
+        array('koordinator', 'length', 'max' => 200),
         // The following rule is used by search().
         // @todo Please remove those attributes that should not be searched.
         array(
-          'id, deskripsi, lokasi, kabupaten, provinsi, titik_koordinat, luas_gudang, stok_masuk, stok_keluar, jumlah_stok, created_date, updated_date, created_by, updated_by, status',
+          'id_gudang, nama, alamat, kabupaten, provinsi, latitude, longitude, luas, telp, koordinator, status',
           'safe',
           'on' => 'search',
         ),
@@ -71,21 +72,17 @@
     public function attributeLabels()
     {
       return array(
-        'id'              => 'ID',
-        'deskripsi'       => 'Deskripsi',
-        'lokasi'          => 'Nama Gudang',
-        'kabupaten'       => 'Kabupaten',
-        'provinsi'        => 'Provinsi',
-        'titik_koordinat' => 'Titik Koordinat',
-        'luas_gudang'     => 'Luas Gudang',
-        'stok_masuk'      => 'Stok Masuk',
-        'stok_keluar'     => 'Stok Keluar',
-        'jumlah_stok'     => 'Jumlah Stok',
-        'created_date'    => 'Tanggal Dibuat',
-        'updated_date'    => 'Tanggal Di Ubah',
-        'created_by'      => 'Dibuat Oleh',
-        'updated_by'      => 'Disunting Oleh',
-        'status'          => 'Status',
+        'id_gudang'          => 'Id Gudang',
+        'nama'        => 'Nama',
+        'alamat'      => 'Alamat',
+        'kabupaten'   => 'Kabupaten',
+        'provinsi'    => 'Provinsi',
+        'latitude'    => 'Latitude',
+        'longitude'   => 'Longitude',
+        'luas'        => 'Luas',
+        'telp'        => 'Telp',
+        'koordinator' => 'Koordinator',
+        'status'      => 'Status',
       );
     }
 
@@ -107,35 +104,36 @@
 
       $criteria = new CDbCriteria;
 
-      $criteria->compare('id', $this->id);
-      $criteria->compare('deskripsi', $this->deskripsi, true);
-      $criteria->compare('lokasi', $this->lokasi, true);
-      $criteria->compare('kabupaten', $this->kabupaten, true);
-      $criteria->compare('provinsi', $this->provinsi, true);
-      $criteria->compare('titik_koordinat', $this->titik_koordinat, true);
-      $criteria->compare('luas_gudang', $this->luas_gudang);
-      $criteria->compare('stok_masuk', $this->stok_masuk);
-      $criteria->compare('stok_keluar', $this->stok_keluar);
-      $criteria->compare('jumlah_stok', $this->jumlah_stok);
-      $criteria->compare('created_date', $this->created_date, true);
-      $criteria->compare('updated_date', $this->updated_date, true);
-      $criteria->compare('created_by', $this->created_by, true);
-      $criteria->compare('updated_by', $this->updated_by, true);
+      $criteria->compare('id_gudang', $this->id_gudang);
+      $criteria->compare('nama', $this->nama, true);
+      $criteria->compare('alamat', $this->alamat, true);
+      $criteria->compare('kabupaten', $this->kabupaten);
+      $criteria->compare('provinsi', $this->provinsi);
+      $criteria->compare('latitude', $this->latitude, true);
+      $criteria->compare('longitude', $this->longitude, true);
+      $criteria->compare('luas', $this->luas);
+      $criteria->compare('telp', $this->telp, true);
+      $criteria->compare('koordinator', $this->koordinator, true);
       $criteria->compare('status', $this->status);
-      $criteria->addCondition('status = 1');
-      $criteria->order = "id ASC";
 
       return new CActiveDataProvider($this, array(
         'criteria' => $criteria,
-        'sort'=>array(
-          'defaultOrder'=>'status, created_date DESC',
-        ),
-        'pagination'    => array(
-          'pageSize' => 10,
-          'pageVar'  => 'page',
-          //'route'    => $this->createUrl('/kospermindo/gudang'),
-        ),
       ));
+    }
+    /* set created_date and hash the password before save is triggered */
+    public function beforeSave()
+    {
+      if ($this->isNewRecord) {
+
+        $this->created_date = date('Y-m-d H:i:s');
+        $this->created_by = Yii::app()->user->getName();
+
+      }else{
+        $this->updated_date = date('Y-m-d H:i:s');
+        $this->updated_by = Yii::app()->user->getName();
+      }
+
+      return parent::beforeSave();
     }
 
     /**
@@ -151,19 +149,18 @@
       return parent::model($className);
     }
 
-    /* set created_date and hash the password before save is triggered */
-    public function beforeSave()
+    public function getProvinsi($id)
     {
-      if ($this->isNewRecord) {
+      $query = Provinsi::model()->findByAttributes(array('provinsi_id' => $id));
 
-        $this->created_date = date('Y-m-d H:i:s');
-        $this->created_by = Yii::app()->user->getName();
-
-      } else {
-        $this->updated_date = date('Y-m-d H:i:s');
-        $this->updated_by = Yii::app()->user->getName();
-      }
-
-      return parent::beforeSave();
+      return $query->provinsi_nama;
     }
+
+    public function getKabupaten($id)
+    {
+      $query = Kotakab::model()->findByAttributes(array('kota_id' => $id));
+
+      return $query->kokab_nama;
+    }
+
   }

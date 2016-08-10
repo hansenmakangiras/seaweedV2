@@ -14,10 +14,14 @@
       'application.modules.' . $module_name . '.models.*',
       'application.modules.' . $module_name . '.components.*',
     ),
-
     'modules' => array(
       $module_name => array(
         'defaultController' => $default_controller,
+      ),
+      'auditTrail'  => array(
+        'userClass' => 'Pengguna', // the class name for the user object
+        'userIdColumn' => 'id', // the column name of the primary key for the user
+        'userNameColumn' => 'username', // the column name of the primary key for the user),
       ),
     ),
     'components' => array(
@@ -28,6 +32,22 @@
 //        'loginUrl'            => '/kospermindo/login',
 //        'authTimeout'         => 2592000,
 //        'absoluteAuthTimeout' => 2592000,
+//      ),
+      'clientScript' => array(
+        'scriptMap' => array(
+          'jquery.js' => false,
+          'jquery.min.js'=>false,  //desable any others default implementation
+          'core.css'=>false, //disable
+          'styles.css'=>false,  //disable
+          'pager.css'=>false,   //disable
+          'default.css'=>false,  //disable
+          )
+      ),
+//      'cache'        => array('class' => 'system.caching.CDummyCache'),
+//      'session'      => array(
+//        'sessionName' => 'SeaweedSession',
+//        'class'       => 'CHttpSession',
+//        //'autoStart'   => true,
 //      ),
       'urlManager' => array(
         'rules' => array(

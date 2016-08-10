@@ -12,6 +12,13 @@
 
     private $_identity;
 
+    public function behaviors()
+    {
+      return array(
+        'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
+      );
+    }
+
     /**
      * Declares the validation rules.
      * The rules state that username and password are required,

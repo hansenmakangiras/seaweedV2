@@ -20,8 +20,9 @@ class DashboardController extends SController
    */
   public function actionLogout()
   {
-    Yii::app()->user->logout();
-    $this->redirect('/superadmin/login');
+    Yii::app()->user->logout(false);
+//    $this->redirect('/superadmin/login');
+    $this->redirect(Yii::app()->getModule('superadmin')->user->loginUrl);
     //$this->redirect(Yii::app()->homeUrl);
   }
 }

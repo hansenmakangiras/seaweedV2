@@ -16,11 +16,9 @@
     // autoloading model and component classes
     'import'   => array(
       'application.models.*',
+      'application.modules.superadmin.components.*',
       'application.components.*',
       'application.extensions.*',
-//      'application.modules.rights.*',
-//      'application.modules.rights.components.*',
-//      'application.modules.rights.components.dataproviders.*',
       'application.modules.auditTrail.*',
       'application.modules.auditTrail.components.*',
       'application.modules.auditTrail.models.AuditTrail',
@@ -31,27 +29,8 @@
         'password'  => 'sembarang',
         'ipFilters' => array('127.0.0.1', '::1'),
       ),
-//      'rights' => array(
-//        'superuserName'      => 'SuperAdmin',
-//        'userClass'          => 'Users',
-//        'authenticatedName'  => 'Authenticated',
-//        'userIdColumn'       => 'id',
-//        'userNameColumn'     => 'username',
-//        'baseUrl'            => '/rights',
-//        'layout'             => 'rights.views.layouts.main',
-//        'appLayout'          => 'application.views.layouts.main',
-//        'displayDescription' => false,
-//        'install'            => false,
-//        'debug'              => true,
-//      ),
-      //'superadmin'  => array(),
-//      'kospermindo'  => array(
-//        'baseUrl'            => '/kospermindo',
-//        'layout'             => 'kospermindo.views.layouts.main',
-//        'appLayout'          => 'application.views.layouts.main',
-//      ),
       'auditTrail'  => array(
-        'userClass' => 'Users', // the class name for the user object
+        'userClass' => 'Pengguna', // the class name for the user object
         'userIdColumn' => 'id', // the column name of the primary key for the user
         'userNameColumn' => 'username', // the column name of the primary key for the user),
       ),
@@ -97,16 +76,16 @@
           '<controller:\w+>/<action:\w+>'          => '<controller>/<action>',
         ),
       ),
-      'cache'        => array('class' => 'system.caching.CDummyCache'),
-      'session'      => array(
-        'sessionName' => 'SeaweedSession',
-        'class'       => 'CHttpSession',
-        'autoStart'   => true,
-      ),
+//      'cache'        => array('class' => 'system.caching.CDummyCache'),
+//      'session'      => array(
+//        'sessionName' => 'SeaweedSession',
+//        'class'       => 'CHttpSession',
+//        //'autoStart'   => true,
+//      ),
       'db'           => require(dirname(__FILE__) . '/database.php'),
 //      'errorHandler' => array(
 //        // use 'site/error' action to display errors
-//        'errorAction' => YII_DEBUG ? null : 'site/error',
+//        'errorAction' => YII_DEBUG ? null : 'kospermindo/error',
 //      ),
       'log'          => array(
         'class'  => 'CLogRouter',
@@ -125,16 +104,13 @@
           )
         ),
       ),
-      'assetManager' => array(
-        'class'    => 'CAssetManager',
-        'basepath' => realpath(__DIR__ . '/../../assets'),
-        'baseUrl'  => '/assets',
-      ),
-//      'request'      => array(
-//        'class'                => 'application.components.SHttpRequest',
-//        'csrfTokenName'        => 'token',
-//        'enableCsrfValidation' => true,
+//      'assetManager' => array(
+//        'class'    => 'CAssetManager',
+//        'basepath' => realpath(__DIR__ . '/../../assets'),
+//        'baseUrl'  => '/assets',
+//        'linkAssets' => true,
 //      ),
+
       'SmtpMail'     => array(
         'class'      => 'application.extensions.smtpmail.PHPMailer',
         'Host'       => 'smtp.gmail.com',
@@ -145,7 +121,18 @@
         'SMTPAuth'   => true,
         'SMTPSecure' => 'tls',
       ),
+      'clientScript' => array(
+        'scriptMap' => array(
+          'jquery.js' => false,
+          'jquery.min.js'=>false,  //desable any others default implementation
+          'core.css'=>false, //disable
+          'styles.css'=>false,  //disable
+          'pager.css'=>false,   //disable
+          'default.css'=>false,  //disable
+        )
+      ),
     ),
+
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
     'params'     => array(

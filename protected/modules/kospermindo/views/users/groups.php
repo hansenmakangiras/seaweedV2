@@ -46,26 +46,27 @@
         <table id="tblkelompok" class="table table-responsive table-hover table-bordered" cellspacing="0" width="100%">
           <thead>
             <tr>
-              <th>Nama Kelompok</th>
+              <th class="text-center">No</th>
               <th>Lokasi</th>
+              <th>Nama Kelompok</th>
               <th>Ketua Kelompok</th>
               <th width="200px">Aksi</th>
             </tr>
           </thead>
           <tbody>
-          <?php if(!empty($data->getData())) { ?>
+          <?php if(!empty($data->getData())) { $j=1; ?>
           <?php foreach($data->getData() as $value) { ?>
             <tr>
             <?php if($value->status==1) { ?>
               
-              
-              <td><?= $value->nama_kelompok; ?></td>
+              <td class="text-center"><?= $j;?></td>
               <td><?= TabelKelompok::model()->getLokasiGudang($value->idgudang); ?></td>  
+              <td><?= $value->nama_kelompok; ?></td>
               <td><?= !empty($value->ketua_kelompok) ? $value->ketua_kelompok : "Belum Ada Ketua Kelompok";?></td>
               <td>
                 <a class="btn btn-default btn-sm btn-icon icon-left" href="<?= $this->baseUrl; ?>/kospermindo/users/update?id=<?= strtolower($value['id']); ?>"><i class="entypo-pencil"></i>Sunting</a>
               </td>
-            <?php } ?>    
+            <?php }$j++; ?>    
             </tr>
           <?php } ?>
           <?php } else { ?>

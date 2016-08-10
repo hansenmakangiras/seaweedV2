@@ -2,7 +2,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Panrita" />
+<meta name="description" content="Neon Admin Panel" />
 <meta name="author" content="" />
 
 <title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -10,7 +10,7 @@
 
 <link rel="stylesheet" href="<?= $this->baseUrl ?>/static/admin/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
 <link rel="stylesheet" href="<?= $this->baseUrl ?>/static/admin/css/font-icons/entypo/css/entypo.css">
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">
 <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="<?= $this->baseUrl ?>/static/admin/css/bootstrap.css">
 <link rel="stylesheet" href="<?= $this->baseUrl ?>/static/admin/css/neon-core.css">

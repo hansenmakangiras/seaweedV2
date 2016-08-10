@@ -33,13 +33,13 @@ class KController extends CController
 //      Yii::app()->clientScript->registerCoreScript('yii');
 
       // Tweaks for Ajax Requests
-//      Yii::app()->user->loginRequiredAjaxResponse = "<script>window.location.href = '" . Yii::app()->user->id . "';</script>";
-//      if (Yii::app()->request->isAjaxRequest) {
-//        Yii::app()->clientScript->scriptMap = array(
-//          'jquery.js'     => false,
-//          'jquery.min.js' => false,
-//        );
-//      }
+      Yii::app()->user->loginRequiredAjaxResponse = "<script>window.location.href = '" . Yii::app()->user->id . "';</script>";
+      if (Yii::app()->request->isAjaxRequest) {
+        Yii::app()->clientScript->scriptMap = array(
+          'jquery.js'     => false,
+          'jquery.min.js' => false,
+        );
+      }
       if (YII_DEBUG) {
         if (isset($_GET['d']) && $_GET['d'] == 'clear') {
           Yii::app()->cache->flush();

@@ -6,7 +6,7 @@
    * Date: 5/25/2016
    * Time: 12:04 AM
    */
-  class ErrorController extends KController
+  class ErrorController extends SController
   {
 
     /* Set global layout for all actions */

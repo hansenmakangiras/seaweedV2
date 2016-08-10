@@ -20,6 +20,7 @@
         <div class="row">
           <?php echo $this->renderPartial('_form', array(
             'model_petani' => $model_petani,
+            'model_gudang' => $model_gudang,
             'pesan'        => $pesan,
 //            'model'        => $model,
             'update'       => $update

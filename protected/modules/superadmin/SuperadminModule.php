@@ -28,7 +28,7 @@
         'superadmin.modules.rights.components.*',
         'superadmin.modules.rights.components.dataproviders.*',
       ));
-
+      parent::init();
       Yii::app()->setComponents(array(
         'errorHandler' => array(
           // use 'site/error' action to display errors
@@ -38,23 +38,14 @@
           'class'          => 'SAdminWebUser',
           // enable cookie-based authentication
           'allowAutoLogin'      => true,
-          'loginUrl'            => Yii::app()->createUrl('superadmin/login'),
+          'loginUrl'            => '/superadmin/login',
           'authTimeout'         => 2592000,
-          'absoluteAuthTimeout' => 2592000,
+          //'absoluteAuthTimeout' => 2592000,
           //'baseUrl'=>Yii::app()->createUrl("/kospermindo/login"),
           'stateKeyPrefix' => '_superadmin',
         ),
       ));
-      parent::init();
-//      $this->setComponents(array(
-//       'rights' => array(
-//         'class' => 'superadmin.components.SWebUser',
-//         'allowAutoLogin'      => true,
-//         'loginUrl'            => '/superadmin/users/login',
-//         'authTimeout'         => 2592000,
-//         'absoluteAuthTimeout' => 2592000,
-//       ),
-//      ));
+      //$this->setModules(array('rights'));
     }
 
     public function beforeControllerAction($controller, $action)
@@ -63,9 +54,7 @@
         // this method is called before any module controller action is performed
         // you may place customized code here
         //if(Yii::app()->user->isSuperUser){
-//        if(Yii::app()->getModule('superadmin')->user->isGuest){
-//          Yii::app()->getModule('superadmin')->user->setReturnUrl('superadmin/login');
-//        }
+
           return true;
         //}
         //Yii::app()->request->redirect('/superadmin/login');
@@ -75,19 +64,19 @@
 
     }
 
-    public function afterControllerAction($controller, $action){
-      if (parent::afterControllerAction($controller, $action)) {
-        // this method is called before any module controller action is performed
-        // you may place customized code here
-        if(!Yii::app()->user->isGuest && !Yii::app()->user->checkAccess('SuperAdmin')){
-          return true;
-        }
-        //Yii::app()->request->createUrl('/superadmin/login');
-        throw new exception("You are not authorize to access this.", 403);
-      } else {
-        return false;
-      }
-    }
+//    public function afterControllerAction($controller, $action){
+//      if (parent::afterControllerAction($controller, $action)) {
+//        // this method is called before any module controller action is performed
+//        // you may place customized code here
+//        if(!Yii::app()->user->isGuest && !Yii::app()->user->checkAccess('SuperAdmin')){
+//          return true;
+//        }
+//        //Yii::app()->request->createUrl('/superadmin/login');
+//        throw new exception("You are not authorize to access this.", 403);
+//      } else {
+//        return false;
+//      }
+//    }
 
     /**
      * Publishes the module assets path.

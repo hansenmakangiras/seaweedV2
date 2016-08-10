@@ -1,3 +1,11 @@
+<?php
+  Yii::app()->clientScript->registerScript('search', "
+    var element = $('#main-menu li[data-nav=\"petani\"]');
+    element.addClass('active opened');
+    element.find('ul').addClass('visible').removeAttr('style');
+    element.find('ul').find('li:nth-child(2)').addClass('active');
+");
+?>
 <div class="headline">
   <ol class="breadcrumb bc-3">
     <li>
@@ -18,7 +26,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
-                <?php echo $this->renderPartial('_formkomoditi', array('komoditi'=>$komoditi,'pesan' => $pesan)); ?>
+                <?php echo $this->renderPartial('_formkomoditi', array('komoditi'=>$komoditi,'pesan' => $pesan,'gudang'=>$gudang,'kelompok'=>$kelompok,'petani'=>$petani)); ?>
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@ body .page-container .sidebar-menu .logo-env > div.sidebar-collapse a, body .pag
 	border-color: #229acb !important;
 }
 
-#content h2 {
+.headline h2 {
 	font-family: montserrat;
 	color: #fff;
 	padding-left: 20px;
@@ -28,12 +28,15 @@ body .page-container .sidebar-menu #main-menu li a {
 }
 
 body .page-container .sidebar-menu #main-menu li ul > li > a {
-	/*background-color: #104256 !important;*/
 	background: #144f67 !important;
 }
 
-body .page-container .sidebar-menu #main-menu li.active > a {
+body .page-container .sidebar-menu #main-menu li.active.opened > a {
 	background: #0e6385 !important;
+}
+
+body .page-container .sidebar-menu #main-menu li.active > a {
+	background: #104256 !important;
 }
 
 #search {
@@ -93,4 +96,42 @@ body .page-container .sidebar-menu #main-menu li.active > a {
 
 .pagination-custom {
 	padding-bottom: 50px !important;
+}
+
+.validate-custom .validate-has-error input {
+	background: transparent;
+}
+
+.validate-custom span.validate-has-error {
+	position: absolute;
+	top: 8px;
+	right: 26px;
+	z-index: -1;
+}
+
+.modal-body {
+	max-height: 65vh !important;
+	overflow-y: auto !important;
+}
+
+.checkbox-replace .cb-wrapper, .radio-replace .cb-wrapper {
+	border-color: #ebebeb !important;
+}
+
+.checkbox-replace .cb-wrapper .checked, .radio-replace .cb-wrapper .checked {
+	background-color: #ebebeb !important;
+}
+
+.checkbox-replace .cb-wrapper + label, .radio-replace .cb-wrapper + label {
+	color: #333;
+}
+
+.sub-komoditi {
+	padding-left: 8px;
+	border-left: 2px solid #eee;
+	margin-bottom: 10px;
+}
+
+.sub-komoditi .checkbox {
+	margin-top: 5px;
 }

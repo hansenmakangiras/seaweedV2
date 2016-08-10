@@ -11,16 +11,13 @@
 
   return array(
     'import' => array(
-      'application.modules.' . $module_name . '.models.*',
-      'application.modules.rights.*',
-      'application.modules.rights.components.*',
-      'application.modules.rights.components.dataproviders.*',
+      'application.modules.' . $module_name . '.models.*'
     ),
 
     'modules' => array(
       $module_name => array(
         'defaultController' => $default_controller,
-        'modules' =>array(
+        'modules' => array(
           'rights' => array(
             'superuserName'      => 'SuperAdmin',
             'userClass'          => 'Users',
@@ -34,18 +31,20 @@
             'install'            => false,
             'debug'              => true,
           ),
-        ),
+        )
       ),
     ),
 
     'components' => array(
 //      'user'         => array(
-//        'class'          => 'RWebUser',
+//        //'class'          => 'superadmin.modules.rights.components.RWebUser',
+//        'class'          => 'SAdminWebUser',
 //        // enable cookie-based authentication
 //        'allowAutoLogin'      => true,
 //        'loginUrl'            => '/superadmin/login',
 //        'authTimeout'         => 2592000,
 //        //'absoluteAuthTimeout' => 2592000,
+//        'stateKeyPrefix' => '_superadmin',
 //      ),
       'urlManager' => array(
         'rules' => array(
@@ -53,9 +52,19 @@
           $module_name . '/<action:\w+>' => $module_name . '/' . $default_controller . '/<action>',
         ),
       ),
+      'clientScript' => array(
+        'scriptMap' => array(
+          'jquery.js' => false,
+          'jquery.min.js'=>false,  //desable any others default implementation
+          'core.css'=>false, //disable
+          'styles.css'=>false,  //disable
+          'pager.css'=>false,   //disable
+          'default.css'=>false,  //disable
+        )
+      ),
       'authManager'  => array(
         'class'           => 'RDbAuthManager',
-        //'defaultRoles'    => array('Authenticated', 'Guest'),
+        'defaultRoles'    => array('Authenticated', 'Guest'),
         'connectionID'    => 'db',
         'itemTable'       => 'authitem',
         'assignmentTable' => 'authassignment',

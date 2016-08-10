@@ -19,6 +19,8 @@
  * @property integer $id_perusahaan
  * @property integer $idkelompok
  * @property integer $idgudang
+ * @property integer $is_ketuakelompok
+ * @property integer $is_moderator
  * @property integer $status
  * @property string $created_date
  * @property string $created_by
@@ -27,6 +29,12 @@
  */
 class TabelPetani extends CActiveRecord
 {
+  public function behaviors()
+  {
+    return array(
+      'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
+    );
+  }
 	/**
 	 * @return string the associated database table name
 	 */
@@ -43,15 +51,15 @@ class TabelPetani extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			//array('alamat, no_telp, nmr_identitas, tempat_lahir, tanggal_lahir, luas_lokasi, jenis_komoditi, kadar_air, jumlah_bentangan, idkelompok, idgudang, created_date, created_by, updated_date, updated_by', 'required'),
-			array('luas_lokasi, kadar_air, jumlah_bentangan, id_user, id_perusahaan, idkelompok, idgudang, status', 'numerical', 'integerOnly'=>true),
+			//array('alamat, no_telp, nmr_identitas, tempat_lahir, tanggal_lahir, luas_lokasi, jenis_komoditi, kadar_air, jumlah_bentangan, idkelompok, idgudang, is_ketuakelompok, is_moderator, created_date, created_by, updated_date, updated_by', 'required'),
+			array('luas_lokasi, kadar_air, jumlah_bentangan, id_user, id_perusahaan, idkelompok, idgudang, is_ketuakelompok, is_moderator, status', 'numerical', 'integerOnly'=>true),
 			array('nama_petani, alamat, tempat_lahir', 'length', 'max'=>100),
 			array('no_telp', 'length', 'max'=>20),
 			array('nmr_identitas', 'length', 'max'=>25),
 			array('jenis_komoditi, created_by, updated_by', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nama_petani, alamat, no_telp, nmr_identitas, tempat_lahir, tanggal_lahir, luas_lokasi, jenis_komoditi, kadar_air, jumlah_bentangan, id_user, id_perusahaan, idkelompok, idgudang, status, created_date, created_by, updated_date, updated_by', 'safe', 'on'=>'search'),
+			array('id, nama_petani, alamat, no_telp, nmr_identitas, tempat_lahir, tanggal_lahir, luas_lokasi, jenis_komoditi, kadar_air, jumlah_bentangan, id_user, id_perusahaan, idkelompok, idgudang, is_ketuakelompok, is_moderator, status, created_date, created_by, updated_date, updated_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -87,6 +95,8 @@ class TabelPetani extends CActiveRecord
 			'id_perusahaan' => 'Id Perusahaan',
 			'idkelompok' => 'Idkelompok',
 			'idgudang' => 'Idgudang',
+			'is_ketuakelompok' => 'Is Ketuakelompok',
+			'is_moderator' => 'Is Moderator',
 			'status' => 'Status',
 			'created_date' => 'Created Date',
 			'created_by' => 'Created By',
@@ -128,6 +138,8 @@ class TabelPetani extends CActiveRecord
 		$criteria->compare('id_perusahaan',$this->id_perusahaan);
 		$criteria->compare('idkelompok',$this->idkelompok);
 		$criteria->compare('idgudang',$this->idgudang);
+		$criteria->compare('is_ketuakelompok',$this->is_ketuakelompok);
+		$criteria->compare('is_moderator',$this->is_moderator);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('created_date',$this->created_date,true);
 		$criteria->compare('created_by',$this->created_by,true);
@@ -201,11 +213,29 @@ class TabelPetani extends CActiveRecord
 	}
 	public function getJabatanPetani($id){
 		$query = Pengguna::model()->findByAttributes(array('id'=>$id));
-		if($query->is_moderator==1){
-			$query = "Moderator";
+		$query2 = TabelPetani::model()->findByAttributes(array('id_user'=>$id));
+		$jabatan = "";
+		if($query2->is_ketuakelompok == 1){
+			$jabatan = "Ketua Kelompok";
+			if($query2->is_moderator == 1){
+				$jabatan = $jabatan."<br/>Moderator";
+			}
+		}elseif($query2->is_moderator == 1){
+			$jabatan = "Moderator";
+			if($query2->is_ketuakelompok == 1){
+				$jabatan = $jabatan."<br/>Ketua Kelompok";
+			}
+			
 		}else{
-			$query = "User";
+			$jabatan = "Petani Rumput Laut";
 		}
-		return $query;
+		return $jabatan;
 	}
+	public function komoditilist(){
+		$models = TabelPetani::model()->findAll(array('condition' => 'id = ' . $this->id, 'order'=> 'id'));
+		foreach ($models as $model)
+			$_items[$model->id] = $model->nama;
+		return $_items;
+	}
+
 }

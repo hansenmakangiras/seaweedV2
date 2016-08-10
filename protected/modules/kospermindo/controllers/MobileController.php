@@ -11,6 +11,7 @@
     private $_useragent;
     private $_dataMobile;
     private $userAuth;
+
     public function init()
     {
       Helper::setTimeZone('Asia/Makassar');
@@ -30,33 +31,33 @@
       $postRequest = Yii::app()->request->getIsPostRequest();
       if ($postRequest) {
         //if ($this->_useragent === 'Mobile-Panrita') {
-          if ($this->_dataMobile && $this->_dataMobile === 'panritaid') {
-            if (isset($userAuth)) {
-              //echo CJSON::encode($userAuth);
-              $registrationId = $userAuth['deviceID'];
-              $userid = $userAuth['userid'];
+        if ($this->_dataMobile && $this->_dataMobile === 'panritaid') {
+          if (isset($userAuth)) {
+            //echo CJSON::encode($userAuth);
+            $registrationId = $userAuth['deviceID'];
+            $userid = $userAuth['userid'];
 
-              $users = Pengguna::model()->findByPk($userid);
-              if ($users) {
-                if(!empty($users->deviceId)){
-                  $users->setScenario('update');
-                  $users->deviceId = $registrationId;
-                }else{
-                  $users->setScenario('insert');
-                  $users->deviceId = $registrationId;
-                }
-                $users->saveAttributes(array('deviceId'));
-                $pesan = 'success';
-                $error = 0;
+            $users = Pengguna::model()->findByPk($userid);
+            if ($users) {
+              if (!empty($users->deviceId)) {
+                $users->setScenario('update');
+                $users->deviceId = $registrationId;
               } else {
-                $pesan = 'User not found';
-                $error = 2;
+                $users->setScenario('insert');
+                $users->deviceId = $registrationId;
               }
+              $users->saveAttributes(array('deviceId'));
+              $pesan = 'success';
+              $error = 0;
             } else {
-              $pesan = 'No DeviceID found';
-              $error = 3;
+              $pesan = 'User not found';
+              $error = 2;
             }
+          } else {
+            $pesan = 'No DeviceID found';
+            $error = 3;
           }
+        }
         //}
       }
       /*Generate data to JSON */
@@ -69,7 +70,8 @@
       Yii::app()->end();
     }
 
-    public function actionGetListContact(){
+    public function actionGetListContact()
+    {
       $users = array();
       //if($this->_useragent === 'Mobile-Panrita') {
       if ($this->_dataMobile && $this->_dataMobile === 'panritaid') {
@@ -119,7 +121,7 @@
           /*Generate data to JSON */
           $jsonData['panrita'] = array(
             'username' => $sess,
-            'userid'   => (int) $iduser,
+            'userid'   => (int)$iduser,
             'pesan'    => $message,
             'error'    => $error,
           );
@@ -136,28 +138,30 @@
     {
       $tipe = KomoditiType::model()->findAll();
       $data = array();
-      foreach ($tipe as $key => $value){
-        $data[$key]['id'] = (int) $value['id'];
+      foreach ($tipe as $key => $value) {
+        $data[$key]['id'] = (int)$value['id'];
         $data[$key]['name'] = $value['type'];
       }
 
       $moderatorConfig = array('phone' => '08134543454', 'name' => 'Anwar', 'level' => 'Moderator');
       $adminConfig = array('phone' => '08114199010', 'name' => 'Hansen', 'level' => 'Admin');
       $helpDesk = "";
-      if(isset($_POST['UserAuth']['userid'])){
-        $pengguna = Pengguna::model()->findAllByAttributes(array('id' => $_POST['UserAuth']['userid'],'is_moderator' => 1));
-        if($pengguna){
+      if (isset($_POST['UserAuth']['userid'])) {
+        $pengguna = Pengguna::model()->findAllByAttributes(array('id'           => $_POST['UserAuth']['userid'],
+                                                                 'is_moderator' => 1,
+        ));
+        if ($pengguna) {
           $helpDesk = array($adminConfig, $moderatorConfig);
-        }else{
+        } else {
           $helpDesk = array($adminConfig);
         }
-      }else{
+      } else {
         $helpDesk = array($adminConfig);
       }
       //if($this->_useragent === 'Mobile-Panrita') {
       //if ($this->_dataMobile && $this->_dataMobile === 'panritaid') {
-        $jsonData['panrita_config'] = array('jenis_seaweed' => $data, 'help_phone' => $helpDesk);
-        echo CJSON::encode($jsonData);
+      $jsonData['panrita_config'] = array('jenis_seaweed' => $data, 'help_phone' => $helpDesk);
+      echo CJSON::encode($jsonData);
       //}
       //}else {
       //$this->redirect("/");
@@ -177,7 +181,7 @@
             $seaweed->attributes = $_POST['Data'];
             $seaweed->id_user = $username->id;
             $seaweed->id_komoditi = $_POST['Data']['id_seaweed'];
-            $seaweed->nama_komoditi = KomoditiType::model()->trKomoditiTipe((int) $_POST['Data']['id_seaweed']);
+            $seaweed->nama_komoditi = KomoditiType::model()->trKomoditiTipe((int)$_POST['Data']['id_seaweed']);
             $seaweed->kadar_air = Helper::_format_number($_POST['Data']['kadar_air']);
             $seaweed->jumlah_bentangan = 0;
             $seaweed->total_panen = Helper::_format_number($_POST['Data']['total_panen']);
@@ -210,8 +214,8 @@
       if ($this->_dataMobile && $this->_dataMobile === 'panritaid') {
         if (!empty($contact)) {
           $fields = array(
-            'username' => '',
-            'userid' => 0,
+            'username'     => '',
+            'userid'       => 0,
             'phone_number' => '',
             'display_name' => '',
           );
@@ -265,7 +269,7 @@
 //          ''
 //        );
 
-        $jsonData['result'] = array('data' => $fields, 'totaldata'=>$total);
+        $jsonData['result'] = array('data' => $fields, 'totaldata' => $total);
         echo CJSON::encode($jsonData);
       }
       //}else {

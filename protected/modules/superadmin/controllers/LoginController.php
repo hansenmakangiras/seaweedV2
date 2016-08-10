@@ -16,7 +16,7 @@
       $login_status = 'invalid';
       $pesan = '';
 
-      $model = new LoginForm();
+      $model = new SuperadminLoginForm;
       $token = !empty($_POST['token']) ? $_POST['token'] : '';
 
       // Make sure the request is POST.

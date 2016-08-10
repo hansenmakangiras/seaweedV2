@@ -10,7 +10,7 @@
 
       $messages = Messages::model()->findAll("sent_status = 0");
       $totaldata = count($messages);
-      $this->render('index', array('model' => $messages, 'totaldata' => $totaldata, 'tags' => $this->loadTags()));
+      $this->render('index', array('model' => $messages, 'totaldata' => $totaldata));
     }
 
     public function actionCreate()
@@ -65,7 +65,7 @@
         }
       }
       $this->render('index',
-        array('model' => $this->loadModel(), "pesan" => $pesan, 'view' => 'create', 'tags' => $this->loadTags()));
+        array('model' => $this->loadModel(), "pesan" => $pesan, 'view' => 'create'));
     }
 
     public function sendNotification($registrasiId, $message)
@@ -121,17 +121,7 @@
       if ($id !== 0) {
 
       }
-      $this->render('index', array('model' => $this->loadModel(), 'view' => '_reply', 'tags' => $this->loadTags()));
-    }
-
-    public function actionForward()
-    {
-      $id = Yii::app()->request->getPost('id');
-      $id = isset($id) ? (int)$id : 0;
-      if ($id !== 0) {
-        $model = Messages::model()->findByPk($id);
-      }
-      $this->render('index', array('model' => $this->loadModel(), 'view' => 'create', 'tags' => $this->loadTags()));
+      $this->render('index', array('model' => $this->loadModel(), 'view' => 'reply'));
     }
 
     public function actionDraft()
@@ -169,7 +159,7 @@
         $data = new Messages("search");
       }
       $messages = Messages::model()->findAll();
-      $this->render('index', array('model' => $messages, 'tags' => $this->loadTags()));
+      $this->render('index', array('model' => $messages));
     }
 
     public function actionView()
@@ -180,7 +170,7 @@
       }
       //$messages = Messages::model()->findAll();
 
-      $this->render('index', array('model' => $message->attributes, 'view' => 'view', 'tags' => $this->loadTags()));
+      $this->render('index', array('model' => $message->attributes, 'view' => 'view'));
     }
 
     public function actionSent()
@@ -188,7 +178,7 @@
       $sentMessages = Messages::model()->findAll("sent_status = 1");
       $totaldata = count($sentMessages);
       $this->render('index',
-        array('model' => $sentMessages, 'totaldata' => $totaldata, 'view' => '_sent', 'tags' => $this->loadTags()));
+        array('model' => $sentMessages, 'totaldata' => $totaldata, 'view' => '_sent'));
     }
 
     private function loadTags()
@@ -205,22 +195,6 @@
       return $model;
     }
 
-    public function loadInboxModel($id, $msgType = 1){
-      $criteria = new CDbCriteria();
-      if($msgType = 1){
-        $criteria->addCondition("sent_status = 0");
-      }elseif ($msgType = 2){
-        $criteria->addCondition("sent_status = 1 and ");
-      }
-
-
-    }
-    public function loadSentModel(){
-
-    }
-    public function loadTrashModel(){
-
-    }
     // Uncomment the following methods and override them if needed
     /*
     public function filters()

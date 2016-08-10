@@ -1,4 +1,4 @@
-<h2>Farmer Details</h2><br />
+<h2>Detail Petani</h2><br />
 <div class="row">
   <div class="col-md-12">
     <div class="panel panel-primary" data-collapsed="0">

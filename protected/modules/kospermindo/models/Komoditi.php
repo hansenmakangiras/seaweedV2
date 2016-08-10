@@ -20,6 +20,12 @@
    */
   class Komoditi extends CActiveRecord
   {
+    public function behaviors()
+    {
+      return array(
+        'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
+      );
+    }
     /**
      * @return string the associated database table name
      */
@@ -185,10 +191,44 @@
     public function getSumPanen()
     {
       $order = 'sango-sango laut, euchema cotoni, spinosom, gracillaria kw 3, gracillaria kw 4, gracillaria bs';
-      $query = Yii::app()->db->createCommand('SELECT SUM(total_panen) as total_panen ,SUM(jumlah_bentangan) as jumlah_bentangan, SUM(kadar_air) as kadar_air from komoditi')
+      $query = Yii::app()->db->createCommand('SELECT nama_komoditi,SUM(total_panen) as total_panen , SUM(kadar_air) as kadar_air from komoditi GROUP by nama_komoditi')
         ->queryAll();
+        //helper::dd($query);
+        $apa = array();
+        for($i=0;$i<=5;$i++){
+          if(!empty($query[$i]) && $query[$i]['nama_komoditi']=='Sango-Sango Laut'){
+            $apa[0]=$query[$i];
+          }
+        
+        }
+        for($i=0;$i<=5;$i++){
+          if(!empty($query[$i]) && $query[$i]['nama_komoditi']=='Spinosom'){
+            $apa[1]=$query[$i];
+          }
+        }
+        for($i=0;$i<=5;$i++){
+          if(!empty($query[$i]) && $query[$i]['nama_komoditi']=='Euchema Cotoni'){
+            $apa[2]=$query[$i];
+          }
+        }
+        for($i=0;$i<=5;$i++){
+          if(!empty($query[$i]) && $query[$i]['nama_komoditi']=='Gracillaria KW 3'){
+            $apa[3]=$query[$i];
+          }
+        }
+        for($i=0;$i<=5;$i++){
+          if(!empty($query[$i]) && $query[$i]['nama_komoditi']=='Gracillaria KW 4'){
+            $apa[4]=$query[$i];
+          }
+        }
 
-      return $query;
+        for( $i=0;$i<=5;$i++){
+          if(!empty($query[$i]) && $query[$i]['nama_komoditi']=='Gracillaria BS'){
+            $apa[5]=$query[$i];
+          }
+        }
+        
+      return $apa;
     }
 
     public function getSumGroupPanen()
@@ -281,5 +321,10 @@
       $models = TabelPetani::model()->findByAttributes(array('id'=>$id_user));
       
       return $models->nama_petani;
+    }
+    public function getReportPetani(){
+      $query = Yii::app()->db->createCommand('SELECT tabel_petani.nama_petani,tabel_kelompok.nama_kelompok,gudang.lokasi,sum(komoditi.total_panen) as total_panen,sum(komoditi.kadar_air) as kadar_air,tabel_petani.jumlah_bentangan FROM tabel_petani LEFT JOIN komoditi on tabel_petani.id=komoditi.id_user JOIN tabel_kelompok ON tabel_petani.idkelompok=tabel_kelompok.id JOIN gudang ON tabel_kelompok.idgudang=gudang.id GROUP by tabel_petani.nama_petani')
+      ->queryAll();
+      return $query;
     }
 }

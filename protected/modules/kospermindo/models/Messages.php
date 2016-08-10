@@ -14,7 +14,6 @@
  * @property integer $sent_status
  * @property integer $is_read
  * @property integer $is_draft
- * @property integer $is_trash
  */
 class Messages extends CActiveRecord
 {
@@ -23,9 +22,12 @@ class Messages extends CActiveRecord
   const STATUS_SENT = 1;
   const STATUS_READ = 2;
 
-  const MESSAGE_TYPE_INBOX = 1;
-  const MESSAGE_TYPE_SENT = 2;
-  const MESSAGE_TYPE_TRASH = 3;
+  public function behaviors()
+  {
+    return array(
+      'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
+    );
+  }
 
 	/**
 	 * @return string the associated database table name
@@ -44,12 +46,12 @@ class Messages extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('tagsid, subject, to, from, content, date_send, date_receive', 'required'),
-			array('tagsid, sent_status, is_draft,is_read,is_trash', 'numerical', 'integerOnly'=>true),
+			array('tagsid, sent_status, is_draft,is_read', 'numerical', 'integerOnly'=>true),
 			array('subject', 'length', 'max'=>150),
 			array('to', 'length', 'max'=>150),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, tagsid, subject, to, from, content, date_send, date_receive, sent_status, is_read ,is_draft,is_trash', 'safe', 'on'=>'search'),
+			array('id, tagsid, subject, to, from, content, date_send, date_receive, sent_status, is_read ,is_draft', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,7 +83,6 @@ class Messages extends CActiveRecord
 			'sent_status' => 'Sent Status',
 			'is_read' => 'Is Read',
 			'is_draft' => 'Is Draft',
-			'is_trash' => 'Is Trash',
 		);
 	}
 
@@ -114,7 +115,6 @@ class Messages extends CActiveRecord
 		$criteria->compare('sent_status',$this->sent_status);
 		$criteria->compare('is_read',$this->is_read);
 		$criteria->compare('is_draft',$this->is_draft);
-		$criteria->compare('is_trash',$this->is_trash);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -135,9 +135,6 @@ class Messages extends CActiveRecord
   public function scopes() {
     return array(
       'byDate' => array('order' => 'date_send DESC'),
-      'read' => array('order' => 'is_read DESC'),
-      'sent' => array('order' => 'sent_status DESC'),
-      'trash' => array('order' => 'is_trash DESC'),
     );
   }
 }

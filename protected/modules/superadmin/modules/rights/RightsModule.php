@@ -33,7 +33,7 @@
     /**
      * @property string the name of the user model class.
      */
-    public $userClass = 'User';
+    public $userClass = 'Users';
     /**
      * @property string the name of the id column in the user table.
      */
@@ -70,7 +70,7 @@
     /**
      * @property string the base url to Rights. Override when module is nested.
      */
-    public $baseUrl = '/rights';
+    public $baseUrl = '/superadmin/rights';
     /**
      * @property string the path to the layout file to use for displaying Rights.
      */

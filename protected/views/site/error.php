@@ -1,3 +1,14 @@
+<div class="headline">
+  <ol class="breadcrumb bc-3">
+    <li>
+      <a href="<?= Kospermindo::getBaseUrl(); ?>"><i class="entypo-home"></i>Beranda</a>
+    </li>
+    <li class="active">
+      <strong><?php echo 'Data Gudang'; ?></strong>
+    </li>
+  </ol>
+  <h2>Manajemen Data Gudang</h2><br/>
+</div>
 <div class="page-error-404">
 
   <div class="error-symbol">

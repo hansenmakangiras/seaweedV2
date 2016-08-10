@@ -7,20 +7,6 @@
       if (Yii::app()->user->isGuest) {
         $this->redirect('/kospermindo/login');
       }
-
-      // $dataProvider = new CActiveDataProvider('Users', array(
-      //   'criteria' => array(
-      //     'condition' => 'status=1',
-      //     'order' => 'id ASC'
-      //   ),
-      //   'countCriteria' => array(
-      //     'condition' => 'status=1'
-      //   ),
-      //   'pagination' => array(
-      //     'pageSize' => 10,
-      //   )
-      // ));
-      //$user = Helper::dd(Yii::app()->user->lastLogin);
       $kelompok = array();
       $findGroup = array();
       $users = Users::model()->isSuperUser();
@@ -147,45 +133,178 @@
       $id_perusahaan = Yii::app()->user->getId();
       $status = 1;
       $nama_komoditi = "";
+      $jenis_komoditi = 0;
       $komoditi = new Komoditi;
-
-      if(isset($_POST['Komoditi'])){
-        $komoditi->attributes = $_POST['Komoditi'];
-
-        $id_komoditi = $_POST['jenis_komoditi'];
-        if($id_komoditi=='1'){
-          $nama_komoditi = 'Gracilaria KW3';
-        }elseif ($id_komoditi=='2') {
-          $nama_komoditi = 'Gracilaria KW4';
-        }elseif ($id_komoditi=='3') {
-          $nama_komoditi = 'Gracilaria BS';
-        }elseif ($id_komoditi=='4') {
-          $nama_komoditi = 'Sango-Sango Laut';
-        }elseif ($id_komoditi=='5') {
-          $nama_komoditi = 'Euchema Cotoni';
-        }elseif ($id_komoditi=='6') {
-          $nama_komoditi = 'Spinosom';
-        }
-        $isFarmer = TabelPetani::model()->findByAttributes(array('nama_petani'=>$_POST['Komoditi']['id_user']));
-        $komoditi->id_user = (int)$isFarmer->id;
-        $jenis_komoditi = $_POST['jenis_komoditi'];
-        $komoditi->nama_komoditi = $nama_komoditi;
-        $komoditi->jenis_komoditi = $_POST['jenis_komoditi'];
-        $komoditi->status = $status;
-        //helper::dd($komoditi);
-        if($komoditi->save()){
-          $pesan="Data Berhasil Di Simpan";
-          Yii::app()->user->setFlash('success','Data berhasil disimpan');
-          $this->redirect('/kospermindo/users/panen',array('pesan'=>$pesan));
-        }else{
-          $pesan = "Data Gagal Disimpan";
-          Yii::app()->user->setFlash('error','Data gagal disimpan');
+      $gudang = new Gudang;
+      $kelompok = new TabelKelompok;
+      $petani = new TabelPetani;
+      if(isset($_POST['Gudang'])){
+        if(isset($_POST['TabelKelompok'])){
+          if(isset($_POST['TabelPetani'])){
+            if(isset($_POST['Komoditi'])){
+              //helper::dd($_POST['TabelPetani']['jenis_komoditi']);
+              $komoditi->attributes = $_POST['Komoditi']; 
+              $nama_komoditi = $_POST['TabelPetani']['jenis_komoditi'];
+              $komoditi->nama_komoditi = $nama_komoditi;
+              if($nama_komoditi=='Gracilaria KW3'){
+                $jenis_komoditi = 1;
+              }elseif ($nama_komoditi=='Gracilaria KW4') {
+                $jenis_komoditi = 2;
+              }elseif ($nama_komoditi=='Gracilaria BS') {
+                $jenis_komoditi = 3;
+              }elseif ($nama_komoditi=='Sango-Sango Laut') {
+                $jenis_komoditi = 4;
+              }elseif ($nama_komoditi=='Euchema Cotoni') {
+                $jenis_komoditi = 5;
+              }elseif ($nama_komoditi=='Spinosom') {
+                $jenis_komoditi = 6;
+              }
+              $komoditi->jenis_komoditi = $jenis_komoditi;
+              $komoditi->status = $status;
+              $komoditi->id_user = $_POST['TabelPetani']['nama_petani'];
+              if($komoditi->save()){
+                $pesan="Data Berhasil Di Simpan";
+                Yii::app()->user->setFlash('success','Data berhasil disimpan');
+                $this->redirect('/kospermindo/users/panen',array('pesan'=>$pesan));
+              }else{
+                $pesan = "Data Gagal Disimpan";
+                Yii::app()->user->setFlash('error','Data gagal disimpan');
+              }
+            }
+          }
         }
       }
+
+      // if(isset($_POST['Komoditi'])){
+      //   $komoditi->attributes = $_POST['Komoditi'];
+      //   $id_komoditi = $_POST['jenis_komoditi'];
+      //   if($id_komoditi=='1'){
+      //     $nama_komoditi = 'Gracilaria KW3';
+      //   }elseif ($id_komoditi=='2') {
+      //     $nama_komoditi = 'Gracilaria KW4';
+      //   }elseif ($id_komoditi=='3') {
+      //     $nama_komoditi = 'Gracilaria BS';
+      //   }elseif ($id_komoditi=='4') {
+      //     $nama_komoditi = 'Sango-Sango Laut';
+      //   }elseif ($id_komoditi=='5') {
+      //     $nama_komoditi = 'Euchema Cotoni';
+      //   }elseif ($id_komoditi=='6') {
+      //     $nama_komoditi = 'Spinosom';
+      //   }
+      //   $isFarmer = TabelPetani::model()->findByAttributes(array('nama_petani'=>$_POST['Komoditi']['id_user']));
+      //   $komoditi->id_user = (int)$isFarmer->id;
+      //   $jenis_komoditi = $_POST['jenis_komoditi'];
+      //   $komoditi->nama_komoditi = $nama_komoditi;
+      //   $komoditi->jenis_komoditi = $_POST['jenis_komoditi'];
+      //   $komoditi->status = $status;
+      //   if($komoditi->save()){
+      //     $pesan="Data Berhasil Di Simpan";
+      //     Yii::app()->user->setFlash('success','Data berhasil disimpan');
+      //     $this->redirect('/kospermindo/users/panen',array('pesan'=>$pesan));
+      //   }else{
+      //     $pesan = "Data Gagal Disimpan";
+      //     Yii::app()->user->setFlash('error','Data gagal disimpan');
+      //   }
+      // }
       $this->render('tambah',array(
-        'komoditi' =>$komoditi,
-        'pesan' =>$pesan,
+        'komoditi' => $komoditi,
+        'gudang'   => $gudang,
+        'kelompok' => $kelompok,
+        'petani'   => $petani,
+        'pesan'    => $pesan,
       ));
+    }
+
+    public function actionListgudang(){
+      $idGudang = $_POST['Gudang']['lokasi'];
+      $isGudang = Gudang::model()->findByAttributes(array('lokasi'=>$idGudang));
+      $allKelompok = TabelKelompok::model()->findAll('idgudang = :idGudang', array(':idGudang'=>$isGudang->id));
+      $allKelompok = CHtml::listData($allKelompok,'id','nama_kelompok');
+      echo CHtml::tag('option',array('value'=>''),'-- Pilih Nama Kelompok --', true);
+      foreach($allKelompok as $value=>$nama){
+       echo CHtml::tag('option',array('value'=>$value),CHtml::encode($nama), true);
+      }
+    }
+    public function actionListKelompok(){
+      $idkelompok = $_POST['TabelKelompok']['nama_kelompok'];
+      $isKelompok = TabelKelompok::model()->findByAttributes(array('nama_kelompok'=>$idkelompok));
+      $allPetani = TabelPetani::model()->findAll('idkelompok = :id_kelompok', array(':id_kelompok'=>$idkelompok));
+      $allPetani = CHtml::listData($allPetani,'id','nama_petani');
+      echo CHtml::tag('option',array('value'=>''),'-- Pilih Nama Petani --', true);
+      foreach($allPetani as $value=>$nama){
+        echo CHtml::tag('option',array('value'=>$value),CHtml::encode($nama), true);
+      }
+    }
+    public function actionListkomoditi(){
+      $idPetani = $_POST['TabelPetani']['nama_petani'];
+      $allKomoditi = TabelPetani::model()->findByAttributes(array('id'=>$idPetani));
+      $jenisKomoditi = explode(",", $allKomoditi->jenis_komoditi);
+      $komoditi = array();
+      for($i=0;$i<count($jenisKomoditi);$i++){
+        if($jenisKomoditi[$i]=='1'){
+          $komoditi[$i] = "Gracillaria KW 3";
+        }
+        if($jenisKomoditi[$i]=='2'){
+          $komoditi[$i] = "Gracillaria KW 4";
+        }
+        if($jenisKomoditi[$i]=='3'){
+          $komoditi[$i] = "Gracillaria BS";
+        }
+        if($jenisKomoditi[$i]=='4'){
+          $komoditi[$i] = "Sango-Sango Laut";
+        }
+        if($jenisKomoditi[$i]=='5'){
+          $komoditi[$i] = "Euchema Cotoni";
+        }
+        if($jenisKomoditi[$i]=='6'){
+          $komoditi[$i] = "Spinosom";
+        }
+      }
+      // foreach ($komoditi as $value) {
+      //   echo $value;
+      //   echo "<br/>";
+      // }
+      $allKomoditi = CHtml::listData($allKomoditi,'id','jenis_komoditi');
+      echo CHtml::tag('option',array('value'=>''),'-- Pilih Jenis Komoditi --', true);
+      foreach($komoditi as $value=>$nama){
+        echo CHtml::tag('option',array('value'=>$nama,'name'=>'jenis_komoditi'),CHtml::encode($nama), true);
+      }
+    }
+    public function actionListpetani()
+    {
+      $isGudang = TabelPetani::model()->findByAttributes(array('nama_petani'=>$_POST['nilai']));
+      $data = TabelPetani::model()->findByAttributes(array('jenis_komoditi'=>$isGudang->jenis_komoditi,'status'=>1));
+      $jenisKomoditi = explode(",", $data->jenis_komoditi);
+      $komoditi = array();
+      for($i=0;$i<count($jenisKomoditi);$i++){
+        if($jenisKomoditi[$i]=='1'){
+          $komoditi[$i] = "Gracillaria KW 3";
+        }
+        if($jenisKomoditi[$i]=='2'){
+          $komoditi[$i] = "Gracillaria KW 4";
+        }
+        if($jenisKomoditi[$i]=='3'){
+          $komoditi[$i] = "Gracillaria BS";
+        }
+        if($jenisKomoditi[$i]=='4'){
+          $komoditi[$i] = "Sango-Sango Laut";
+        }
+        if($jenisKomoditi[$i]=='5'){
+          $komoditi[$i] = "Euchema Cotoni";
+        }
+        if($jenisKomoditi[$i]=='6'){
+          $komoditi[$i] = "Spinosom";
+        }
+      }
+      // helper::dd($komoditi);
+      
+      $data=CHtml::listData($data,'id','jenis_komoditi');
+      
+      foreach($komoditi as $value=>$name)
+      {
+        echo CHtml::tag('option',
+        array('value'=>$value,'name'=>'idkelompok'),CHtml::encode($name),true);
+      }
     }
     public function actionCreate(){
       $update='anu';
@@ -605,16 +724,26 @@
     }
     public function actionModerator(){
       if (Yii::app()->user->isGuest) {
-        $this->redirect('/kospermindo/login');
+        $this->redirect('/kospermindo/users/login');
       }
 
-      $moderator = Pengguna::model()->findByAttributes(array('is_moderator' => 1));
-
+      // $dataProvider = new CActiveDataProvider('Users', array(
+      //   'criteria' => array(
+      //     'condition' => 'status=1',
+      //     'order' => 'id ASC'
+      //   ),
+      //   'countCriteria' => array(
+      //     'condition' => 'status=1'
+      //   ),
+      //   'pagination' => array(
+      //     'pageSize' => 10,
+      //   )
+      // ));
+      //$user = Helper::dd(Yii::app()->user->lastLogin);
       $kelompok = array();
       $findGroup = array();
       $users = Users::model()->isSuperUser();
       if ($users == false) {
-
         $data = Users::model()->findAllByAttributes(array(
           'isadmin'   => 0,
           'superuser' => 0,
@@ -622,34 +751,29 @@
           'levelid'   => 2,
           'companyid' => Yii::app()->user->id,
         ));
-
         $dataUser = Pengguna::model()->findAllByAttributes(array(
           'levelid'       => 3,
           'id_perusahaan' => Yii::app()->user->id,
         ));
-
         foreach ($dataUser as $dataKelompok) {
           $kelompok[]= $dataKelompok->idkelompok;
         }
-
         for($i=0;$i<count($kelompok);$i++) {
           $findUsername[] = Pengguna::model()->findByAttributes(array('id'=>$kelompok[$i]));
-          $findGroup[] = TabelKelompok::model()->findByAttributes(array('nama_kelompok'=>$findUsername[$i]['username']));
+          $findGroup[] = TabelKelompok::model()->findByAttributes(array('id_user'=>$findUsername[$i]['username']));
         }
-
         $komoditi = Komoditi::model()->findAllByAttributes(array('status'=>1));
         $apa[]=0;
-
         foreach ($komoditi as $value) {
           $apa[]+=$value->total_panen;
         }
 
         //for profile 2
-        $groupData = TabelKelompok::model()->findAllByAttributes(array('id'=>Yii::app()->user->id));
+        $groupData = TabelKelompok::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
         $farmerData = Users::model()->findAllByAttributes(array('isadmin'=>0,'superuser'=>0,'status'=>1,'levelid'=>2,'groupid'=>0,'companyid'=>Yii::app()->user->id));
 
         //for profile 3
-        $warehouseData = Gudang::model()->findAllByAttributes(array('id'=>Yii::app()->user->id));
+        $warehouseData = Gudang::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
         $farmerData = Users::model()->findAllByAttributes(array('isadmin'=>0,'superuser'=>0,'status'=>1,'levelid'=>2,'groupid'=>0,'companyid'=>Yii::app()->user->id));
         $farmer = Pengguna::model()->findAllByAttributes(array('levelid'=>3));
         $moderator = Pengguna::model()->findAllByAttributes(array('levelid'=>3,'is_moderator'=>1));
@@ -657,15 +781,12 @@
       } elseif ($users == true) {
         $data = Users::model()->findAllByAttributes(array('status' => 1));
       }
-
       $summary = Komoditi::model()->getSummarySeaweed();
       $dataProvider = new Users('search');
       $dataProvider->unsetAttributes();
-
       if (isset($_GET['Users'])) {
         $dataProvider->attributes = $_GET['Users'];
       }
-
       $this->render('moderator', array(
         'data'     => $data,
         'dataUser' => $dataUser,

@@ -51,6 +51,14 @@
         </div>
     </div>
 <?php }elseif ($alert==4) { ?>
+  <?php
+  Yii::app()->clientScript->registerScript('search', "
+    var element = $('#main-menu li[data-nav=\"petani\"]');
+    element.addClass('active opened');
+    element.find('ul').addClass('visible').removeAttr('style');
+    element.find('ul').find('li:nth-child(2)').addClass('active');
+");
+?>
     <div class="headline">
       <ol class="breadcrumb bc-3">
         <li>

@@ -83,18 +83,15 @@
   </thead>
 
   <tbody>
-  <?php foreach ($allfarmerMenu as $key => $value) { ?>
+  <?php foreach ($report_petani as $key => $value) { ?>
     <tr style="cursor: pointer"
-        onclick="window.location = '<?= $this->baseUrl; ?>/kospermindo/report/detil?id=<?= strtolower($value->id); ?>'">
-      <td><?= $value->nama_petani ?></a></td>
-      <td><?= $farmergroup[$key][0]['nama_kelompok']; ?></td>
-      <td><?= $farmergroup[$key][0]['idgudang']; ?></td>
-      <td
-        class="text-center"><?= !empty($totalpanenpetani[$key][0]['total_panen']) ? $totalpanenpetani[$key][0]['total_panen'] : "0"; ?></td>
-      <td
-        class="text-center"><?= !empty($totalpanenpetani[$key][0]['kadar_air']) ? $totalpanenpetani[$key][0]['kadar_air'] : "0"; ?></td>
-      <td
-        class="text-center"><?= !empty($totalpanenpetani[$key][0]['jumlah_bentangan']) ? $totalpanenpetani[$key][0]['jumlah_bentangan'] : "0"; ?></td>
+        onclick="window.location = ''">
+      <td><?= $value['nama_petani']; ?></a></td>
+      <td><?= $value['nama_kelompok']; ?></td>
+      <td><?= $value['lokasi']; ?></td>
+      <td class="text-center"><?= !empty($value['total_panen']) ? $value['total_panen']." Ton" : "-"; ?></td>
+      <td class="text-center"><?= !empty($value['kadar_air']) ? $value['kadar_air']." %" : "-"; ?></td>
+      <td class="text-center"><?= !empty($value['jumlah_bentangan']) ? $value['jumlah_bentangan']." m" : "-";?></td>
     </tr>
   <?php } ?>
   </tbody>

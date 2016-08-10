@@ -7,19 +7,15 @@ class ProfileController extends KController
     if (Yii::app()->user->isGuest) {
       $this->redirect('/kospermindo/login');
     }
-		$param = Yii::app()->request->getQueryString();
-		$gid = Yii::app()->request->getParam("gid");
-		$id = Yii::app()->request->getParam("id");
+		$id = !empty($_GET['id']) ? $_GET['id'] : '';
 		//helper::dd($id);
 		if(isset($id)){
-      		$profile = TabelPetani::model()->findByAttributes(array('id' => $id));
-      		$total = Komoditi::model()->getPanenFarmer($profile->id_user);
-      		//helper::dd($total);
-      		//helper::dd($profile);
+      		$profile = Petani::model()->findByAttributes(array('id_petani' => $id));
+      		/*$total = Komoditi::model()->getPanenFarmer($profile->id_user);*/
+
       		$this->render('index',
       			array(
-      				'model_petani' => $profile,
-      				'total'        => $total));
+      				'petani' => $profile));
 		}
 		
 	}

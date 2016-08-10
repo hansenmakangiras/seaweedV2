@@ -3,7 +3,7 @@
   <div class="mail-header">
     <!-- title -->
     <h3 class="mail-title">
-      Draft
+      Kotak Tersimpan
       <span class="count"><?php echo "(".Kospermindo::getCountDraft().")"; ?></span>
     </h3>
 

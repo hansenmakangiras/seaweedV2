@@ -3,7 +3,7 @@
   <div class="mail-header">
     <!-- title -->
     <h3 class="mail-title">
-      Inbox
+      Kotak Masuk
       <span class="count"><?php echo "(".Kospermindo::getCountUnreadMessages().")"; ?></span>
     </h3>
 
@@ -31,7 +31,7 @@
       </th>
       <th colspan="4">
 
-        <div class="mail-select-options">Mark as Read</div>
+        <div class="mail-select-options">Tandai sudah dibaca</div>
 
         <div class="mail-pagination" colspan="2">
           <strong>1-30</strong> <span>of <?= $totaldata; ?></span>

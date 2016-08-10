@@ -1,21 +1,14 @@
 <?php
 
-/**
- * This is the model class for table "tabel_kelompok".
- *
- * The followings are the available columns in table 'tabel_kelompok':
- * @property integer $id
- * @property string $nama_kelompok
- * @property string $ketua_kelompok
- * @property integer $idgudang
- * @property integer $status
- * @property string $created_date
- * @property string $created_by
- * @property string $updated_date
- * @property string $updated_by
- */
+
 class TabelKelompok extends CActiveRecord
 {
+  public function behaviors()
+  {
+    return array(
+      'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
+    );
+  }
 	/**
 	 * @return string the associated database table name
 	 */
@@ -148,7 +141,15 @@ class TabelKelompok extends CActiveRecord
 	    return parent::beforeSave();
 	}
 	public function getLokasiGudang($id){
-		$query = Gudang::model()->findByPK($id);
+		$query = Gudang::model()->findByAttributes(array('id'=>$id));
 		return $query->lokasi;
+	}
+	public function kelompoklist(){
+		$models = TabelPetani::model()->findAll(array('condition' => 'idkelompok = ' . $this->idkelompok, 'order'=> 'id'));
+
+		foreach ($models as $model)
+			$_items[$model->id] = $model->nama;
+
+		return $_items;
 	}
 }

@@ -1,4 +1,3 @@
-<?php /* @var $this Controller */ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,5 +18,6 @@
   </div>
 <?php $this->renderPartial('/layouts/partials/script'); ?>
 <?php $this->renderPartial('/modal/modal'); ?>
+  <div id="modal-view"></div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <div class="headline">
-  <ol class="breadcrumb bc-3 hidden-print">
+  <ol class="breadcrumb bc-3">
     <li>
       <a href="<?= Kospermindo::getBaseUrl(); ?>"><i class="entypo-home"></i>Beranda</a>
     </li>
@@ -7,7 +7,7 @@
       <strong><?php echo 'Laporan Komoditi'; ?></strong>
     </li>
   </ol>
-  <h2>Laporan Komoditi</h2><br class="hidden-print" />
+  <h2>Laporan Komoditi</h2><br/>
 </div>
 
 <div class="col-md-12">
@@ -16,7 +16,7 @@
       <div class="panel-title">
         <h4>Komoditi Statistik</h4>
       </div>
-      <div class="panel-options hidden-print">
+      <div class="panel-options">
         <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
         <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
       </div>
@@ -35,35 +35,12 @@
       </table>
     </div>
   </div>
-    <!--    </Komoditi Statistik-->
-    <!--  <div class="panel panel-default">-->
-    <!--    <div class="panel-heading">-->
-    <!--      <div class="panel-title">-->
-    <!--        <h4>-->
-    <!--          Real Time Stats-->
-    <!--          <br/>-->
-    <!--          <small>current server uptime</small>-->
-    <!--        </h4>-->
-    <!--      </div>-->
-    <!---->
-    <!--      <div class="panel-options">-->
-    <!--        <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i-->
-    <!--            class="entypo-cog"></i></a>-->
-    <!--        <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>-->
-    <!--        <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>-->
-    <!--        <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!---->
-    <!--    <div class="panel-body no-padding">-->
-    <!--      <div id="rickshaw-chart-demo-2">-->
-    <!--        <div id="rickshaw-legend"></div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!--  </div>-->
-    <hr class="hidden-print"/>
+    <br/>
+    <hr/>
     <?php $this->renderPartial('/widget/search-filter'); ?>
-    <br class="hidden-print">
+
+    <br>
+    <br/>
     <table id="tblpetani" class="table table-hover table-responsive table-bordered" cellspacing="0" width="100%">
       <thead>
       <tr>
@@ -150,7 +127,7 @@
         </td>
 
       </tr>
-      <tr>
+      <!-- <tr>
         <td>
           <center>Jumlah Bentangan</center>
         </td>
@@ -173,56 +150,58 @@
           <center><?= !empty($summary[5]['jumlah_bentangan']) ? $summary[5]['jumlah_bentangan'] . "m" : "-"; ?></center>
         </td>
 
-      </tr>
-      <tr class="hidden-print">
-        <td class="hidden-print">
+      </tr> -->
+      <!-- <tr>
+        <td>
           <center>Aksi</center>
         </td>
-        <td class="hidden-print">
+        <td>
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=1"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td class="hidden-print">
+        <td>
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=2"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td class="hidden-print">
+        <td>
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=3"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td class="hidden-print">
+        <td>
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=4"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td class="hidden-print">
+        <td>
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=5"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-        <td class="hidden-print">
+        <td>
           <center><a href="<?= $this->baseUrl; ?>/user/detailseaweed?id=6"
                      class="btn btn-info btn-sm btn-icon icon-left">
               <i class="entypo-info"></i>
               Detil
             </a></center>
         </td>
-      </tr>
+      </tr> -->
       </tbody>
     </table>
+    <br/>
+    <br/>
   </div>
 
   <?php

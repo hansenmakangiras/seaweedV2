@@ -3,7 +3,7 @@
   <div class="mail-header">
     <!-- title -->
     <h3 class="mail-title">
-      Pesan Terkirim
+      Kotak Keluar
       <span class="count"><?php echo "(".Kospermindo::getCountUnreadMessages().")"; ?></span>
     </h3>
 

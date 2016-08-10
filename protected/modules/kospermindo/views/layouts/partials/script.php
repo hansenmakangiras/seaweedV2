@@ -48,6 +48,7 @@
 <!--<script src="--><?php //echo $this->baseUrl ?><!--/static/admin/js/bootstrap-colorpicker.min.js"></script>-->
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/daterangepicker/moment.min.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/daterangepicker/daterangepicker.js"></script>
+<script src="<?php echo $this->baseUrl ?>/static/admin/js/fileinput.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/jquery.multi-select.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/icheck/icheck.min.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/custom/app.js"></script>

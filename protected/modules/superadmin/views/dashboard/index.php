@@ -1,15 +1,4 @@
-<?php
-/* @var $this DefaultController */
 
-//$this->breadcrumbs=array(
-//	$this->module->id,
-//);
-//  $this->widget('zii.widgets.CBreadcrumbs', array(
-//      'links'=>$this->breadcrumbs,
-//      'htmlOptions' => ''
-//    )
-//  );
-?>
 <ol class="breadcrumb">
   <li class="active">
     <a href="<?php echo SAdmin::getBaseUrl();?>">

@@ -243,15 +243,6 @@
         $isfarmergroup[] = Pengguna::model()->getgroup($value->idkelompok);
         $totalpanenpetani[] = Komoditi::model()->getPanenFarmer($value->id_user);
       }
-      //helper::dd($totalpanenpetani);
-
-      // 'warehouse'=>$isCoordinator,
-      // 'total_panen'=>$totalpanengroup,
-      // 'total_group'=>$isGroupAll
-      //$tes = Komoditi::model()->getGrafik('2016');
-      //helper::dd($tes);
-      // // console.log($tes);
-      //helper::dd($tes);
       $this->render('report_komoditi', array(
         'allFarmers'       => $allFarmers,
         'allGroups'        => $allGroups,
@@ -282,83 +273,13 @@
       $allFarmers = TabelPetani::model()->countByAttributes(array('status' => 1));
       $allGroups = TabelKelompok::model()->countByAttributes(array('status' => 1));
       $allWarehouses = Gudang::model()->countByAttributes(array('status' => 1));
-      $summary = Komoditi::model()->getSumPanen();
       $isCoordinator = Gudang::model()->findAllByAttributes(array('status' => 1));
-
-      $groups = TabelKelompok::model()->findAllByAttributes(array('status' => 1));
-      $cek = VKomoditibygroup::model()->findAll();
-      $romi = array();
-      foreach ($groups as $key => $valuee) {
-        foreach ($cek as $key => $value) {
-          if ($value->idkelompok == $valuee->id_user) {
-            array_push($romi, $value->total);
-          } else {
-            //array_push($romi, "0");
-            //array_push($romi, $value->total);
-          }
-        }
-      }
-      $apa = array();
-      $aku = array();
-      $kamu = array();
-      $allkelompok = Pengguna::model()->findAllByAttributes(array('levelid' => 2, 'status' => 1));
-      foreach ($allkelompok as $value) {
-        $isPetani[] = Pengguna::model()->findAllByAttributes(array('idkelompok' => $value->id));
-        // $ispetani[] = Pengguna::model()->findAllByAttributes(array('idkelompok'=>$value->id));
-        $apa[] = Pengguna::model()->countByAttributes(array('idkelompok' => $value->id));
-      }
-      $farmers = TabelPetani::model()->findAllByAttributes(array(
-        'id_perusahaan' => Yii::app()->user->id,
-        'status'        => 1,
-      ));
-      $cek = VKomoditibygroup::model()->findAll();
-      $isCoordinator = Gudang::model()->findAllByAttributes(array('status' => 1));
-      foreach ($isCoordinator as $key => $value) {
-        $isGroupAll[] = TabelKelompok::model()->countByAttributes(array('idgudang' => $value->id));
-      }
-
-      $tes = VKomoditibygroup::model()->getTotalPanen();
-      $totalpanengroup = array();
-      foreach ($isCoordinator as $key => $valuee) {
-        foreach ($tes as $key => $value) {
-          if ($value['lokasi'] == $valuee['lokasi']) {
-            array_push($totalpanengroup, $value['total']);
-          } else {
-            //array_push($romi, "0");
-            //array_push($romi, $value->total);
-          }
-        }
-      }
-      $isfarmer = TabelPetani::model()->findAllByAttributes(array('status' => 1));
-      foreach ($isfarmer as $key => $value) {
-        $isfarmergroup[] = Pengguna::model()->getgroup($value->idkelompok);
-//        $isfarmergroup[] = TabelKelompok::model()->findAllByAttributes($value->idkelompok);
-        $totalpanenpetani[] = Komoditi::model()->getPanenFarmer($value->id_user);
-      }
-      //helper::dd($totalpanenpetani);
-
-      // 'warehouse'=>$isCoordinator,
-      // 'total_panen'=>$totalpanengroup,
-      // 'total_group'=>$isGroupAll
-      //$tes = Komoditi::model()->getGrafik('2016');
-      //helper::dd($tes);
-      // // console.log($tes);
-      //helper::dd($tes);
+      $report_petani = Komoditi::model()->getReportPetani();
       $this->render('report_petani', array(
         'allFarmers'       => $allFarmers,
         'allGroups'        => $allGroups,
         'allWarehouses'    => $allWarehouses,
-        'summary'          => $summary,
-        'warehouse'        => $isCoordinator,
-        'groups'           => $groups,
-        'farmers'          => $farmers,
-        'allkelompok'      => $apa,
-        'totalpanen'       => $romi,
-        'total_panen'      => $totalpanengroup,
-        'total_group'      => $isGroupAll,
-        'allfarmerMenu'    => $isfarmer,
-        'farmergroup'      => $isfarmergroup,
-        'totalpanenpetani' => $totalpanenpetani,
+        'report_petani'    => $report_petani,
       ));
     }
 
