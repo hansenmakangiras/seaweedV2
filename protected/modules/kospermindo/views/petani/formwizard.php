@@ -1,3 +1,15 @@
+<?php if (Yii::app()->user->hasFlash('success')) { ?>
+	<div id="alert-flash" class="alert-view">
+		<div class="alert-custom alert-custom-success">
+			<i class="entypo-check"></i> &nbsp;<?php echo CHtml::encode(Yii::app()->user->getFlash('success')); ?>			
+		</div>
+	</div>
+<?php } ?>
+<div id="alert" class="alert-view hidden">
+	<div class="alert-custom">
+	</div>
+</div>
+
 <h4>Tambah Data Petani
 	<small>- Silahkan masukkan data petani anda dibawah ini</small>
 </h4>
@@ -115,7 +127,7 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<input type="text" class="form-control input-lg datepicker" name="tanggal_lahir" id="tanggal_lahir" data-validate="required" placeholder="Tanggal Lahir"/>
+						<input type="text" class="form-control input-lg datepicker" name="tanggal_lahir" data-format="dd/mm/yyyy" id="tanggal_lahir" data-validate="required" placeholder="Tanggal Lahir"/>
 					</div>
 				</div>
 
@@ -127,7 +139,7 @@
 
 			<div class="row">
 
-				<div class="col-md-6">
+				<div class="col-md-offset-3 col-md-6">
 					<div class="panel panel-primary" data-collapsed="0">
 		
 						<!-- panel head -->
@@ -147,19 +159,50 @@
 													<h5><?= $value['parent']->jenis ?></h5>
 												</p>
 												<div class="sub-komoditi">
-													<?php foreach ($value['child'] as $key => $val) { ?>
-														<div class="checkbox checkbox-replace">
-															<input type="checkbox" id="chk-<?= $n; ?>">
-															<label data-id="<?= $val->id_komoditi ?>" id="jenis-lbl"><?= $val->jenis ?></label>
-														</div>
-													<?php } ?>
-												</div>
+														<?php foreach ($value['child'] as $key => $val) { ?>
+															<div class="col-md-12">
+																<div id="data-lokasi-jenis">
+																	<div class="checkbox checkbox-replace">
+																		<input type="checkbox" id="chk-<?= $n; ?>">
+																		<label data-id="<?= $val->id_komoditi ?>" id="jenis-lbl"><?= $val->jenis ?></label>
+																	</div>
+																	<div class="col-md-12 sub-form hidden" id="data-lokasi-<?= $n; ?>">
+																		<div class="row">
+																			<div class="col-md-12">
+																				<div class="input-group">
+																					<input type="text" id="luas_lokasi" min="0" class="form-control" name="luas_lokasi" id="luas_lokasi" maxlength="10" data-validate="required" placeholder="Luas Lokasi"/>
+																					<span class="input-group-addon" id="basic-addon1">m<sup>2</sup></span>
+																				</div>
+																			</div>
+
+																			<!-- <div class="col-md-12">
+																				<input type="text" id="jumlah_bentangan" min="0" class="form-control" disabled="true" name="jumlah_bentangan" id="jumlah_bentangan" maxlength="10" data-validate="required" placeholder="Jumlah Bentangan"/>
+																			</div> -->
+																		</div>
+																	</div>
+																</div>
+															</div>
+														<?php } ?>
+													</div>
+													<br>
 											<?php }else{ ?>
+											<div id="data-lokasi-jenis">												
 												<div class="checkbox checkbox-replace">
 													<input type="checkbox" id="chk-<?= $n; ?>">
 													<label data-id="<?= $value['parent']->id_komoditi ?>" id="jenis-lbl"><?= $value['parent']->jenis ?></label>
 												</div>
+												<div class="col-md-12 sub-form hidden" id="data-lokasi-<?= $n; ?>">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="input-group">
+																<input type="text" id="luas_lokasi" min="0" class="form-control" name="luas_lokasi" id="luas_lokasi" maxlength="10" data-validate="required" placeholder="Luas Lokasi"/>
+																<span class="input-group-addon" id="basic-addon1">m<sup>2</sup></span>
+															</div>
+														</div>
+													</div>
+												</div>
 												<br>
+											</div>
 										<?php } $n++; }  ?>
 									</p>
 								</div>
@@ -171,26 +214,6 @@
 					</div>
 				</div>
 
-				<div class="col-md-6">
-					<div class="row">
-
-						<div class="col-md-12">
-							<div class="input-group">
-								<input type="text" id="luas_lokasi" min="0" class="form-control input-lg" name="luas_lokasi" id="luas_lokasi" maxlength="10" data-validate="required" placeholder="Luas Lokasi"/>
-								<span class="input-group-addon" id="basic-addon1">m<sup>2</sup></span>
-							</div>
-							<br>
-						</div>
-
-						<div class="col-md-12">
-							<div class="input-group">
-								<input type="text" id="jumlah_bentangan" min="0" class="form-control input-lg" name="jumlah_bentangan" id="jumlah_bentangan" maxlength="10" data-validate="required" placeholder="Jumlah Bentangan"/>
-								<span class="input-group-addon" id="basic-addon1">m</span>
-							</div>
-						</div>
-						
-					</div>
-				</div>
 
 			</div>
 
@@ -202,30 +225,26 @@
 
 				<div class="col-md-offset-3 col-md-6">
 					<div class="form-group">
-						<input type="text" class="form-control input-lg" name="username" id="username" maxlength="25" data-validate="required,minlength[5]" data-message-minlength="Minimal 5 karakter" placeholder="Nama Pengguna"/>
+						<input type="text" class="form-control input-lg" name="username" id="username" maxlength="25" data-validate="required,minlength[5],alphanumeric" data-message-minlength="Minimal 5 karakter" placeholder="Nama Pengguna"/>
 					</div>
 				</div>
 
 			</div>
 
 			<div class="row">
-
 				<div class="col-md-offset-3 col-md-6">
 					<div class="form-group">
 						<input type="password" class="form-control input-lg" name="password" id="password" data-validate="required,minlength[6]" data-message-minlength="Minimal 6 karakter" placeholder="Kata Sandi"/>
 					</div>
 				</div>
-
 			</div>
 
 			<div class="row">
-
 				<div class="col-md-offset-3 col-md-6">
 					<div class="form-group">
 						<input type="password" class="form-control input-lg" name="repeat_password" data-validate="required,equalTo[#password]" data-message-equal-to="Kata Sandi tidak sama" placeholder="Ulangi Kata Sandi"/>
 					</div>
 				</div>
-
 			</div>
 
 		</div>
@@ -233,7 +252,16 @@
 		<div class="tab-pane" id="tab2-4">
 
 			<div class="row">
+				<div class="col-md-offset-3 col-md-6">
+					<div class="form-group">
+						<select name="jenis_gudang" id="jenis_gudang" class="form-control input-lg" data-validate="required">
+							<option value="">Pilih Jenis Gudang</option>
+						</select>
+					</div>
+				</div>
+			</div>
 
+			<div class="row">
 				<div class="col-md-offset-3 col-md-6">
 					<div class="form-group">
 						<select name="gudang" id="gudang" class="form-control input-lg" data-validate="required">
@@ -241,7 +269,6 @@
 						</select>
 					</div>
 				</div>
-
 			</div>
 
 			<div class="row">
@@ -287,31 +314,40 @@
 <?php
 	Yii::app()->clientScript->registerscript('new-farmer', '
 		$(document).ready(function(){
+			setTimeout(function() {
+				$("#alert-flash").addClass("hidden");
+			}, 1500);
 
 			$("#telpon").keypress(function (e) {
 				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
 					return false;
 				}
 			});
+			
+			$("#username").keypress(function (e) {
+				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && (e.which < 97 || e.which > 122) && (e.which < 65 || e.which > 90)) {
+					return false;
+				}
+			});
 
 			$("#nomor_identitas").keypress(function (e) {
-				if (e.which != 7 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
 					return false;
 				}
 			});
 
 			$("#luas_lokasi").keypress(function (e) {
-				if (e.which != 7 && e.which != 46 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+				if (e.which != 8 && e.which != 46 && e.which != 0 && (e.which < 48 || e.which > 57)) {
 					return false;
 				}
 			});
 
 			$("#jumlah_bentangan").keypress(function (e) {
-				if (e.which != 7 && e.which != 46 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+				if (e.which != 8 && e.which != 46 && e.which != 0 && (e.which < 48 || e.which > 57)) {
 					return false;
 				}
 			});
-
+			
 			$.ajax({
 				type: "POST",
 				url: "/kospermindo/petani/getprov",
@@ -320,7 +356,7 @@
 				success: function(data){
 					msg = $.parseJSON(data);
 					$.each(msg, function(i, v){
-						$("#provinsi").append("<option value=\""+ v +"\">"+ v +"</option>");
+						$("#provinsi").append("<option value=\""+ v.id +"\">"+ v.nama +"</option>");
 					});
 				}
 			});
@@ -337,11 +373,25 @@
 						$("#kabupaten").empty();
 						$("#kabupaten").end();
 						$.each(msg, function(i, v){
-							$("#kabupaten").append("<option value=\""+ v +"\">"+ v +"</option>");
+							$("#kabupaten").append("<option value=\""+ v.id +"\">"+ v.nama +"</option>");
 						});
 					}
 				});
 			});
+
+			$.ajax({
+				type: "POST",
+				url: "/kospermindo/petani/getjenisgudang",
+				data:{
+				},
+				success: function(data){
+					msg = $.parseJSON(data);
+					$.each(msg, function(i, v){
+						$("#jenis_gudang").append("<option value=\""+ v.id +"\">"+ v.value +"</option>");
+					});
+				}
+			});
+
 
 			$.ajax({
 				type: "POST",
@@ -354,6 +404,39 @@
 						$("#gudang").append("<option value=\""+ v.id +"\">"+ v.value +"</option>");
 					});
 				}
+			});
+
+			$("#jenis_gudang").on("change", function(){
+				$.ajax({
+					type: "POST",
+					url: "/kospermindo/petani/getgudang",
+					data:{
+						"id" : $("#jenis_gudang").val(),
+					},
+					success: function(data){
+						msg = $.parseJSON(data);
+						$("#gudang").empty();
+						$("#gudang").end();
+						$.each(msg, function(i, v){
+							$("#gudang").append("<option value=\""+ v.id +"\">"+ v.value +"</option>");
+						});
+						$.ajax({
+							type: "POST",
+							url: "/kospermindo/petani/getkelompok",
+							data:{
+								"id" : $("#gudang").val(),
+							},
+							success: function(data){
+								msg = $.parseJSON(data);
+								$("#kelompok").empty();
+								$("#kelompok").end();
+								$.each(msg, function(i, v){
+									$("#kelompok").append("<option value=\""+ v.id +"\">"+ v.value +"</option>");
+								});
+							}
+						});
+					}
+				});
 			});
 
 			$("#gudang").on("change", function(){
@@ -380,24 +463,42 @@
 				$("#submit").addClass("disabled");
 				var fileInput = $("#foto"),
 			    	maxSize = 100000,
-					jenis ="",
+					jenis=[],
+					luas,
+					bentangan,
 					formData = new FormData(),
 					input_img = fileInput.prop("files")[0];
 
 				if(fileInput.get(0).files.length){
 					var fileSize = fileInput.get(0).files[0].size;
 					if(fileSize > maxSize){
-						toastr.error("Kapasitas File Foto Melebihi 100 KB", "Perhatian !");
-						$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
-						$("#submit").removeClass("disabled");
+
+						$("#alert").removeClass("hidden");
+						$("#alert .alert-custom").addClass("alert-custom-danger");
+						$("#alert .alert-custom").html("<i class=\"entypo-cancel\"></i> &nbsp;Gagal menambahkan data baru, file foto melebihi kapasitas");
+						setTimeout(function() {
+								$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
+								$("#submit").removeClass("disabled");
+								$("#alert .alert-custom").removeClass("alert-custom-danger");
+								$("#alert .alert-custom").html("");
+								$("#alert").addClass("hidden");
+							}, 1500);
 						return false;
 					}
 				}
 
 				$("div.checkbox-replace.checked").each(function(index, value){
 					var getJenis = $(this).children("#jenis-lbl").attr("data-id");
+					luas = $(this).parent("#data-lokasi-jenis").children(".sub-form").children(".row").children(".col-md-12").children(".input-group").children("#luas_lokasi").val();
+					bentangan = $(this).parent("#data-lokasi-jenis").children(".sub-form").children(".row").children(".col-md-12").children(".input-group").children("#jumlah_bentangan").val();
+					
 					if(getJenis !== undefined){
-						jenis = jenis + getJenis + ",";
+						arrJenis ={
+							"id" : getJenis,
+							"luas" : luas,
+							"bentangan" : parseFloat((luas/25)).toFixed(2)
+						}
+						jenis.push(arrJenis);
 					}
 				});
 
@@ -410,11 +511,10 @@
 				formData.append("kabupaten", $("#kabupaten").val());
 				formData.append("tempat_lahir", $("#tempat_lahir").val());
 				formData.append("tanggal_lahir", $("#tanggal_lahir").val());
-				formData.append("luas_lokasi", $("#luas_lokasi").val());
-				formData.append("jumlah_bentangan", $("#jumlah_bentangan").val());
-				formData.append("jenis", jenis);
+				formData.append("jenis", JSON.stringify(jenis));
 				formData.append("username", $("#username").val());
 				formData.append("password", $("#password").val());
+				formData.append("jenis_gudang", $("#jenis_gudang").val());
 				formData.append("gudang", $("#gudang").val());
 				formData.append("kelompok", $("#kelompok").val());
 
@@ -430,20 +530,43 @@
 				    	msg = $.parseJSON(data);
 
 				    	if(msg == "success"){
-							toastr.success("Data Petani Berhasil Tersimpan !", "Perhatian !");
-							setTimeout(function() {
-								$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
-								$("#submit").removeClass("disabled");
-								window.location.reload(true);
-							}, 2000);
+							window.location.reload(true);
 						}else if(msg == "any_user"){
-							toastr.error("Username sudah digunakan !", "Perhatian !");
-							$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
-							$("#submit").removeClass("disabled");
+							$("#alert").removeClass("hidden");
+							$("#alert .alert-custom").addClass("alert-custom-danger");
+							$("#alert .alert-custom").html("<i class=\"entypo-cancel\"></i> &nbsp;Gagal menambahkan data baru, username telah digunakan");
+							setTimeout(function() {
+									$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
+									$("#submit").removeClass("disabled");
+									$("#alert .alert-custom").removeClass("alert-custom-danger");
+									$("#alert .alert-custom").addClass("hidden");
+									$("#alert .alert-custom").html("");
+									$("#alert").removeClass("hidden");
+								}, 1500);
+						}else if(msg == "any_ktp"){
+							$("#alert").removeClass("hidden");
+							$("#alert .alert-custom").addClass("alert-custom-danger");
+							$("#alert .alert-custom").html("<i class=\"entypo-cancel\"></i> &nbsp;Gagal menambahkan data baru, Nomor Identitas telah digunakan");
+							setTimeout(function() {
+									$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
+									$("#submit").removeClass("disabled");
+									$("#alert .alert-custom").removeClass("alert-custom-danger");
+									$("#alert .alert-custom").addClass("hidden");
+									$("#alert .alert-custom").html("");
+									$("#alert").removeClass("hidden");
+								}, 1500);
 				    	}else{
-							toastr.error("Data Petani Gagal Tersimpan !", "Perhatian !");
-							$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
-							$("#submit").removeClass("disabled");
+							$("#alert").removeClass("hidden");
+							$("#alert .alert-custom").addClass("alert-custom-danger");
+							$("#alert .alert-custom").html("<i class=\"entypo-cancel\"></i> &nbsp;Gagal menambahkan data baru");
+							setTimeout(function() {
+									$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
+									$("#submit").removeClass("disabled");
+									$("#alert .alert-custom").removeClass("alert-custom-danger");
+									$("#alert .alert-custom").addClass("hidden");
+									$("#alert .alert-custom").html("");
+									$("#alert").removeClass("hidden");
+								}, 1000);
 				    	}
 				    }
 				});
@@ -452,12 +575,28 @@
 			});
 
 			$(document).ajaxError(function( event, request, settings ) {
-				toastr.error("Gagal Proses !", "Perhatian !");
-				$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
-				$("#submit").removeClass("disabled");
+				$("#alert").removeClass("hidden");
+				$("#alert .alert-custom").addClass("alert-custom-danger");
+				$("#alert .alert-custom").html("<i class=\"entypo-cancel\"></i> &nbsp;Proses gagal");
+				setTimeout(function() {
+						$("#submit").html("<i class=\"entypo-floppy\"></i>Simpan");
+						$("#submit").removeClass("disabled");
+						$("#alert .alert-custom").removeClass("alert-custom-danger");
+						$("#alert .alert-custom").html("");
+						$("#alert").addClass("hidden");
+					}, 1500);
+			});
+
+			$(document).on("click", "div.checkbox-replace", function(){
+				if($(this).hasClass("checked")){
+					$(this).parent("#data-lokasi-jenis").find(".sub-form").removeClass("hidden");
+				}else{
+					$(this).parent("#data-lokasi-jenis").find(".sub-form").addClass("hidden");
+				}
 			});
 
 		});
+
 
 	', CClientScript::POS_END);
 ?>

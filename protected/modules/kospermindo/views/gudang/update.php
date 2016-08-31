@@ -17,12 +17,9 @@
   <div class="col-md-12">
     <div class="row">
       <?php echo $this->renderPartial('_form', array(
-        'model_koordinator' => $model_koordinator,
-        'pesan'             => $pesan,
-        // 'model'             => $model,
-        // 'update'            => $update
-        // 'idgudang'          => $idgudang,
-        // 'idkoordinator'     => $idkoordinator,
+        'model' => $model,
+        'pesan' => $pesan,
+        'error' => $error,
       )); ?>
     </div>
   </div>

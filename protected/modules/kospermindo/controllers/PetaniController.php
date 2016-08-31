@@ -10,258 +10,306 @@
 		}
 
 
-		public function actionCreate(){
-			$request = Yii::app()->request->isPostRequest;
+	public function actionCreate(){
+		$request = Yii::app()->request->isPostRequest;
 
-			if($request){
-				$pesan = 'failed';
-				$gambar = CUploadedFile::getInstanceByName('foto');
-				$getUser = Petani::model()->findByAttributes(array('username'=>$_POST['username'], 'status_hapus'=>1));				
-				if($getUser){
-					$pesan = 'any_user';
+		if($request){
+			$pesan = 'failed';
+			$gambar = CUploadedFile::getInstanceByName('foto');
+			$getUserAdmin = Users::model()->findByAttributes(array('username'=>$_POST['username'], 'status'=>0));				
+			$getUser = Petani::model()->findByAttributes(array('username'=>$_POST['username'], 'status_hapus'=>0));				
+			$getUserNik = Petani::model()->findByAttributes(array('nik'=>$_POST['nomor_identitas'], 'status_hapus'=>0));				
+			if($getUser || $getUserAdmin){
+				$pesan = 'any_user';
+			}else if($getUserNik){
+				$pesan = 'any_ktp' ;
+			}else{
+				if(empty($gambar)){
+					$getImage = Yii::app()->getBaseUrl(true)."/static/admin/images/profile-picture.png";
 				}else{
-					if(empty($gambar)){
-						$getImage = Yii::app()->getBaseUrl(true)."/static/admin/images/profile-picture.png";
-					}else{
-						$imgname = 'img_' . date('Y-m-d-H-i-s') . '_' . rand(1, 1000);
-						$filename_err = explode(".",$gambar->getName());
-						$filename_err_count = count($filename_err);
-						$file_ext = $filename_err[$filename_err_count-1];
-						$size = getimagesize($gambar->getTempName());
+					$imgname = 'img_' . date('Y-m-d-H-i-s') . '_' . rand(1, 1000);
+					$filename_err = explode(".",$gambar->getName());
+					$filename_err_count = count($filename_err);
+					$file_ext = $filename_err[$filename_err_count-1];
+					$size = getimagesize($gambar->getTempName());
 
-						move_uploaded_file($gambar->getTempName(), "images/".$imgname."_kospermindo".".".$file_ext);
-						
-						$getImage = Yii::app()->getBaseUrl(true)."/images/".$imgname."_kospermindo".".".$file_ext;
+					move_uploaded_file($gambar->getTempName(), "images/".$imgname."_kospermindo".".".$file_ext);
+					$getImage = Yii::app()->getBaseUrl(true)."/images/".$imgname."_kospermindo".".".$file_ext;
 
-					}
+				}
+				
+				$lastkode = Petani::model()->findAllByAttributes(array('kode_kelompok'=>$_POST['kelompok']), array('order'=>'id_petani DESC', 'limit'=>1));
+				if(!$lastkode){
+					$kode = $_POST['kelompok'].'.0001';
+				}else{
+					$getkode = substr($lastkode[0]['kode_petani'], (strlen($lastkode[0]['kode_petani'])-4), (strlen($lastkode[0]['kode_petani']))) ;
+					$getkodesum = '0000'.((int)$getkode + 1);
+					$kode = $_POST['kelompok'].'.'.substr($getkodesum , (strlen($getkodesum)-4), strlen($getkodesum));
+				}
 
+				$id_perusahaan = (Yii::app()->user->akses == 1) ? Yii::app()->user->id : Users::model()->getCompanyId(Yii::app()->user->id);
+				/*insert petani*/
+				$petani = new Petani;
+				$petani->kode_petani = $kode;
+				$petani->kode_jenis_gudang = !empty($_POST['jenis_gudang']) ? $_POST['jenis_gudang'] : '';
+				$petani->kode_gudang = !empty($_POST['gudang']) ? $_POST['gudang'] : '';
+				$petani->kode_kelompok = !empty($_POST['kelompok']) ? $_POST['kelompok'] : '';
+				$petani->id_perusahaan = (int)$id_perusahaan;
+				$petani->nama_petani = !empty($_POST['nama_lengkap']) ? Helper::cleanString($_POST['nama_lengkap']) : '';
+				$petani->nik = !empty($_POST['nomor_identitas']) ? $_POST['nomor_identitas'] : '';
+				$petani->alamat = !empty($_POST['alamat']) ? Helper::cleanString($_POST['alamat']) : '';
+				$petani->provinsi = !empty($_POST['provinsi']) ? (int)$_POST['provinsi'] : '';
+				$petani->kabupaten = !empty($_POST['kabupaten']) ? (int)$_POST['kabupaten'] : '';
+				$petani->no_telp = !empty($_POST['no_telp']) ? '+62'.$_POST['no_telp'] : '';
+				$petani->tempat_lahir = !empty($_POST['tempat_lahir']) ? Helper::cleanString($_POST['tempat_lahir']) : '';
+				$petani->tgl_lahir = !empty($_POST['tanggal_lahir']) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['tanggal_lahir']))) : '';
+				$petani->jenis_komoditi = !empty($_POST['jenis']) ? $_POST['jenis'] : '';
+				$petani->url_foto = $getImage;
+				$petani->username = !empty($_POST['username']) ? $_POST['username'] : '';
+				$petani->password = !empty($_POST['password']) ? $_POST['password'] : '';
+				$petani->device_id = '';
+				$petani->status_login = 0;
+				$petani->status_hapus = 0;
+
+				if($petani->save()){
 					/*insert petani*/
-					$petani = new Petani;
-					$petani->id_gudang = !empty($_POST['gudang']) ? (int)$_POST['gudang'] : '';
-					$petani->id_kelompok = !empty($_POST['kelompok']) ? (int)$_POST['kelompok'] : '';
-					$petani->id_perusahaan = (int)Yii::app()->user->id;
-					$petani->nama_petani = !empty($_POST['nama_lengkap']) ? Helper::cleanString($_POST['nama_lengkap']) : '';
-					$petani->nik = !empty($_POST['nomor_identitas']) ? $_POST['nomor_identitas'] : '';
-					$petani->alamat = !empty($_POST['alamat']) ? Helper::cleanString($_POST['alamat']) : '';
-					$petani->provinsi = !empty($_POST['provinsi']) ? $_POST['provinsi'] : '';
-					$petani->kabupaten = !empty($_POST['kabupaten']) ? $_POST['kabupaten'] : '';
-					$petani->no_telp = !empty($_POST['no_telp']) ? '+62'.$_POST['no_telp'] : '';
-					$petani->tempat_lahir = !empty($_POST['tempat_lahir']) ? Helper::cleanString($_POST['tempat_lahir']) : '';
-					$petani->tgl_lahir = !empty($_POST['tanggal_lahir']) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['tanggal_lahir']))) : '';
-					$petani->luas_lahan = !empty($_POST['luas_lokasi']) ? (int)$_POST['luas_lokasi'] : '';
-					$petani->jumlah_bentangan = !empty($_POST['jumlah_bentangan']) ? (int)$_POST['jumlah_bentangan'] : '';
-					$petani->jenis_komoditi = !empty($_POST['jenis']) ? $_POST['jenis'] : '';
-					$petani->url_foto = $getImage;
-					$petani->username = !empty($_POST['username']) ? $_POST['username'] : '';
-					$petani->password = !empty($_POST['password']) ? $_POST['password'] : '';
-					$petani->device_id = '';
-					$petani->status_login = 0;
-					$petani->status_hapus = 1;
+					$petanihis = new PetaniHistory;
+					$petanihis->id_petani = $petani->id_petani;
+					$petanihis->kode_petani = $petani->kode_petani;
+					$petanihis->kode_jenis_gudang = $petani->kode_jenis_gudang;
+					$petanihis->kode_gudang = $petani->kode_gudang;
+					$petanihis->kode_kelompok = $petani->kode_kelompok;
+					$petanihis->id_perusahaan = $petani->id_perusahaan;
+					$petanihis->nama_petani = $petani->nama_petani;
+					$petanihis->nik = $petani->nik;
+					$petanihis->alamat = $petani->alamat;
+					$petanihis->provinsi = $petani->provinsi;
+					$petanihis->kabupaten = $petani->kabupaten;
+					$petanihis->no_telp = $petani->no_telp;
+					$petanihis->tempat_lahir = $petani->tempat_lahir;
+					$petanihis->tgl_lahir = $petani->tgl_lahir;
+					$petanihis->jenis_komoditi = $petani->jenis_komoditi;
+					$petanihis->url_foto = $petani->url_foto;
+					$petanihis->username = $petani->username;
+					$petanihis->password = $petani->password;
+					$petanihis->device_id = $petani->device_id;
+					$petanihis->status_login = $petani->status_login;
+					$petanihis->status_hapus = $petani->status_hapus;
+					$petanihis->created_date = date('Y-m-d H:i:s');
+					$petanihis->created_by = (int)Yii::app()->user->id;
 
-					if($petani->save()){
-						$petani_last = Petani::model()->lastRecord()->find();
-						
-						/*insert petani*/
-						$petanihis = new PetaniHistory;
-						$petanihis->id_petani = $petani_last['id_petani'];
-						$petanihis->id_gudang = !empty($_POST['gudang']) ? (int)$_POST['gudang'] : '';
-						$petanihis->id_kelompok = !empty($_POST['kelompok']) ? (int)$_POST['kelompok'] : '';
-						$petanihis->id_perusahaan = (int)Yii::app()->user->id;
-						$petanihis->nama_petani = !empty($_POST['nama_lengkap']) ? Helper::cleanString($_POST['nama_lengkap']) : '';
-						$petanihis->nik = !empty($_POST['nomor_identitas']) ? $_POST['nomor_identitas'] : '';
-						$petanihis->alamat = !empty($_POST['alamat']) ? Helper::cleanString($_POST['alamat']) : '';
-						$petanihis->provinsi = !empty($_POST['provinsi']) ? $_POST['provinsi'] : '';
-						$petanihis->kabupaten = !empty($_POST['kabupaten']) ? $_POST['kabupaten'] : '';
-						$petanihis->no_telp = !empty($_POST['no_telp']) ? '+62'.$_POST['no_telp'] : '';
-						$petanihis->tempat_lahir = !empty($_POST['tempat_lahir']) ? Helper::cleanString($_POST['tempat_lahir']) : '';
-						$petanihis->tgl_lahir = !empty($_POST['tanggal_lahir']) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['tanggal_lahir']))) : '';
-						$petanihis->luas_lahan = !empty($_POST['luas_lokasi']) ? (int)$_POST['luas_lokasi'] : '';
-						$petanihis->jumlah_bentangan = !empty($_POST['jumlah_bentangan']) ? (int)$_POST['jumlah_bentangan'] : '';
-						$petanihis->jenis_komoditi = !empty($_POST['jenis']) ? $_POST['jenis'] : '';
-						$petanihis->url_foto = $getImage;
-						$petanihis->username = !empty($_POST['username']) ? $_POST['username'] : '';
-						$petanihis->password = $petani_last['password'];
-						$petanihis->device_id = '';
-						$petanihis->status_login = 0;
-						$petanihis->status_hapus = 1;
-						$petanihis->created_date = date('Y-m-d H:i:s');
-						$petanihis->created_by = (int)Yii::app()->user->id;
-
-						if($petanihis->save()){
-							$pesan = 'success';
-						}else{
-							$pesan = 'failed';
-						}
-
+					if($petanihis->save()){
+						Yii::app()->user->setFlash('success','Berhasil menambahkan data baru');
+						$pesan = 'success';
 					}else{
 						$pesan = 'failed';
 					}
+
+				}else{
+					$pesan = 'failed';
+				}
+			}
+
+			echo json_encode($pesan);
+		}
+	}
+
+	public function actionUpdate(){
+
+		$request = Yii::app()->request->isPostRequest;
+
+		if($request){
+			$pesan = 'failed';
+			$gambar = CUploadedFile::getInstanceByName('foto');
+			$id = !empty($_GET['id']) ? $_GET['id'] : '';
+			$getUser = Petani::model()->findByAttributes(array('username'=>'o', 'status_hapus'=>0));
+			$getUserNik = Petani::model()->findByAttributes(array('nik'=>$_POST['nomor_identitas'], 'status_hapus'=>0));				
+			$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>0));
+			$getUserAdmin = Users::model()->findByAttributes(array('username'=>'o', 'status'=>0));				
+
+			if(($getUser && ($id !== $getUser['id_petani'])) || $getUserAdmin ){
+				$pesan = 'any_user';
+			}else if($getUserNik && ($id !== $getUserNik['id_petani'])){
+				$pesan = 'any_ktp';
+			}else{
+				if(empty($gambar)){
+					$getImage = $petani['url_foto'];
+				}else{
+					$imgname = 'img_' . date('Y-m-d-H-i-s') . '_' . rand(1, 1000);
+					$filename_err = explode(".",$gambar->getName());
+					$filename_err_count = count($filename_err);
+					$file_ext = $filename_err[$filename_err_count-1];
+					$size = getimagesize($gambar->getTempName());
+
+					move_uploaded_file($gambar->getTempName(), "images/".$imgname."_kospermindo".".".$file_ext);
+					
+					$getImage = Yii::app()->getBaseUrl(true)."/images/".$imgname."_kospermindo".".".$file_ext;
+
 				}
 
-				echo json_encode($pesan);
-			}
-		}
-
-		public function actionUpdate(){
-
-			$request = Yii::app()->request->isPostRequest;
-
-			if($request){
-				$pesan = 'failed';
-				$gambar = CUploadedFile::getInstanceByName('foto');
-				$id = !empty($_GET['id']) ? $_GET['id'] : '';
-				$getUser = Petani::model()->findByAttributes(array('username'=>'o', 'status_hapus'=>1));				
-				$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>1));
-				if($getUser && ($id !== $getUser['id_petani'])){
-					$pesan = 'any_user';
-				}else{
-					if(empty($gambar)){
-						$getImage = $petani['url_foto'];
+				$getkode = Petani::model()->findByAttributes(array('id_petani'=>$id));
+				$getkodekelompok = $getkode['kode_kelompok'];
+				if($_POST['kelompok'] !== $getkodekelompok){
+					$lastkode = Petani::model()->findAllByAttributes(array('kode_kelompok'=>$_POST['kelompok']), array('order'=>'id_petani DESC', 'limit'=>1));
+					if(!$lastkode){
+						$kode = $_POST['kelompok'].'.0001';
 					}else{
-						$imgname = 'img_' . date('Y-m-d-H-i-s') . '_' . rand(1, 1000);
-						$filename_err = explode(".",$gambar->getName());
-						$filename_err_count = count($filename_err);
-						$file_ext = $filename_err[$filename_err_count-1];
-						$size = getimagesize($gambar->getTempName());
-
-						move_uploaded_file($gambar->getTempName(), "images/".$imgname."_kospermindo".".".$file_ext);
-						
-						$getImage = Yii::app()->getBaseUrl(true)."/images/".$imgname."_kospermindo".".".$file_ext;
-
+						$getkode = substr($lastkode[0]['kode_petani'], (strlen($lastkode[0]['kode_petani'])-4), (strlen($lastkode[0]['kode_petani']))) ;
+						$getkodesum = '0000'.((int)$getkode + 1);
+						$kode = $_POST['kelompok'].'.'.substr($getkodesum , (strlen($getkodesum)-4), strlen($getkodesum));
 					}
+				}
 
+				/*insert petani*/
+				if($getkodekelompok !== $_POST['kelompok']){
+					$petani->kode_petani = $kode;
+				}
+				$petani->kode_jenis_gudang = !empty($_POST['jenis_gudang']) ? $_POST['jenis_gudang'] : '';
+				$petani->kode_gudang = !empty($_POST['gudang']) ? $_POST['gudang'] : '';
+				$petani->kode_kelompok = !empty($_POST['kelompok']) ? $_POST['kelompok'] : '';
+				$petani->id_perusahaan = (int)Yii::app()->user->id;
+				$petani->nama_petani = !empty($_POST['nama_lengkap']) ? Helper::cleanString($_POST['nama_lengkap']) : '';
+				$petani->nik = !empty($_POST['nomor_identitas']) ? $_POST['nomor_identitas'] : '';
+				$petani->alamat = !empty($_POST['alamat']) ? Helper::cleanString($_POST['alamat']) : '';
+				$petani->provinsi = !empty($_POST['provinsi']) ? $_POST['provinsi'] : '';
+				$petani->kabupaten = !empty($_POST['kabupaten']) ? $_POST['kabupaten'] : '';
+				$petani->no_telp = !empty($_POST['no_telp']) ? '+62'.$_POST['no_telp'] : '';
+				$petani->tempat_lahir = !empty($_POST['tempat_lahir']) ? Helper::cleanString($_POST['tempat_lahir']) : '';
+				$petani->tgl_lahir = !empty($_POST['tanggal_lahir']) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['tanggal_lahir']))) : '';
+				$petani->luas_lahan = !empty($_POST['luas_lokasi']) ? (int)$_POST['luas_lokasi'] : '';
+				$petani->jumlah_bentangan = !empty($_POST['jumlah_bentangan']) ? (int)$_POST['jumlah_bentangan'] : '';
+				$petani->jenis_komoditi = !empty($_POST['jenis']) ? $_POST['jenis'] : '';
+				$petani->url_foto = $getImage;
+				$petani->status_login = 0;
+				$petani->status_hapus = 0;
+
+				if($petani->save()){
+					
 					/*insert petani*/
-					$petani->id_gudang = !empty($_POST['gudang']) ? (int)$_POST['gudang'] : '';
-					$petani->id_kelompok = !empty($_POST['kelompok']) ? (int)$_POST['kelompok'] : '';
-					$petani->id_perusahaan = (int)Yii::app()->user->id;
-					$petani->nama_petani = !empty($_POST['nama_lengkap']) ? Helper::cleanString($_POST['nama_lengkap']) : '';
-					$petani->nik = !empty($_POST['nomor_identitas']) ? $_POST['nomor_identitas'] : '';
-					$petani->alamat = !empty($_POST['alamat']) ? Helper::cleanString($_POST['alamat']) : '';
-					$petani->provinsi = !empty($_POST['provinsi']) ? $_POST['provinsi'] : '';
-					$petani->kabupaten = !empty($_POST['kabupaten']) ? $_POST['kabupaten'] : '';
-					$petani->no_telp = !empty($_POST['no_telp']) ? '+62'.$_POST['no_telp'] : '';
-					$petani->tempat_lahir = !empty($_POST['tempat_lahir']) ? Helper::cleanString($_POST['tempat_lahir']) : '';
-					$petani->tgl_lahir = !empty($_POST['tanggal_lahir']) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['tanggal_lahir']))) : '';
-					$petani->luas_lahan = !empty($_POST['luas_lokasi']) ? (int)$_POST['luas_lokasi'] : '';
-					$petani->jumlah_bentangan = !empty($_POST['jumlah_bentangan']) ? (int)$_POST['jumlah_bentangan'] : '';
-					$petani->jenis_komoditi = !empty($_POST['jenis']) ? $_POST['jenis'] : '';
-					$petani->url_foto = $getImage;
-					$petani->status_login = 0;
-					$petani->status_hapus = 1;
+					$petanihis = new PetaniHistory;
+					$petanihis->id_petani = $petani->id_petani;
+					$petanihis->kode_petani = $petani->kode_petani;
+					$petanihis->kode_jenis_gudang = $petani->kode_jenis_gudang;
+					$petanihis->kode_gudang = $petani->kode_gudang;
+					$petanihis->kode_kelompok = $petani->kode_kelompok;
+					$petanihis->id_perusahaan = $petani->id_perusahaan;
+					$petanihis->nama_petani = $petani->nama_petani;
+					$petanihis->nik = $petani->nik;
+					$petanihis->alamat = $petani->alamat;
+					$petanihis->provinsi = $petani->provinsi;
+					$petanihis->kabupaten = $petani->kabupaten;
+					$petanihis->no_telp = $petani->no_telp;
+					$petanihis->tempat_lahir = $petani->tempat_lahir;
+					$petanihis->tgl_lahir = $petani->tgl_lahir;
+					$petanihis->jenis_komoditi = $petani->jenis_komoditi;
+					$petanihis->url_foto = $petani->url_foto;
+					$petanihis->username = $petani->username;
+					$petanihis->password = $petani->password;
+					$petanihis->device_id = $petani->device_id;
+					$petanihis->status_login = $petani->status_login;
+					$petanihis->status_hapus = $petani->status_hapus;
+					$petanihis->created_date = date('Y-m-d H:i:s');
+					$petanihis->created_by = (int)Yii::app()->user->id;
 
-					if($petani->save()){
-						$petani_last = Petani::model()->lastRecord()->find();
-						
-						/*insert petani*/
-						$petanihis = new PetaniHistory;
-						$petanihis->id_petani = $petani['id_petani'];
-						$petanihis->id_gudang = !empty($_POST['gudang']) ? (int)$_POST['gudang'] : '';
-						$petanihis->id_kelompok = !empty($_POST['kelompok']) ? (int)$_POST['kelompok'] : '';
-						$petanihis->id_perusahaan = (int)Yii::app()->user->id;
-						$petanihis->nama_petani = !empty($_POST['nama_lengkap']) ? Helper::cleanString($_POST['nama_lengkap']) : '';
-						$petanihis->nik = !empty($_POST['nomor_identitas']) ? $_POST['nomor_identitas'] : '';
-						$petanihis->alamat = !empty($_POST['alamat']) ? Helper::cleanString($_POST['alamat']) : '';
-						$petanihis->provinsi = !empty($_POST['provinsi']) ? $_POST['provinsi'] : '';
-						$petanihis->kabupaten = !empty($_POST['kabupaten']) ? $_POST['kabupaten'] : '';
-						$petanihis->no_telp = !empty($_POST['no_telp']) ? '+62'.$_POST['no_telp'] : '';
-						$petanihis->tempat_lahir = !empty($_POST['tempat_lahir']) ? Helper::cleanString($_POST['tempat_lahir']) : '';
-						$petanihis->tgl_lahir = !empty($_POST['tanggal_lahir']) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['tanggal_lahir']))) : '';
-						$petanihis->luas_lahan = !empty($_POST['luas_lokasi']) ? (int)$_POST['luas_lokasi'] : '';
-						$petanihis->jumlah_bentangan = !empty($_POST['jumlah_bentangan']) ? (int)$_POST['jumlah_bentangan'] : '';
-						$petanihis->jenis_komoditi = !empty($_POST['jenis']) ? $_POST['jenis'] : '';
-						$petanihis->url_foto = $getImage;
-						$petanihis->username = $petani['username'];
-						$petanihis->password = $petani['password'];
-						$petanihis->device_id = $petani['device_id'];
-						$petanihis->status_login = 0;
-						$petanihis->status_hapus = 1;
-						$petanihis->created_date = date('Y-m-d H:i:s');
-						$petanihis->created_by = (int)Yii::app()->user->id;
+					if($petanihis->save()){
+						Yii::app()->user->setFlash('success','Berhasil menyunting data');
 
-						if($petanihis->save()){
-							$pesan = 'success';
-						}else{
-							$pesan = 'failed';
-						}
-
+						$pesan = 'success';
 					}else{
 						$pesan = 'failed';
 					}
-				}
 
-				echo json_encode($pesan);
-			}
-		}
-
-		public function actionUpdatepass(){
-			$request = Yii::app()->request->isPostRequest;
-
-			if($request){
-				$pesan = 'failed';
-
-				$id = !empty($_GET['id']) ? $_GET['id'] : '';
-
-				$getUser = Petani::model()->findByAttributes(array('username'=>$_POST['username'], 'status_hapus'=>1));				
-				$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>1));
-
-				if($getUser && ($id !== $getUser['id_petani'])){
-					$pesan = 'any_user';
 				}else{
+					$pesan = 'failed';
+				}
+			}
 
+			echo json_encode($pesan);
+		}
+	}
+
+	public function actionUpdatepass(){
+		$request = Yii::app()->request->isPostRequest;
+
+		if($request){
+			$pesan = 'failed';
+
+			$id = !empty($_GET['id']) ? $_GET['id'] : '';
+
+			$getUser = Petani::model()->findByAttributes(array('username'=>$_POST['username'], 'status_hapus'=>0));				
+			$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>0));
+			$getUserAdmin = Users::model()->findByAttributes(array('username'=>$_POST['username'], 'status'=>0));				
+
+			if(($getUser && ($id !== $getUser['id_petani'])) || $getUserAdmin ){
+				Yii::app()->user->setFlash('failed','Gagal menyunting username, username telah digunakan');
+
+				$pesan = 'any_user';
+			}else{
+
+				/*insert petani*/
+				$petani->username = !empty($_POST['username']) ? $_POST['username'] : '';
+				$petani->password = CPasswordHelper::hashPassword($_POST['password']);
+
+				if($petani->save()){
+					
 					/*insert petani*/
-					$petani->username = !empty($_POST['username']) ? $_POST['username'] : '';
-					$petani->password = CPasswordHelper::hashPassword($_POST['password']);
+					$petanihis = new PetaniHistory;
+					$petanihis->id_petani = $petani->id_petani;
+					$petanihis->kode_petani = $petani->kode_petani;
+					$petanihis->kode_jenis_gudang = $petani->kode_jenis_gudang;
+					$petanihis->kode_gudang = $petani->kode_gudang;
+					$petanihis->kode_kelompok = $petani->kode_kelompok;
+					$petanihis->id_perusahaan = $petani->id_perusahaan;
+					$petanihis->nama_petani = $petani->nama_petani;
+					$petanihis->nik = $petani->nik;
+					$petanihis->alamat = $petani->alamat;
+					$petanihis->provinsi = $petani->provinsi;
+					$petanihis->kabupaten = $petani->kabupaten;
+					$petanihis->no_telp = $petani->no_telp;
+					$petanihis->tempat_lahir = $petani->tempat_lahir;
+					$petanihis->tgl_lahir = $petani->tgl_lahir;
+					$petanihis->jenis_komoditi = $petani->jenis_komoditi;
+					$petanihis->url_foto = $petani->url_foto;
+					$petanihis->username = $petani->username;
+					$petanihis->password = $petani->password;
+					$petanihis->device_id = $petani->device_id;
+					$petanihis->status_login = $petani->status_login;
+					$petanihis->status_hapus = $petani->status_hapus;
+					$petanihis->created_date = date('Y-m-d H:i:s');
+					$petanihis->created_by = (int)Yii::app()->user->id;
+					if($petanihis->save()){
+						Yii::app()->user->setFlash('success','Berhasil menyunting username dan password');
 
-					if($petani->save()){
-						
-						/*insert petani*/
-						$petanihis = new PetaniHistory;
-						$petanihis->id_petani = $petani['id_petani'];
-						$petanihis->id_gudang = $petani['id_gudang'];
-						$petanihis->id_kelompok = $petani['id_kelompok'];
-						$petanihis->id_perusahaan = $petani['id_perusahaan'];
-						$petanihis->nama_petani = $petani['nama_petani'];
-						$petanihis->nik = $petani['nik'];
-						$petanihis->alamat = $petani['alamat'];
-						$petanihis->provinsi = $petani['provinsi'];
-						$petanihis->kabupaten = $petani['kabupaten'];
-						$petanihis->no_telp = $petani['no_telp'];
-						$petanihis->tempat_lahir = $petani['tempat_lahir'];
-						$petanihis->tgl_lahir = $petani['tgl_lahir'];
-						$petanihis->luas_lahan = $petani['luas_lahan'];
-						$petanihis->jumlah_bentangan = $petani['jumlah_bentangan'];
-						$petanihis->jenis_komoditi = $petani['jenis_komoditi'];
-						$petanihis->url_foto = $petani['url_foto'];
-						$petanihis->username = $petani['username'];
-						$petanihis->password = CPasswordHelper::hashPassword($_POST['password']);
-						$petanihis->device_id = $petani['device_id'];;
-						$petanihis->status_login = 0;
-						$petanihis->status_hapus = 0;
-						$petanihis->created_date = date('Y-m-d H:i:s');
-						$petanihis->created_by = (int)Yii::app()->user->id;
-						if($petanihis->save()){
-							$pesan = 'success';
-						}else{
-							$pesan = 'failed';
-						}
-
+						$pesan = 'success';
 					}else{
+						Yii::app()->user->setFlash('failed','Gagal menyunting username dan password');
+
 						$pesan = 'failed';
 					}
+
+				}else{
+					Yii::app()->user->setFlash('failed','Gagal menyunting username dan password');
+
+					$pesan = 'failed';
 				}
-
-				echo json_encode($pesan);
 			}
+
+			echo json_encode($pesan);
 		}
+	}
 
-		public function actionTambah(){
+	public function actionTambah(){
 
-			$jnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('status'=>1));
+		if (Yii::app()->user->isGuest) {
+			$this->redirect('/kospermindo/login');
+		}else if(Yii::app()->user->akses == 1 || (Yii::app()->user->akses == 2 && in_array("1", json_decode(Users::model()->getModeratorMenu(Yii::app()->user->id))))){
+
+			$jnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('status'=>0));
 			$arrJnsKomoditi = array();
 
 			foreach ($jnsKomoditi as $key => $value) {
 				if($value->parent_id == 0){
-					$childJnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('parent_id'=>$value->id_komoditi, 'status'=>1));
+					$childJnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('parent_id'=>$value->id_komoditi, 'status'=>0));
 					if($childJnsKomoditi){
 						$arr = array('hasChild'=>1,'parent'=>$value, 'child'=>$childJnsKomoditi);
 						array_push($arrJnsKomoditi, $arr);
@@ -275,21 +323,30 @@
 			$this->render('create', array(
 				'jenis_komoditi' => $arrJnsKomoditi
 			));
+		}else{
+			$this->redirect('/kospermindo');
 		}
+	}
 		
-		public function actionSunting(){
+	public function actionSunting(){
+
+		if (Yii::app()->user->isGuest) {
+			$this->redirect('/kospermindo/login');
+		}else if(Yii::app()->user->akses == 1 || (Yii::app()->user->akses == 2 && in_array("1", json_decode(Users::model()->getModeratorMenu(Yii::app()->user->id))))){
+
 			$id = !empty($_GET['id']) ? $_GET['id'] : '';
 
-			$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>1));
+			$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>0));
 			$prov = Provinsi::model()->findAll();
-			$gudang = Gudang::model()->findAllByAttributes(array('status'=>1));
+			$Kotakab = Kotakab::model()->findAllByAttributes(array('provinsi_id'=>$petani['provinsi']));
+			$jenisGudang = JenisGudang::model()->findAll();
 
-			$jnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('status'=>1));
+			$jnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('status'=>0));
 			$arrJnsKomoditi = array();
 
 			foreach ($jnsKomoditi as $key => $value) {
 				if($value->parent_id == 0){
-					$childJnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('parent_id'=>$value->id_komoditi, 'status'=>1));
+					$childJnsKomoditi = JenisKomoditi::model()->findAllByAttributes(array('parent_id'=>$value->id_komoditi, 'status'=>0));
 					if($childJnsKomoditi){
 						$arr = array('hasChild'=>1,'parent'=>$value, 'child'=>$childJnsKomoditi);
 						array_push($arrJnsKomoditi, $arr);
@@ -300,22 +357,31 @@
 				}
 			}
 
+			$gudang = Gudang::model()->findAllByAttributes(array('kode_jenis_gudang'=>$petani['kode_jenis_gudang'],'status'=>0));
+			$kelompok = Kelompok::model()->findAllByAttributes(array('kode_gudang'=>$petani['kode_gudang'],'status'=>0));
 			$this->render('sunting',
 				array(
 					'petani' => $petani,
 					'jenis_komoditi' => $arrJnsKomoditi,
 					'provinsi' => $prov,
-					'gudang' => $gudang
+					'kabupaten' => $Kotakab,
+					'jenis_gudang' => $jenisGudang,
+					'gudang' => $gudang,
+					'kelompok' => $kelompok
 				)
 			);
+		}else{
+			$this->redirect('/kospermindo');
 		}
+	}
 
 
 	public function actionGetprov(){
 		$prov = Provinsi::model()->findAll();
 		$provinsi = array();
 		foreach ($prov as $key => $value) {
-			array_push($provinsi, $value->provinsi_nama);
+			$arr = array('id'=>$value->provinsi_id, 'nama'=>$value->provinsi_nama);
+			array_push($provinsi, $arr);
 		};
 		echo json_encode($provinsi);
 	}
@@ -323,20 +389,31 @@
 
 	public function actionGetkota(){
 		$prov = !empty($_POST['prov']) ? $_POST['prov'] : '';
-		$getProv = Provinsi::model()->findByAttributes(array('provinsi_nama'=>$prov));
-		$getKota = Kotakab::model()->findAllByAttributes(array('provinsi_id'=>$getProv['provinsi_id']));
+		$getKota = Kotakab::model()->findAllByAttributes(array('provinsi_id'=>$prov));
 		$kota = array();
 		foreach ($getKota as $key => $value) {
-			array_push($kota, $value->kokab_nama);
+			$arr = array('id'=>$value->kota_id, 'nama'=>$value->kokab_nama);
+			array_push($kota, $arr);
 		};
 		echo json_encode($kota);
 	}
 
+	public function actionGetjenisgudang(){
+		$jenisgudang = JenisGudang::model()->findAll();
+		$arrGudang = array();
+		foreach ($jenisgudang as $key => $value) {
+			$arr = array('id'=>$value->kode_jenis_gudang, 'value'=>$value->jenis_gudang);
+			array_push($arrGudang, $arr);
+		};
+		echo json_encode($arrGudang);
+	}
+
 	public function actionGetgudang(){
-		$gudang = Gudang::model()->findAllByAttributes(array('status'=>1));
+		$id = !empty($_POST['id']) ? $_POST['id'] : '';
+		$gudang = Gudang::model()->findAllByAttributes(array('kode_jenis_gudang'=>$id,'status'=>0));
 		$arrGudang = array();
 		foreach ($gudang as $key => $value) {
-			$arr = array('id'=>$value->id_gudang, 'value'=>$value->nama);
+			$arr = array('id'=>$value->kode_gudang, 'value'=>$value->nama);
 			array_push($arrGudang, $arr);
 		};
 		echo json_encode($arrGudang);
@@ -346,7 +423,8 @@
 	public function actionGetkelompok(){
 		$id = !empty($_POST['id']) ? $_POST['id'] : '';
 
-		$getKel = Kelompok::model()->findAllByAttributes(array('id_gudang'=>$id, 'status'=>1));
+		$gudang = Gudang::model()->findByAttributes(array('id_gudang'=>$id,'status'=>0));
+		$getKel = Kelompok::model()->findAllByAttributes(array('kode_gudang'=>$gudang['kode_gudang'], 'status'=>0));
 		$arrKel = array();
 		foreach ($getKel as $key => $value) {
 			$arr = array('id'=>$value->id_kelompok, 'value'=>$value->nama_kelompok);
@@ -355,17 +433,35 @@
 		echo json_encode($arrKel);
 	}
 
+	public function actionGetpetani(){
+		$id_gudang = !empty($_POST['id_gudang']) ? $_POST['id_gudang'] : '';
+		$id_kelompok = !empty($_POST['id_kelompok']) ? $_POST['id_kelompok'] : '';
+
+		$gudang = Gudang::model()->findByAttributes(array('id_gudang'=>$id_gudang));
+		$kelompok = Kelompok::model()->findByAttributes(array('id_kelompok'=>$id_kelompok));
+
+		$getPetani = Petani::model()->findAllByAttributes(array('kode_gudang'=>$gudang['kode_gudang'],'kode_kelompok'=>$kelompok['kode_kelompok'], 'status_hapus'=>0));
+		$arrPetani = array();
+		foreach ($getPetani as $key => $value) {
+			$arr = array('id'=>$value->id_petani, 'value'=>$value->nama_petani);
+			array_push($arrPetani, $arr);
+		};
+		echo json_encode($arrPetani);
+	}
+
 	public function actionDelete(){
 		$id = !empty($_POST['id']) ? $_POST['id'] : '';
 
-		$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>1));
+		$petani = Petani::model()->findByAttributes(array('id_petani'=>$id, 'status_hapus'=>0));
 		$petanihis = new PetaniHistory;
 
-		$petani->status_hapus = 0;
+		$petani->status_hapus = 1;
 		if($petani->save()){
 			$petanihis->id_petani = $petani['id_petani'];
-			$petanihis->id_gudang = $petani['id_gudang'];
-			$petanihis->id_kelompok = $petani['id_kelompok'];
+			$petanihis->kode_petani = $petani['kode_petani'];
+			$petanihis->kode_jenis_gudang = $petani['kode_jenis_gudang'];
+			$petanihis->kode_gudang = $petani['kode_gudang'];
+			$petanihis->kode_kelompok = $petani['kode_kelompok'];
 			$petanihis->id_perusahaan = $petani['id_perusahaan'];
 			$petanihis->nama_petani = $petani['nama_petani'];
 			$petanihis->nik = $petani['nik'];
@@ -383,15 +479,21 @@
 			$petanihis->password = $petani['password'];
 			$petanihis->device_id = $petani['device_id'];;
 			$petanihis->status_login = 0;
-			$petanihis->status_hapus = 0;
+			$petanihis->status_hapus = 1;
 			$petanihis->created_date = date('Y-m-d H:i:s');
 			$petanihis->created_by = (int)Yii::app()->user->id;
 			if($petanihis->save()){
+				Yii::app()->user->setFlash('success','Berhasil menghapus data');
+
 				$pesan = array('message'=>'success');
 			}else{
+				Yii::app()->user->setFlash('failed','Gagal menghapus data');
+
 				$pesan = array('message'=>'failed');
 			}
 		}else{
+			Yii::app()->user->setFlash('failed','Gagal menghapus data');
+
 			$pesan = array('message'=>'failed');
 		}
 
@@ -400,141 +502,57 @@
 
 
 
+	public function actionHasil(){
+    	$client = Elasticsearch\ClientBuilder::create()->setHosts(['localhost:9200'])->build();
 
+    	$json = '{
+				  "query": { 
+				    	"bool": { 
+				    		must": [
+				    			"match_all" : {}
+				    		],
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		public function ActionListkelompok()
-		{
-			$isGudang = Gudang::model()->findByAttributes(array('lokasi'=>$_POST['nilai']));
-			$data=TabelKelompok::model()->findAll('idgudang=:parent_id AND status=:status',array(':parent_id'=>$isGudang->id,':status'=>1));
-			
-			$data=CHtml::listData($data,'id','nama_kelompok');
-			foreach($data as $value=>$name)
-			{
-				echo CHtml::tag('option',
-				array('value'=>$value,'name'=>'idkelompok'),CHtml::encode($name),true);
-			}
-		}
-
-		public function actionUbah($id){
-			$update = 'yes';
-			$pesan = '';
-			$id = Yii::app()->request->getParam('id');
-			if($id){
-				$isPetani = TabelPetani::model()->findByAttributes(array('id'=>$id));
-				$isGudang = Gudang::model()->findByAttributes(array('id'=>$isPetani->idgudang));
-				if(!empty($isPetani)){
-					if(isset($_POST['TabelPetani'])){
-						$jenisRumputLaut = implode(',', $_POST['jenisRumputLaut']);
-						$isPetani->attributes = $_POST['TabelPetani'];
-						$isPetani->jenis_komoditi = $jenisRumputLaut;
-						$isPetani->id = $id;
-						if ($isPetani->save()) {
-							$pesan = 'Data berhasil disimpan';
-							Yii::app()->user->setFlash('success','Data berhasil di perbaharui');
-							$this->redirect('/kospermindo/petani');
-						} else {
-							//Helper::dd($isPetani);
-							Yii::app()->user->setFlash('success','Data gagal di perbaharui');
-							$pesan = 'Data Gagal disimpan';
-						}
-					}
-					$this->render('update', array(
-							'model_petani' => $isPetani,
-							'model_gudang' => $isGudang,
-							'pesan'=> $pesan,
-							'update' =>$update
-						));  
+				    	}
+				  	}
 				}
-			}
-		}
-		public function actionHapus(){
-			$req = Yii::app()->request->getIsPostRequest();
-			$ajax = Yii::app()->request->getIsAjaxRequest();
-			$id = Yii::app()->request->getPost('id');
-			//Helper::dd($id);
-			$pesan = '';
-			$redirectUrl = "/user";
-			$status = 0;
-			if ($req && $ajax) {
-				if($id){
-					$isPetani = TabelPetani::model()->findByAttributes(array('id'=>$id));
-					$isUser = Pengguna::model()->findByAttributes(array('id'=>$isPetani->id_user));
-					if(!empty($isPetani)){
-								$isPetani->status = $status;
-								$isUser->status = $status;
-								$isPetani->id = $id;
-								$isUser->id = $isPetani->id_user;
-								if($isPetani->save() && $isUser->save()){
-									$pesan = 'success';
-									Yii::app()->user->setFlash('success','Data berhasil Dihapus');
-									$redirectUrl = "/kospermindo/petani";
-								}else{
-									Yii::app()->user->setFlash('error','Data Gagal disimpan');
-									$pesan = 'invalid';
-								}
-						$data = array('message' => $pesan, 'redirect_url' => $redirectUrl);
-						echo CJSON::encode($data);
-					}
+    	';
 
-					}
-			}else{
-				echo CJSON::encode(array('message' => 'Your request is invalid'));
-			}
-			
-		}
-		
+    	$params = [
+    		'index' => 'hasil_produksi',
+    		'type' => 'type_hasil_produksi',
+    		'body' => $json
+    	];
+      
+    	$respons =  $client->search($params);
 
-		public function actionDetails($id)
-		{
-			$petani = TabelPetani::model()->findByAttributes(array('id_user' => $id));
-			$this->render('details', array(
-				'model_petani' => $petani,
-			));
-		}
+    	var_dump($respons);
+	}
 
-		
 
 		/**
 		 * Lists all models.
 		 */
-		public function actionIndex()
-		{
-			if (Yii::app()->user->isGuest) {
-				$this->redirect('/kospermindo/login');
-			}
+	public function actionIndex()
+	{
+		if (Yii::app()->user->isGuest) {
+			$this->redirect('/kospermindo/login');
+		}else if(Yii::app()->user->akses == 1 || (Yii::app()->user->akses == 2 && in_array("1", json_decode(Users::model()->getModeratorMenu(Yii::app()->user->id))))){
 
 			$page = !empty($_GET['page']) ? $_GET['page'] : 1;
 
-			$petani = Petani::model()->findAllByAttributes(array('status_hapus'=>1));
+			$petani = Petani::model()->findAllByAttributes(array('status_hapus'=>0));
 
 			$count_petani = count($petani);
 			$limit = 10;
 			$petani_count = ceil($count_petani/$limit);
 			$offset = $limit*($page-1);
 
-			$petaniShow = Petani::model()->findAllByAttributes(array('status_hapus'=>1), array('limit'=>$limit, 'offset'=>$offset));
+			$petaniShow = Petani::model()->findAllByAttributes(array('status_hapus'=>0), array('limit'=>$limit, 'offset'=>$offset));
 			
 
 			$dataProvider = new CActiveDataProvider('Petani', array(
 				'countCriteria' => array(
-					'condition' => 'status_hapus=1'
+					'condition' => 'status_hapus=0'
 				),
 				'pagination' => array(
 					'pageSize' => 10,
@@ -545,10 +563,13 @@
 
 			$this->render('index', array(
 				'data' => $dataProvider,
-				'petani' => $petaniShow
-
+				'petani' => $petaniShow,
 			));
+		}else{
+			$this->redirect('/kospermindo');
+
 		}
+	}
 
 		/**
 		 * Manages all models.

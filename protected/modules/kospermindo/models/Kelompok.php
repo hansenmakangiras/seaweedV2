@@ -5,6 +5,8 @@
  *
  * The followings are the available columns in table 'kelompok':
  * @property integer $id_kelompok
+ * @property string $kode_gudang
+ * @property string $kode_kelompok
  * @property string $nama_kelompok
  * @property integer $ketua_kelompok
  * @property integer $id_gudang
@@ -12,12 +14,6 @@
  */
 class Kelompok extends CActiveRecord
 {
-  public function behaviors()
-  {
-    return array(
-      'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
-    );
-  }
 	/**
 	 * @return string the associated database table name
 	 */
@@ -34,12 +30,13 @@ class Kelompok extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			//array('nama_kelompok, ketua_kelompok, id_gudang, status', 'required'),
-			array('ketua_kelompok, id_gudang, status', 'numerical', 'integerOnly'=>true),
+			//array('kode_gudang, kode_kelompok, nama_kelompok, ketua_kelompok, id_gudang, status', 'required'),
+			array('ketua_kelompok, status', 'numerical', 'integerOnly'=>true),
+			array('kode_gudang, kode_kelompok', 'length', 'max'=>20),
 			array('nama_kelompok', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_kelompok, nama_kelompok, ketua_kelompok, id_gudang, status', 'safe', 'on'=>'search'),
+			array('id_kelompok, kode_jenis_gudang, kode_gudang, kode_kelompok, nama_kelompok, ketua_kelompok, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +48,7 @@ class Kelompok extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+      'from_gudang' => array(self::BELONGS_TO, 'Gudang', 'kode_gudang'),
 		);
 	}
 
@@ -61,9 +59,11 @@ class Kelompok extends CActiveRecord
 	{
 		return array(
 			'id_kelompok' => 'Id Kelompok',
+			'kode_jenis_gudang' => 'Kode Jenis Gudang',
+			'kode_gudang' => 'Kode Gudang',
+			'kode_kelompok' => 'Kode Kelompok',
 			'nama_kelompok' => 'Nama Kelompok',
 			'ketua_kelompok' => 'Ketua Kelompok',
-			'id_gudang' => 'Id Gudang',
 			'status' => 'Status',
 		);
 	}
@@ -87,9 +87,11 @@ class Kelompok extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id_kelompok',$this->id_kelompok);
+		$criteria->compare('kode_jenis_gudang',$this->kode_jenis_gudang,true);
+		$criteria->compare('kode_gudang',$this->kode_gudang,true);
+		$criteria->compare('kode_kelompok',$this->kode_kelompok,true);
 		$criteria->compare('nama_kelompok',$this->nama_kelompok,true);
 		$criteria->compare('ketua_kelompok',$this->ketua_kelompok);
-		$criteria->compare('id_gudang',$this->id_gudang);
 		$criteria->compare('status',$this->status);
 
 		return new CActiveDataProvider($this, array(
@@ -107,12 +109,11 @@ class Kelompok extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-
 	public function getNamaGudang($id){
-		$query = Gudang::model()->findByAttributes(array('id_gudang'=>$id));
+		$query = Gudang::model()->findByAttributes(array('kode_gudang'=>$id));
 
 		if(!empty($query)){
-			return $query->nama;	
+			return $query['nama'];	
 		}else{
 			return "Gudang Belum ditentukan";
 		}
@@ -129,4 +130,23 @@ class Kelompok extends CActiveRecord
 		}
 	}
 
+  public function getListKelompok(){
+    $criteria = new CDbCriteria();
+    $criteria->order = "kode_gudang";
+
+    $model = $this->findAll($criteria);
+    return CHtml::listData($model, 'kode_kelompok', 'nama_kelompok','kode_gudang');
+  }
+
+  public function getListKelompokByGudang($kode){
+    if(isset($kode)){
+      $criteria = new CDbCriteria();
+      $criteria->condition = 'kode_jenis_gudang = :kode_jenis_gudang';
+      $criteria->params = array(':kode_jenis_gudang' => (int) $kode);
+      $model = $this->findAll($criteria);
+    }else{
+      $model = $this->findAll();
+    }
+    return CHtml::listData($model, 'kode_kelompok', 'nama_kelompok','kode_jenis_gudang');
+  }
 }

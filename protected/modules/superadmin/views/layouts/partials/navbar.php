@@ -1,68 +1,50 @@
-<div class="row">
-  <!-- Profile Info and Notifications -->
-  <div class="col-md-6 col-sm-8 clearfix">
+<div class="row nav-custom">
+	<!-- Profile Info and Notifications -->
+	<div class="col-md-12 col-sm-8 clearfix">
 
-    <ul class="user-info pull-left pull-none-xsm">
-      <!-- Profile Info -->
-      <li class="profile-info dropdown">
-        <!-- add class "pull-right" if you want to place this from right -->
+		<ul class="user-info pull-right pull-none-xsm">
+			<!-- Profile Info -->
+			<li class="profile-info dropdown pull-right">
+				<!-- add class "pull-right" if you want to place this from right -->
+				<a href="#" class="dropdown-toggle user" data-toggle="dropdown">
+					<img src="" data-name="<?php echo (!empty(Yii::app()->user->getName())) ? strtoupper(Yii::app()->user->getName()): "Guest" ?>" id="profile" alt="" class="img-circle profile" width="44"/>
+					<strong style="color: #ffffff"><?php echo (!empty(Yii::app()->user->getName())) ? strtoupper(Yii::app()->user->getName()): "Guest" ?></strong>
+				</a>
 
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <img src="<?= $this->baseUrl ?>/static/admin/images/thumb-1@2x.png" alt="" class="img-circle" width="44"/>
-          Welcome, <strong><?php echo (!empty(Yii::app()->user->getName())) ? strtoupper(Yii::app()->user->getName()): "Guest" ?></strong>
-        </a>
+				<ul class="dropdown-menu">
 
-        <ul class="dropdown-menu">
+					<!-- Reverse Caret -->
+					<li class="caret"></li>
 
-          <!-- Reverse Caret -->
-          <li class="caret"></li>
+					<!-- <li>
+						<a href="/kospermindo/pengaturan/ubahakun" class="no-margin">
+							<i class="entypo-key"></i>
+							Pengaturan Akun
+						</a>
+					</li> -->
+<!-- 					<li>
+	<a href="/kospermindo/pengaturan" class="no-margin">
+		<i class="entypo-cog"></i>
+		Pengaturan
+	</a>
+</li> -->
 
-          <!-- Profile sub-links -->
-          <li>
-            <a href="/profile" class="no-margin">
-              <i class="entypo-user"></i>
-              Edit Profile
-            </a>
-          </li>
-
-          <li>
-            <a href="/message" class="no-margin">
-              <i class=" entypo-mail"></i>
-              Inbox
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Raw Links -->
-  <div class="col-md-6 col-sm-4 clearfix hidden-xs">
-
-    <ul class="list-inline links-list pull-right">
-      <li>
-        <a href="<?= $this->baseUrl; ?>/settings">
-          Settings <i class="entypo-cog right"></i>
-        </a>
-      </li>
-      <li class="sep"></li>
-
-      <li>
-        <a href="<?= $this->baseUrl; ?>/superadmin/dashboard/logout">
-          Keluar <i class="entypo-logout right"></i>
-        </a>
-      </li>
-    </ul>
-
-  </div>
-
+					<li>
+						<a href="/superadmin/users/logout" class="no-margin">
+							<i class="entypo-logout"></i>
+							Keluar
+						</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 </div>
-<hr/>
 <?php
-  Yii::app()->clientScript->registerScript('initial', '
-    $(".profile").initial({
-      fontSize: 50,
-      fontWeight: 700
-     }); 
-  ');
+	Yii::app()->clientScript->registerScript('initial', '
+		$(".profile").initial({
+			fontSize: 50,
+			fontWeight: 700
+		 }); 
+	');
 ?>

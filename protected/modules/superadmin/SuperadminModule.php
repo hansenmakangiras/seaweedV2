@@ -19,22 +19,25 @@
       // this method is called when the module is being created
       // you may place code here to customize the module or the application
       //$this->baseUrl = Yii::app()->getBaseUrl(true);
-      //$this->defaultController = "dashboard";
+      parent::init();
+      Yii::setPathOfAlias('superadmin',dirname(__FILE__));
+      $this->defaultController = "dashboard";
       // import the module-level models and components
       $this->setImport(array(
         'superadmin.models.*',
         'superadmin.components.*',
+        'application.modules.kospermindo.models.*',
         'superadmin.modules.rights.*',
         'superadmin.modules.rights.components.*',
         'superadmin.modules.rights.components.dataproviders.*',
       ));
-      parent::init();
+
       Yii::app()->setComponents(array(
         'errorHandler' => array(
           // use 'site/error' action to display errors
           'errorAction' => YII_DEBUG ? null : '/superadmin/error',
         ),
-        'user'         => array(
+        'superadminuser'         => array(
           'class'          => 'SAdminWebUser',
           // enable cookie-based authentication
           'allowAutoLogin'      => true,
@@ -44,7 +47,7 @@
           //'baseUrl'=>Yii::app()->createUrl("/kospermindo/login"),
           'stateKeyPrefix' => '_superadmin',
         ),
-      ));
+      ),false);
       //$this->setModules(array('rights'));
     }
 
@@ -82,19 +85,36 @@
      * Publishes the module assets path.
      * @return string the base URL that contains all published asset files of Rights.
      */
+//    public function getAssetsUrl()
+//    {
+//      if ($this->_assetsUrl === null) {
+//        $assetsPath = Yii::getPathOfAlias('superadmin.assets');
+//
+//        // We need to republish the assets if debug mode is enabled.
+//        if ($this->debug === true) {
+//          $this->_assetsUrl = Yii::app()->getAssetManager()->publish($assetsPath, false, -1, true);
+//        } else {
+//          $this->_assetsUrl = Yii::app()->getAssetManager()->publish($assetsPath);
+//        }
+//      }
+//
+//      return $this->_assetsUrl;
+//    }
+    /**
+     * @return string the base URL that contains all published asset files of gii.
+     */
     public function getAssetsUrl()
     {
-      if ($this->_assetsUrl === null) {
-        $assetsPath = Yii::getPathOfAlias('superadmin.assets');
-
-        // We need to republish the assets if debug mode is enabled.
-        if ($this->debug === true) {
-          $this->_assetsUrl = Yii::app()->getAssetManager()->publish($assetsPath, false, -1, true);
-        } else {
-          $this->_assetsUrl = Yii::app()->getAssetManager()->publish($assetsPath);
-        }
-      }
-
+      if($this->_assetsUrl===null)
+        $this->_assetsUrl=Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('superadmin.assets'));
       return $this->_assetsUrl;
+    }
+
+    /**
+     * @param string $value the base URL that contains all published asset files of gii.
+     */
+    public function setAssetsUrl($value)
+    {
+      $this->_assetsUrl=$value;
     }
   }

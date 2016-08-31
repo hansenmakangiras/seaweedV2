@@ -1,3 +1,11 @@
+<?php
+  $cs = Yii::app()->clientScript;
+  $cs->coreScriptPosition = CClientScript::POS_END;
+  $cs->scriptMap=array(
+    'jquery.js'=>FALSE,
+    'jquery.min.js'=>FALSE,
+  );
+?>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -33,6 +41,7 @@
 <link rel="stylesheet" href="<?= $this->baseUrl ?>/static/admin/js/icheck/skins/futurico/futurico.css">
 <link rel="stylesheet" href="<?= $this->baseUrl ?>/static/admin/js/icheck/skins/polaris/polaris.css">
 <link rel="stylesheet" href="<?= $this->baseUrl ?>/static/admin/js/wysihtml5/bootstrap-wysihtml5.css">
+
 <!-- 
 <style type="text/css">
 	.modal-dialog {

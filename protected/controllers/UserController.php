@@ -67,55 +67,7 @@
 
     public function actionCreate()
     {
-      $model = new Users;
-      $komoditi = Users::model()->getKomoditiTipe();
-      $pesan = '';
-      $userid = Yii::app()->user->getId();
-      $users = Users::model()->findByPk($userid);
 
-      $status = 1;
-      if (isset($_POST['Users'])) {
-
-        //$checklevel = Users::model()->checkLevel;
-        //Helper::dd($_POST['Users']);($userid);
-//        $isSuperUser = Users::model()->isSuperUser();
-//        $model->attributes = $_POST['Users'];
-//        if ($isSuperUser === true) {
-//          if ($model->save()) {
-//            $pesan = 'Data berhasil disimpan';
-//            $this->redirect(array('view', 'id' => $model->id));
-//          } else {
-//            Helper::dd($model->errors);
-//            //throw new CHttpException($model->errors['code']);
-//            $pesan = 'Data Gagal disimpan';
-//          }
-//        }
-        //if (isset($_POST['Komoditi'])) {
-        if ($users->komoditi !== $_POST['Komoditi']) {
-          $model->isadmin = 1;
-          $model->superuser = 1;
-          $model->status = $status;
-          $model->levelid = 0;
-          $model->attributes = $_POST['Users'];
-
-          if ($model->save()) {
-            $pesan = 'Data berhasil disimpan';
-            $this->redirect(array('view', 'id' => $model->id));
-          } else {
-            //Helper::dd($model);
-            $pesan = 'Data Gagal disimpan';
-          }
-        } else {
-          $pesan = "User with :" . $_POST['Komoditi'] . "already exist";
-        }
-      }
-      //}
-
-      $this->render('create', array(
-        'model' => $model,
-        'pesan' => $pesan,
-        //'model_level' => $model_level,
-      ));
     }
 
     /**

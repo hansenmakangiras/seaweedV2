@@ -145,9 +145,9 @@
      *
      * @return boolean
      */
-    public static function CheckClassType($className, $type = "")
+    public static function CheckClassType($className, $type = '')
     {
-      $className = preg_replace("/[^a-z0-9]/i", "", $className);
+      $className = preg_replace('/[^a-z0-9]/i', '', $className);
 
       if (is_array($type)) {
         foreach ($type as $t) {
@@ -170,9 +170,7 @@
         $url = array();
         foreach ($param as $key => $value) {
           if (!empty($value)) {
-//					if ($url[$key] == 'page') {
-            //						# code...
-            //					}
+
             $url[$key] = $value;
           }
         }
@@ -197,7 +195,7 @@
       $rupiah = self::_format_number($var, $null, $fractional);
 
       // var_dump($rupiah);
-      return $rupiah != "" && $rupiah != "N/A" ? "Rp. " . $rupiah : $rupiah;
+      return $rupiah !== '' && $rupiah !== 'N/A' ? 'Rp. ' . $rupiah : $rupiah;
 
       //    return 'Rp. ' . number_format($var);
       //    return 'Rp. ' . money_format("%i", $var);
@@ -392,8 +390,8 @@
             }
           }
         }
-      } elseif ($count == 2) {
-        if ($explode[1] == '000') {
+      } elseif ($count === 2) {
+        if ($explode[1] === '000') {
           $nom = $explode[0];
 
           return $nom . ' Rb';
@@ -427,7 +425,7 @@
       $kata = explode(' ', $val);
       $count = count($kata);
       if ($count == 2 && $kata[0] != '0') {
-        if ($kata[1] == 'M') {
+        if ($kata[1] === 'M') {
           $explode = explode(',', $kata[0]);
           if (strpos($kata[0], ',') !== false) {
             $length = strlen($explode[1]);
@@ -441,7 +439,7 @@
           } else {
             $float = $kata[0] . '000000000';
           }
-        } elseif ($kata[1] == 'jt') {
+        } elseif ($kata[1] === 'jt') {
           $explode = explode(',', $kata[0]);
           if (strpos($kata[0], ',') !== false) {
             $length = strlen($explode[1]);
@@ -456,7 +454,7 @@
             $float = $kata[0] . '000000';
           }
         }
-      } elseif ($count == 1 && $kata[0] != '-' && $kata[0] != '0') {
+      } elseif ($count === 1 && $kata[0] !== '-' && $kata[0] !== '0') {
         $float = str_replace(array(',', '.'), '', $kata[0]);
       } else {
         $float = $kata[0];
@@ -593,18 +591,18 @@
       }
 
       $BulanIndo = array(
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember",
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember',
       );
 
       $tahun = substr($date, 0, 4); // memisahkan format tahun menggunakan substring
@@ -612,10 +610,7 @@
       $tgl = substr($date, 8, 2); // memisahkan format tanggal menggunakan substring
 
       $bulan_kalender = isset($BulanIndo[(int)$bulan - 1]) ? $BulanIndo[(int)$bulan - 1] : $BulanIndo[0];
-      $result = $tgl . " " . $bulan_kalender . " " . $tahun;
-
-      // var_dump($result);exit();
-      return ($result);
+      return $tgl . ' ' . $bulan_kalender . ' ' . $tahun;
     }
 
     public static function warna($nilai)
@@ -1774,14 +1769,14 @@
       $controller = Yii::app()->controller->id;
       $action = Yii::app()->controller->action->id;
       if($module == $url[1] && $controller === $url[2] && $action == "index"){
-        $aktif = "inbox";
+        $aktif = "masuk";
       }else{
-        if($url[3] == "sent" || strpos($url[3],"sent")){
-          $aktif = "sent";
-        }elseif($url[3] == "draft" || strpos($url[3],"draft")){
-          $aktif = "draft";
-        }elseif($url[3] == "trash" || strpos($url[3],"trash")){
-          $aktif = "trash";
+        if($url[3] == "keluar" || strpos($url[3],"keluar")){
+          $aktif = "keluar";
+        }elseif($url[3] == "simpan" || strpos($url[3],"simpan")){
+          $aktif = "simpan";
+        }elseif($url[3] == "terhapus" || strpos($url[3],"terhapus")){
+          $aktif = "terhapus";
         }
       }
       return $aktif;
@@ -1818,8 +1813,8 @@
           $active = 'kelompok';
         } elseif ($url[2] == 'seaweed' OR strpos($url[2], 'seaweed') !== false) {
           $active = 'seaweed';
-        } elseif ($url[2] == 'kordinator' OR strpos($url[2], 'kordinator') !== false) {
-          $active = 'kordinator';
+        } elseif ($url[2] == 'pesan' OR strpos($url[2], 'pesan') !== false) {
+          $active = 'pesan';
         } elseif ($url[2] == 'pengguna' OR strpos($url[2], 'pengguna') !== false) {
           $active = 'pengguna';
         } elseif ($url[2] == 'company' OR strpos($url[2], 'company') !== false) {
@@ -1846,14 +1841,14 @@
     }
 
     //function that returns usual 0 or 1 value dependently user input
-    public function getSwitch($switch)
+    public static function getSwitch($switch)
     {
       if(is_null($switch)) return $switch; //null shows all records
-      if(is_numeric($switch)) return $switch; //here we save an ability to search with `0` or `1` value
-      if($switch == 'on') {
-        return 1; //all fields with `switch` = 1
-      } elseif($switch == 'off') {
-        return 0; //all fields with `switch` = 0
+      //if(is_numeric($switch)) return $switch; //here we save an ability to search with `0` or `1` value
+      if($switch === 1) {
+        return false; //all fields with `switch` = 1
+      } elseif($switch === 0) {
+        return true; //all fields with `switch` = 0
       } else {
         return null; //all fields
       }

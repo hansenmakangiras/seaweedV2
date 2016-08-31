@@ -1,86 +1,182 @@
 <?php
 
   class DashboardController extends KController
+
   {
-    public function actionIndex()
-    {
-      // renders the view file 'protected/views/site/index.php'
-      // using the default layout 'protected/views/layouts/main.php'
 
-      if (Yii::app()->user->isGuest) {
-        $this->redirect('/kospermindo/login');
-      }
+	public function actionIndex()
+	{
 
-      $allFarmers = TabelPetani::model()->countByAttributes(array('status' => 1));
-      $allGroups = TabelKelompok::model()->countByAttributes(array('status' => 1));
-      $allWarehouses = TabelKoordinator::model()->countByAttributes(array('status' => 1));
-      $summary = Komoditi::model()->getSummarySeaweedAll();
-      $allPanen = Komoditi::model()->getSumPanen();
-      $this->render('index', array(
-        'allFarmers' => $allFarmers,
-        'allPanen'   => $allPanen,
-        'summary'    => $summary,
-      ));
-    }
+	  if (Yii::app()->user->isGuest) {
 
-    public function actionGetData()
-    {
-      for ($i = 2015; $i <= 2020; $i++) {
-        $tes[] = Komoditi::model()->getGrafik($i);
-      }
+		$this->redirect('/kospermindo/login');
 
-      $data = array(
-        array(
-          'y' => '2015',
-          'a' => !empty($tes[0][0]['total_panen']) ? $tes[0][0]['total_panen'] : "0",
-          'b' => !empty($tes[0][1]['total_panen']) ? $tes[0][1]['total_panen'] : "0",
-          'c' => !empty($tes[0][2]['total_panen']) ? $tes[0][2]['total_panen'] : "0",
-          'd' => !empty($tes[0][3]['total_panen']) ? $tes[0][3]['total_panen'] : "0",
-        ),
-        array(
-          'y' => '2016',
-          'a' => !empty($tes[1][0]['total_panen']) ? $tes[1][0]['total_panen'] : "0",
-          'b' => !empty($tes[1][1]['total_panen']) ? $tes[1][1]['total_panen'] : "0",
-          'c' => !empty($tes[1][2]['total_panen']) ? $tes[1][2]['total_panen'] : "0",
-          'd' => !empty($tes[1][3]['total_panen']) ? $tes[1][3]['total_panen'] : "0",
-        ),
-        array(
-          'y' => '2017',
-          'a' => !empty($tes[2][0]['total_panen']) ? $tes[2][0]['total_panen'] : "0",
-          'b' => !empty($tes[2][1]['total_panen']) ? $tes[2][1]['total_panen'] : "0",
-          'c' => !empty($tes[2][2]['total_panen']) ? $tes[2][2]['total_panen'] : "0",
-          'd' => !empty($tes[2][3]['total_panen']) ? $tes[2][3]['total_panen'] : "0",
-        ),
-        array(
-          'y' => '2018',
-          'a' => !empty($tes[3][0]['total_panen']) ? $tes[3][0]['total_panen'] : "0",
-          'b' => !empty($tes[3][1]['total_panen']) ? $tes[3][1]['total_panen'] : "0",
-          'c' => !empty($tes[3][2]['total_panen']) ? $tes[3][2]['total_panen'] : "0",
-          'd' => !empty($tes[3][3]['total_panen']) ? $tes[3][3]['total_panen'] : "0",
-        ),
-        array(
-          'y' => '2019',
-          'a' => !empty($tes[4][0]['total_panen']) ? $tes[4][0]['total_panen'] : "0",
-          'b' => !empty($tes[4][1]['total_panen']) ? $tes[4][1]['total_panen'] : "0",
-          'c' => !empty($tes[4][2]['total_panen']) ? $tes[4][2]['total_panen'] : "0",
-          'd' => !empty($tes[4][3]['total_panen']) ? $tes[4][3]['total_panen'] : "0",
-        ),
-        array(
-          'y' => '2020',
-          'a' => !empty($tes[5][0]['total_panen']) ? $tes[5][0]['total_panen'] : "0",
-          'b' => !empty($tes[5][1]['total_panen']) ? $tes[5][1]['total_panen'] : "0",
-          'c' => !empty($tes[5][2]['total_panen']) ? $tes[5][2]['total_panen'] : "0",
-          'd' => !empty($tes[5][3]['total_panen']) ? $tes[5][3]['total_panen'] : "0",
-        ),
-      );
-      echo CJSON::encode($data);
-    }
+	  }elseif (Yii::app()->user->akses == 3) {
 
-    public function actionLogout(){
-//      Yii::app()->user->logout();
-      Yii::app()->user->logout(false);
-//      $this->redirect('/kospermindo/login');
-      $this->redirect(Yii::app()->getModule('kospermindo')->user->loginUrl);
-      //$this->redirect(Yii::app()->homeUrl);
-    }
+	  	$id = Yii::app()->user->id;
+	  	$allPetani = Gudang::model()->countPetani();
+
+		$sumProduksi = Gudang::model()->sumProduksiByPetani($id);
+
+		$data = array();
+
+		$sumProduksiByJenis = Gudang::model()->sumProduksiByJenisPetani($id);
+		// var_dump($sumProduksiByJenis);
+		// exit();
+
+		$allGudang = Gudang::model()->findAllByAttributes(array('status' => 0));
+		$allKelompok = Kelompok::model()->findAllByAttributes(array('status' => 0));
+
+		$this->render('index', array(
+			'allFarmers'         => $allPetani,
+			'allPanen'           => $sumProduksi,
+			'sumProduksiByJenis' => $sumProduksiByJenis,
+			'allGudang'          => $allGudang,
+			'allKelompok'        => $allKelompok,
+		  ));
+		
+	  }else{
+
+		  $allPetani = Gudang::model()->countPetani();
+
+		  $sumProduksi = Gudang::model()->sumProduksi();
+
+		  $data = array();
+
+		  $sumProduksiByJenis = Gudang::model()->sumProduksiByJenis();
+
+		  $allGudang = Gudang::model()->findAllByAttributes(array('status' => 0));
+		  $allKelompok = Kelompok::model()->findAllByAttributes(array('status' => 0));
+
+		  $this->render('index', array(
+			'allFarmers'         => $allPetani,
+			'allPanen'           => $sumProduksi,
+			'sumProduksiByJenis' => $sumProduksiByJenis,
+			'allGudang'          => $allGudang,
+			'allKelompok'        => $allKelompok,
+		  ));
+
+	  }
+
+
+	}
+
+	public function actionGetData()
+
+	{
+
+		if(Yii::app()->user->akses == 3){
+			$id = Yii::app()->user->id;
+			
+			$sumProduksiByJenis = Gudang::model()->sumProduksiByJenisPetani($id);
+		
+		}else{
+
+	  		$sumProduksiByJenis = Gudang::model()->sumProduksiByJenis();
+		}
+
+	  	echo json_encode($sumProduksiByJenis);
+
+
+	  /*$data = array(
+
+		array(
+
+		  'y' => '2015',
+
+		  'a' => !empty($jss[0][0]['total_produksi']) ? $jss[0][0]['total_produksi'] : "0",
+
+		  'b' => !empty($jss[0][1]['total_produksi']) ? $jss[0][1]['total_produksi'] : "0",
+
+		  'c' => !empty($jss[0][2]['total_produksi']) ? $jss[0][2]['total_produksi'] : "0",
+
+		  'd' => !empty($jss[0][3]['total_produksi']) ? $jss[0][3]['total_produksi'] : "0",
+
+		),
+
+		array(
+
+		  'y' => '2016',
+
+		  'a' => !empty($jss[1][0]['total_produksi']) ? $jss[1][0]['total_produksi'] : "0",
+
+		  'b' => !empty($jss[1][1]['total_produksi']) ? $jss[1][1]['total_produksi'] : "0",
+
+		  'c' => !empty($jss[1][2]['total_produksi']) ? $jss[1][2]['total_produksi'] : "0",
+
+		  'd' => !empty($jss[1][3]['total_produksi']) ? $jss[1][3]['total_produksi'] : "0",
+
+		),
+
+		array(
+
+		  'y' => '2017',
+
+		  'a' => !empty($jss[2][0]['total_produksi']) ? $jss[2][0]['total_produksi'] : "0",
+
+		  'b' => !empty($jss[2][1]['total_produksi']) ? $jss[2][1]['total_produksi'] : "0",
+
+		  'c' => !empty($jss[2][2]['total_produksi']) ? $jss[2][2]['total_produksi'] : "0",
+
+		  'd' => !empty($jss[2][3]['total_produksi']) ? $jss[2][3]['total_produksi'] : "0",
+
+		),
+
+		array(
+
+		  'y' => '2018',
+
+		  'a' => !empty($jss[3][0]['total_produksi']) ? $jss[3][0]['total_produksi'] : "0",
+
+		  'b' => !empty($jss[3][1]['total_produksi']) ? $jss[3][1]['total_produksi'] : "0",
+
+		  'c' => !empty($jss[3][2]['total_produksi']) ? $jss[3][2]['total_produksi'] : "0",
+
+		  'd' => !empty($jss[3][3]['total_produksi']) ? $jss[3][3]['total_produksi'] : "0",
+
+		),
+
+		array(
+
+		  'y' => '2019',
+
+		  'a' => !empty($jss[4][0]['total_produksi']) ? $jss[4][0]['total_produksi'] : "0",
+
+		  'b' => !empty($jss[4][1]['total_produksi']) ? $jss[4][1]['total_produksi'] : "0",
+
+		  'c' => !empty($jss[4][2]['total_produksi']) ? $jss[4][2]['total_produksi'] : "0",
+
+		  'd' => !empty($jss[4][3]['total_produksi']) ? $jss[4][3]['total_produksi'] : "0",
+
+		),
+
+		array(
+
+		  'y' => '2020',
+
+		  'a' => !empty($jss[5][0]['total_produksi']) ? $jss[5][0]['total_produksi'] : "0",
+
+		  'b' => !empty($jss[5][1]['total_produksi']) ? $jss[5][1]['total_produksi'] : "0",
+
+		  'c' => !empty($jss[5][2]['total_produksi']) ? $jss[5][2]['total_produksi'] : "0",
+
+		  'd' => !empty($jss[5][3]['total_produksi']) ? $jss[5][3]['total_produksi'] : "0",
+
+		),
+
+	  );
+
+	  echo CJSON::encode($data);*/
+
+	}
+
+	public function actionLogout()
+	{
+
+	  Yii::app()->user->logout(false);
+
+	  $this->redirect(Yii::app()->getModule('kospermindo')->user->loginUrl);
+
+	}
+
   }

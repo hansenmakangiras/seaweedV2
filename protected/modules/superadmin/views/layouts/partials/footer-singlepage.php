@@ -16,6 +16,4 @@
 <script src="<?= $this->baseUrl; ?>/static/admin/js/jquery.validate.min.js"></script>
 <script src="<?= $this->baseUrl; ?>/static/admin/js/jquery.inputmask.bundle.min.js"></script>
 <script src="<?= $this->baseUrl; ?>/static/admin/js/toastr.js"></script>
-<!--<script src="--><?php //echo $this->baseUrl; ?><!--/static/admin/js/neon-login.js"></script>-->
-<script src="<?= $this->baseUrl; ?>/static/admin/js/neon-register.js"></script>
 <script src="<?= $this->baseUrl; ?>/static/admin/js/neon-custom.js"></script>

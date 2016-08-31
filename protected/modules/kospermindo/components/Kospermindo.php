@@ -18,6 +18,8 @@
     private static $_m;
     private static $_a;
 
+    public $dateFormat = 'Y-m-d H:i:s';
+
     /**
      * Returns the base url to Kospermindo.
      * @return the url to Kospermindo.
@@ -30,7 +32,7 @@
     }
 
     /**
-     * @return KospermindoModule the Kospermindo module.
+     * @return string $_m Get This module.
      */
     public static function module()
     {
@@ -48,7 +50,7 @@
      * @param CModule $module the module to find the module in. Defaults to null,
      * meaning that the application will be used.
      *
-     * @return the Kospermindo module.
+     * @return string $m Kospermindo module.
      */
     private static function findModule(CModule $module = null)
     {
@@ -88,24 +90,34 @@
 
     public static function getCountUnreadMessages()
     {
-      $data = Messages::model()->findAll("is_read = 0 && sent_status = 0");
-      $count = count($data);
+      $data = Messages::model()->findAll("sent_status = 0 AND is_read = 0");
+      return count($data);
+    }
 
-      return $count;
+    public static function getCountReadMessages()
+    {
+      $data = Messages::model()->findAll("sent_status = 0 AND is_read = 1");
+      return count($data);
     }
 
     public static function getCountDraft()
     {
       $data = Messages::model()->findAll("is_draft = 1");
-      $count = count($data);
+      return count($data);
+    }
 
-      return $count;
+    public static function getCountUnreadDraft()
+    {
+      $data = Messages::model()->findAll("is_draft = 0");
+      return count($data);
     }
 
     public static function getSentMessageStatus(){
       $data = Messages::model()->findAll("sent_status = 1");
-      $count = count($data);
+      return count($data);
+    }
 
-      return $count;
+    public function getCountUnreadedMessages($userId) {
+      return Messages::model()->getCountUnreaded($userId);
     }
   }

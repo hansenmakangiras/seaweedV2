@@ -19,13 +19,33 @@
 	<h2>Manajemen Data Komoditi</h2><br/>
 </div>
 
+<?php if (Yii::app()->user->hasFlash('success')) { ?>
+	<div id="alert-flash" class="alert-view">
+		<div class="alert-custom alert-custom-success">
+			<i class="entypo-check"></i> &nbsp;<?php echo CHtml::encode(Yii::app()->user->getFlash('success')); ?>
+		</div>
+	</div>
+<?php } else {
+	if (Yii::app()->user->hasFlash('failed')) { ?>
+		<div id="alert-flash" class="alert-view">
+			<div class="alert-custom alert-custom-danger">
+				<i class="entypo-cancel"></i> &nbsp;<?php echo CHtml::encode(Yii::app()->user->getFlash('failed')); ?>
+			</div>
+		</div>
+	<?php }
+} ?>
+
 <div class="row">
 	<div class="col-md-12">
 
 		<div class="row">
 			<div class="col-md-12">
-				<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modal-insert" id="btn-tmbh"><i class="entypo-plus"></i>Tambah</button>
-				<hr>
+				<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modal-insert"
+								id="btn-tmbh"><i class="entypo-plus"></i>Tambah
+				</button>
+				<br>
+				<br>
+				<br>
 			</div>
 		</div>
 
@@ -33,32 +53,35 @@
 			<div class="col-md-12">
 				<table id="tblwarehouse" class="table table-bordered table-responsive table-hover">
 					<thead>
-						<tr>
-							<th class="text-center" width="5%">No</th>
-							<th class="text-center">Jenis Komoditi</th>
-							<th class="text-center">Sub Komoditi</th>
-							<th class="text-center" width="200px" rowspan="2">Aksi</th>
-						</tr>
+					<tr>
+						<th class="text-center" width="5%">No</th>
+						<th class="text-center">Jenis Komoditi</th>
+						<th class="text-center">Sub Komoditi</th>
+						<th class="text-center" width="200px">Aksi</th>
+					</tr>
 					<thead>
 
 					<tbody>
-						<?php if(!empty($jenis)){ ?>
-							<?php $i=!empty($_GET['page']) ? (($_GET['page']-1)*10)+1 : 1; foreach ($jenis as $key => $value) { ?>
-								<tr>
-									<td class="text-center"><?= $i++; ?></td>
-									<td id="val-jenis"><?= $value['jenis'] ?></td>
-									<td><?= $value['sub'] ?></td>
-									<td>
-										<a class="btn btn-default btn-sm btn-icon icon-left" id="sunting" data-id="<?= $value['id'] ?>" data-parent-id="<?= $value['parent_id'] ?>" href="#"><i class="entypo-pencil"></i>Sunting</a>
-										<a href="#"  data-id="<?= $value['id'] ?>" id="hapus-komo" class="btn btn-danger btn-sm btn-icon icon-left">Hapus <i
-												class="entypo-trash"></i>
-										</a>
-									</td>
-								</tr>
-							<?php } ?>
-						<?php }else{ ?>
-						<td colspan="10" class="text-center">Tidak ada hasil ditemukan</td>
+					<?php if (!empty($jenis)) { ?>
+						<?php $i = !empty($_GET['page']) ? (($_GET['page'] - 1) * 10) + 1 : 1;
+						foreach ($jenis as $key => $value) { ?>
+							<tr>
+								<td class="text-center"><?= $i++; ?></td>
+								<td id="val-jenis"><?= $value['jenis'] ?></td>
+								<td><?= $value['sub'] ?></td>
+								<td>
+									<a class="btn btn-default btn-sm btn-icon icon-left" id="sunting" data-id="<?= $value['id'] ?>"
+										 data-parent-id="<?= $value['parent_id'] ?>" href="#"><i class="entypo-pencil"></i>Sunting</a>
+									<a href="#" data-id="<?= $value['id'] ?>" id="hapus-komo"
+										 class="btn btn-danger btn-sm btn-icon icon-left">Hapus <i
+											class="entypo-trash"></i>
+									</a>
+								</td>
+							</tr>
 						<?php } ?>
+					<?php } else { ?>
+						<td colspan="10" class="text-center">Tidak ada hasil ditemukan</td>
+					<?php } ?>
 					</tbody>
 				</table>
 			</div>
@@ -69,9 +92,9 @@
 			$pages = $data->pagination;
 			$this->widget('CLinkPager', array(
 				'pages'             => $pages,
-				'maxButtonCount' => 30,
+				'maxButtonCount'=> 30,
 				'pageSize'          => 10,
-				'itemCount' => (int) $data->totalItemCount,
+				'itemCount'         => (int) $data->totalItemCount,
 				'htmlOptions'       => array('class' => 'pagination pagination-custom'),
 				'hiddenPageCssClass' => '',
 				'selectedPageCssClass' => 'active',
@@ -91,7 +114,8 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myModalLabel">Tambah Komoditi</h4>
 			</div>
 			<div class="modal-body">
@@ -101,9 +125,10 @@
 							<div class="form-group" style="margin-bottom: 0;">
 
 								<div class="col-md-12">
-									<input type="text" placeholder="Jenis Komoditi" name="" id="jenis" class="form-control input-lg" required>
+									<input type="text" placeholder="Jenis Komoditi" name="" id="jenis" class="form-control input-lg"
+												 required>
 									<br>
-									
+
 									<select name="" id="sub-komoditi" class="form-control input-lg">
 										<option value="0">Bukan Sub Komoditi</option>
 									</select>
@@ -114,7 +139,8 @@
 									<div class="alert hidden"><strong></strong></div>
 									<br>
 									<div class="pull-right">
-										<button id="submit" type="submit" class="btn btn-info btn-lg"><i class="entypo-plus"></i>Tambah</button>
+										<button id="submit" type="submit" class="btn btn-info btn-lg"><i class="entypo-plus"></i>Tambah
+										</button>
 										<a id="edit" class="btn btn-info btn-lg" data-id=""><i class="entypo-pencil"></i>Sunting</a>
 									</div>
 								</div>
@@ -134,9 +160,9 @@
 
 <?php
 	Yii::app()->clientScript->registerScript('close-alert', '
-	setTimeout(function () {
-		$("#pesan").addClass("hidden");
-	}, 5000);
+	setTimeout(function() {
+		$("#alert-flash").addClass("hidden");
+	}, 1500);
 
 	$("#modal-insert").prependTo("#modal-view");
 	
@@ -156,28 +182,9 @@
 			success: function(data){
 				msg = $.parseJSON(data);
 				if(msg.message === "success"){
-						$(".alert strong").html("Jenis Komoditi Berhasil Tersimpan !");
-						$(".alert").removeClass("hidden");
-						$(".alert").addClass("alert-success");
-					setTimeout(function() {
-						$("#submit").html("<i class=\"entypo-plus\"></i>Tambah");
-						$("#submit").removeClass("disabled");
-						$(".alert strong").html("");
-						$(".alert").addClass("hidden");
-						$(".alert").removeClass("alert-success");
-						window.location.reload(true);
-					}, 2500);
+					window.location.reload(true);
 				}else{
-					$(".alert strong").html("Jenis Komoditi Gagal Tersimpan !");
-					$(".alert").removeClass("hidden");
-					$(".alert").addClass("alert-danger");
-					setTimeout(function() {
-						$("#submit").html("<i class=\"entypo-plus\"></i>Tambah");
-						$("#submit").removeClass("disabled");
-						$(".alert strong").html("");
-						$(".alert").addClass("hidden");
-						$(".alert").removeClass("alert-danger");
-					}, 2500);
+					window.location.reload(true);
 				}
 			}
 		});
@@ -220,28 +227,10 @@
 					msg = $.parseJSON(data);
 
 					if(msg.message === "success"){
-							$(".alert strong").html("Jenis Komoditi Berhasil Terubah !");
-							$(".alert").removeClass("hidden");
-							$(".alert").addClass("alert-success");
-						setTimeout(function() {
-							$("#edit").html("<i class=\"entypo-pencil\"></i>Sunting");
-							$("#edit").removeClass("disabled");
-							$(".alert strong").html("");
-							$(".alert").addClass("hidden");
-							$(".alert").removeClass("alert-success");
-							window.location.reload(true);
-						}, 2500);
+						window.location.reload(true);
 					}else{
-						$(".alert strong").html("Jenis Komoditi Gagal Terubah !");
-						$(".alert").removeClass("hidden");
-						$(".alert").addClass("alert-danger");
-						setTimeout(function() {
-							$("#edit").html("<i class=\"entypo-pencil\"></i>Sunting");
-							$("#edit").removeClass("disabled");
-							$(".alert strong").html("");
-							$(".alert").addClass("hidden");
-							$(".alert").removeClass("alert-danger");
-						}, 2500);
+						window.location.reload(true);
+
 					}
 				}
 			});
@@ -280,14 +269,7 @@
 				if(msg.message === "success"){
 					window.location.reload(true);
 				}else{
-					$(".alert strong").html("Jenis Komoditi Gagal Terhapus !");
-					$(".alert").removeClass("hidden");
-					$(".alert").addClass("alert-danger");
-					setTimeout(function() {
-						$(".alert strong").html("");
-						$(".alert").addClass("hidden");
-						$(".alert").removeClass("alert-danger");
-					}, 2500);
+					window.location.reload(true);
 				}
 			}
 		});		

@@ -1,63 +1,113 @@
 <div class="col-md-12">
-  <?php if (!empty($pesan)) { ?>
-    <div class="alert alert-dismissible alert-danger">
-      <button type="button" class="close" data-dismiss="alert"><i class="fa fa-remove"></i></button>
-      <?= $pesan; ?>
+  <div id="pesan">
+    <?php if ($error === 0) { ?>
+      <div class="alert alert-success">
+        <?= $pesan; ?>
+      </div>
+    <?php }elseif($error === 1){ ?>
+      <div class="alert alert-danger">
+        <?= $pesan; ?>
+      </div>
+    <?php }else{ ?>
+      <div></div>
+    <?php } ?>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-title">
+
     </div>
-  <?php } ?>
-  <div class="">
-    <div class="">
+    <div class="panel-body">
       <?php $form = $this->beginWidget('CActiveForm', array(
-        'id'                   => 'book-form',
+        'id'                   => 'gudang-form',
         'enableAjaxValidation' => false,
         'htmlOptions'          => array(
-          'class' => 'form-horizontal',
+          'class' => 'form-horizontal validate',
         ),
       )); ?>
-      <div class="hr-dashed"></div>
       <div class="form-group">
-        <div class="col-sm-6">
-          <?php echo $form->textField($model_koordinator, 'lokasi',
-            array('class' => 'form-control input-lg', 'placeholder' => 'Lokasi Gudang', 'required' => true)); ?>
-        </div>
-      </div>
-      <div class="hr-dashed"></div>
-      <!-- <div class="form-group">
-        <label class="col-sm-2 control-label">Stok Keluar</label>
-        <div class="col-sm-10">
-          <?php echo $form->textField($model_koordinator, 'stok_keluar',
-            array('class' => 'form-control','data-mask' => 'decimal','required' =>TRUE)); ?>
-        </div>
-      </div> -->
-       <div class="hr-dashed"></div>
-      
-      <div class="form-group">
-      
-      <div class="hr-dashed"></div>
-      
-        <div class="col-sm-12">
-          <!-- <button class="btn btn-default" type="submit">Cancel</button> -->
-          <?php echo CHtml::submitButton('S I M P A N', array("class" => "btn btn-success")); ?>
+        <div class="col-md-12">
+          <h4><b>Informasi Dasar</b></h4>
+          <hr>
         </div>
 
-      <?php $this->endWidget(); ?>
+        <div class="col-md-6">
+          <?php echo $form->textField($model, 'nama',
+            array('class' => 'form-control input-lg', 'placeholder' => 'Nama Gudang', 'data-validate' => 'required')); ?>
+          <br>
+        </div>
+
+        <div class="col-md-6">
+          <?php echo $form->textField($model, 'koordinator',
+            array('class' => 'form-control input-lg', 'placeholder' => 'Penanggungjawab Gudang', 'data-validate' => 'required')); ?>
+          <br>
+        </div>
+
+        <div class="col-md-6">
+          <?php echo $form->textField($model, 'telp',
+            array('type' => 'number','class' => 'form-control input-lg', 'placeholder' => 'Telepon / HP', 'data-validate' => 'required')); ?>
+          <br>
+        </div>
+
+        <div class="col-md-6">
+          <div class="input-group">
+            <?php echo $form->textField($model, 'luas',
+              array('class' => 'form-control input-lg', 'type' => 'number','placeholder' => 'Luas Gudang', 'data-validate' => 'required')); ?>
+            <span class="input-group-addon" id="basic-addon1">m<sup>2</sup></span>
+          </div>
+          <br>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="col-md-12">
+          <h4><b>Lokasi Gudang</b></h4>
+          <hr>
+          <?php echo $form->textField($model, 'alamat',
+            array('class' => 'form-control input-lg', 'placeholder' => 'Alamat Gudang', 'data-validate' => 'required')); ?>
+          <br>
+          <?php echo $form->dropDownList($model, 'provinsi', Provinsi::model()->getProvinsi(),
+            array('class' => 'form-control input-lg','data-validate' => 'required')); ?>
+          <br>
+          <?php echo $form->dropDownList($model, 'kabupaten', Kotakab::model()->getKabupaten(),
+            array('class' => 'form-control input-lg','data-validate' => 'required')); ?>
+          <br>
+          <hr/>
+          <div class="form-group">
+            <div class="col-sm-3 col-sm-offset-5">
+              <button type="submit" class="btn btn-success btn-lg"><i class="entypo-pencil"></i> Sunting</button>
+            </div>
+          </div>
+        </div>
+
+        <?php $this->endWidget(); ?>
+      </div>
     </div>
   </div>
-</div>
-<?php
-  Yii::app()->clientScript->registerScript('closeAlert', '
-    var deleteAlert = $(".alert-danger");
-        setTimeout(function () {
-            deleteAlert.addClass("hide","slow");
-            //$("input").val("");
-        }, 2500);
-  ')
-;?>
-<?php
-  Yii::app()->clientScript->registerScript('showNotif','
-    $("#add").click(function (e) {
-    toastr.error("Please Add Warehose Name First!!!");
-    e.preventDefault();
-  });
-  ');
-?>
+  <?php
+    Yii::app()->clientScript->registerScript('closeAlert', '
+    var alertGagal = $(".alert-danger");
+    var alertSukses = $(".alert-success");
+      setTimeout(function () {
+          alertGagal.addClass("hide","slow");
+          alertSukses.addClass("hide","slow");
+      }, 5000);
+      
+    $("#Gudang_provinsi").on("change", function(){
+      $.ajax({
+          type: "POST",
+          url: "/kospermindo/gudang/getkota",
+          data:{
+              "prov" : $("#Gudang_provinsi").val()
+          },
+          success: function(data){
+              var msg = $.parseJSON(data);
+              $("#Gudang_kabupaten").empty();
+              $.each(msg, function(i, v){
+                  $("#Gudang_kabupaten").append("<option value=\""+ v.kota_id +"\">"+ v.kokab_nama +"</option>");
+              });
+          }
+      });
+    });
+  ', CClientScript::POS_END);
+  ?>
+

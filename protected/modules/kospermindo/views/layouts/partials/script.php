@@ -29,7 +29,7 @@
 <!--<script src="--><?php //echo $this->baseUrl ?><!--/static/admin/js/datatables/jquery.dataTables.columnFilter.js"></script>-->
 <!--<script src="--><?php //echo $this->baseUrl ?><!--/static/admin/js/datatables/lodash.min.js"></script>-->
 <!--<script src="--><?php //echo $this->baseUrl ?><!--/static/admin/js/datatables/responsive/js/datatables.responsive.js"></script>-->
-<!--<script src="--><?php //echo $this->baseUrl ?><!--/static/admin/js/select2/select2.min.js"></script>-->
+<script src="<?php echo $this->baseUrl ?>/static/admin/js/select2/select2.min.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/rickshaw/vendor/d3.v3.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/rickshaw/rickshaw.min.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/raphael-min.js"></script>
@@ -55,4 +55,3 @@
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/wysihtml5/wysihtml5-0.4.0pre.min.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/wysihtml5/bootstrap-wysihtml5.js"></script>
 <script src="<?php echo $this->baseUrl ?>/static/admin/js/initial.js"></script>
-

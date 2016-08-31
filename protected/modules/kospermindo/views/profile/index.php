@@ -64,16 +64,16 @@
 				<tr>
 					<td>Alamat</td>
 					<td>:</td>
-					<td><?= $petani['alamat'].', '.$petani['kabupaten'].'-'.$petani['provinsi']; ?></td>
+					<td><?= $petani['alamat'].', '.Petani::model()->getKabupaten($petani['kabupaten']).'-'.Petani::model()->getProvinsi($petani['provinsi']); ?></td>
 				</tr>
 				<tr>
 					<td>Nama Gudang</td>
 					<td>:</td>
-					<td><?= Petani::model()->getGudang($petani['id_gudang']) ?></td>
+					<td><?= Petani::model()->getGudang($petani['kode_gudang']) ?></td>
 				</tr>					<tr>
 					<td>Nama Kelompok</td>
 					<td>:</td>
-					<td><?= Petani::model()->getKelompok($petani['id_kelompok']) ?></td>
+					<td><?= Petani::model()->getKelompok($petani['kode_kelompok']) ?></td>
 				</tr>
 				<tr>
 					<td>Jabatan Kelompok</td>
@@ -83,22 +83,18 @@
 				<tr>
 					<td>Jenis Komoditi</td>
 					<td>:</td>
-					<td><?php 
-						foreach (Petani::model()->getKomoditi($petani['jenis_komoditi']) as $key => $val) { ?>
-							<?= $val ?>
-							<br>
-						<?php } ?>
+					<td>
+					<?php foreach (json_decode($petani['jenis_komoditi']) as $key => $valjns) { ?>
+
+						<ul style="padding-left: 8px">
+							<li>
+								<b><?= Petani::model()->getKomoditi($valjns->id) ?></b><br>
+								Luas Lahan : <?= $valjns->luas ?><br>
+								Jumlah Bentangan : <?= $valjns->bentangan ?>
+							</li>
+						</ul>
+					<?php } ?>
 					</td>
-				</tr>					
-				<tr>
-					<td>Luas Lokasi</td>
-					<td>:</td>
-					<td><?= $petani['luas_lahan']; ?> m<sup>2</sup></td>
-				</tr>
-				<tr>
-					<td>Panjang Bentangan</td>
-					<td>:</td>
-					<td><?= $petani['jumlah_bentangan'] ?> m</td>
 				</tr>
 			</table>
 		</div>
@@ -137,14 +133,8 @@
 				if(msg.message === "success"){
 					window.location.href = "/kospermindo/petani";
 				}else{
-					$(".alert strong").html("Petani Terhapus !");
-					$(".alert").removeClass("hidden");
-					$(".alert").addClass("alert-danger");
-					setTimeout(function() {
-						$(".alert strong").html("");
-						$(".alert").addClass("hidden");
-						$(".alert").removeClass("alert-danger");
-					}, 2500);
+					window.location.href = "/kospermindo/petani";
+
 				}
 			}
 		});		

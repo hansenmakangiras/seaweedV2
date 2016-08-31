@@ -1,15 +1,10 @@
 <?php
-	/**
-	 * Created by PhpStorm.
-	 * User: hanse
-	 * Date: 5/25/2016
-	 * Time: 2:37 PM
-	 */
+
 	Yii::app()->clientScript->registerScript('search', "
 		var element = $('#main-menu li[data-nav=\"laporan\"]');
 		element.addClass('active opened');
 		element.find('ul').addClass('visible').removeAttr('style');
-		element.find('ul').find('li:nth-child(4)').addClass('active');
+		element.find('ul').find('li:nth-child(1)').addClass('active');
 ");
 ?>
 <div class="headline">
@@ -18,123 +13,251 @@
 			<a href="<?= Kospermindo::getBaseUrl(); ?>"><i class="entypo-home"></i>Beranda</a>
 		</li>
 		<li class="active">
-			<strong><?php echo 'Laporan Gudang'; ?></strong>
+			<b>Laporan Gudang</b>
 		</li>
 	</ol>
 	<h2>Laporan Gudang</h2><br/>
 </div>
 
-<div class="row">
-	<div class="col-sm-3">
+<div id="load">
+	
+	<div class="row">
 
-		<div class="tile-stats tile-aqua">
-
-			<div class="num" data-start="0" data-end="<?= !empty($allFarmers) ? $allFarmers : "0";?>" data-postfix="" data-duration="1500"
-					 data-delay="1200">0
+		<form method="post" class="search-bar" action="" enctype="application/x-www-form-urlencoded">
+			<div class="col-md-3">
+				<input value="<?= (!empty($range)) ? $range : date('d/m/Y').' - '.date('d/m/Y') ?>" type="text" id="range_date" data-format="DD/MM/YYYY" class="form-control daterange input-lg" placeholder="Rentang Waktu" />
 			</div>
-			<span><strong>Orang</strong></span>
-
-			<h3>Total User</h3>
-		</div>
-
-	</div>
-
-	<div class="col-sm-3">
-
-		<div class="tile-stats tile-blue">
-
-			<div class="num" data-start="0" data-end="<?= !empty($allWarehouses) ? $allWarehouses : "0";?>" data-postfix="" data-duration="1500"
-					 data-delay="1800">0
+			<div class="col-md-3">
+				<select name="test" id="gudang" class="select2" data-allow-clear="true" data-placeholder="Pilih Gudang">
+					<option></option>
+					<optgroup label="Cadangan">
+						<?php foreach ($gudang as $key => $valcad) { 
+							if($valcad->kode_jenis_gudang == '111'){ ?>
+							<option value="<?= $valcad->id_gudang ?>" <?= ($id_gudang==$valcad->id_gudang) ? 'selected' : '' ?>><?= $valcad->nama ?></option>
+						<?php }} ?>
+					</optgroup>
+					<optgroup label="Koperasi">
+						<?php foreach ($gudang as $key => $valkop) { 
+							if($valkop->kode_jenis_gudang == '112'){ ?>
+							<option value="<?= $valkop->id_gudang ?>" <?= ($id_gudang==$valkop->id_gudang) ? 'selected' : '' ?>><?= $valkop->nama ?></option>
+						<?php }} ?>
+					</optgroup>
+					<optgroup label="Gapoktan">
+						<?php foreach ($gudang as $key => $valgap) { 
+							if($valgap->kode_jenis_gudang == '113'){ ?>
+							<option value="<?= $valgap->id_gudang ?>" <?= ($id_gudang==$valgap->id_gudang) ? 'selected' : '' ?>><?= $valgap->nama ?></option>
+						<?php }} ?>
+					</optgroup>
+				</select>
 			</div>
-			<span><strong>Gudang</strong></span>
+		</form>
 
-			<h3>Total Gudang</h3>
+		<div class="clearfix"></div>
+
+		<div class="col-md-12">
+			<hr>
 		</div>
 
-	</div>
-	<div class="col-sm-3">
+		<?php
+			$colors = ['red', 'aqua', 'blue', 'green', 'cyan', 'orange'];
+			$colorHex = ['#f56954','#00c0ef', '#0073b7', '#00a65a', '#009987', '#f89d00'];
+		?>
+		
+		<?php $i = 0; $total_panen = 0; foreach ($jenis_komoditi as $key => $valjnsk) { 
+			$total_panen = $total_panen + (float)$valjnsk['jumlah'][0]['SUM(total_panen)']/1000;
+			 ?>
+			<div class="col-sm-3">
+				<div class="tile-stats tile-<?= $colors[$i] ?>">
 
-		<div class="tile-stats tile-green">
+					<h3><?= JenisKomoditi::model()->getJenisKomoditi($valjnsk['id'])['jenis'] ?></h3>
+					<h2 style="color:#fff"><b>
+						<div id="<?= $valjnsk['id'] ?>" class="num" data-start="0" data-end="" data-postfix="" data-duration="1500"
+								 data-delay="1200" data-color-hex="<?= $colorHex[$i] ?>"><?= (!is_null($valjnsk['jumlah'][0]['SUM(total_panen)'])) ? number_format((float)$valjnsk['jumlah'][0]['SUM(total_panen)'], 2, '.', '') :'0' ?>
+						</div>
+					</b> TON</h2>
 
-			<div class="num" data-start="0" data-end="<?= !empty($allGroups) ? $allGroups : "0";?>" data-postfix="" data-duration="1500"
-					 data-delay="1800">0
-			</div>
-			<span><strong>Kelompok</strong></span>
-
-			<h3>Total Kelompok</h3>
-		</div>
-
-	</div>
-</div>
-
-<br>
-
-<div class="row">
-	<form method="post" class="search-bar" action="" enctype="application/x-www-form-urlencoded">  
-		<div class="col-md-2">
-			<a type="button" style="width: 100%" class="btn btn-lg btn-primary btn-icon" target="_blank" href="<?= $this->baseUrl; ?>/kospermindo/report/cetakhasilpetani">Cetak<i class="entypo-print"></i></a>
-		</div>
-		<div class="col-md-2">
-			<a type="button" href="#" style="width: 100%" class="btn btn-primary btn-lg btn-icon" data-toggle="modal" data-target="#modal-filter">
-				Filter
-				<i class="entypo-list"></i></a>
-		</div>
-		<div class="col-md-8">
-			<div class="input-group">
-				<input type="text" class="form-control input-lg" name="search" placeholder="Cari Sesuatu...">
-				<div class="input-group-btn">
-					<button type="submit" class="btn btn-lg btn-primary">
-						Cari
-					</button>
 				</div>
+
 			</div>
+
+		<?php 
+			if ($i == 5) {
+				$i = 0;
+			}else{
+				$i++;
+			}
+		} ?>
+	</div>
+
+	<br/>
+	<br/>
+
+	<div class="row">
+		<div class="col-sm-12">
+
+			<div class="panel panel-primary" id="charts_env" style="margin-bottom: 50px;">
+
+				<div class="panel-heading">
+					<div class="panel-title">Grafik Komoditi</div>
+				</div>
+
+				<div class="panel-body">
+					<div id="line-chart-demo" class="morrischart" style="height: 300px"></div>
+				</div>
+
+				<table class="table table-bordered table-responsive">
+
+					<thead>
+						<tr class="count-footer">
+							<th width="50%" class="col-padding-1">
+								<div class="pull-left">
+									<i class="entypo-leaf"></i>
+									<div class="h4" style="font-size: 14px;">Hasil Panen</div>
+									<small style="font-size: 20px; font-weight: bold; color: #00a65a" id="total_panen"><?= number_format((float)$total_panen, 2, '.', ''); ?> Ton</small>
+								</div>
+							</th>
+							<th width="50%" class="col-padding-1">
+								<div class="pull-left">
+									<i class="entypo-user"></i>
+									<div class="h4" style="font-size: 14px;">Total Petani</div>
+									<small style="font-size: 20px; font-weight: bold; color: #00a65a" id="petani"><?= count($petani);?> Orang</small>
+								</div>
+							</th>
+						</tr>
+					</thead>
+
+				</table>
+
+			</div>
+
 		</div>
-	</form>
-</div>
 
-<br/>
-<br/>
-
-<table class="table table-hover table-responsive table-bordered" id="printTable">
-	<thead>
-		<tr>
-			<th class="text-center">Lokasi</th>
-			<th class="text-center">Total Kelompok</th>
-			<th class="text-center">Total Panen (Ton)</th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach($warehouse as $key => $value) { ?>
-			<tr>
-				<td class="text-center"><?= !empty($value['lokasi_gudang']) ? $value['lokasi_gudang'] : "No Warehouse";?></td>
-				<td class="text-center"><?= !empty($total_group[$key]) ? $total_group[$key] : "0";?></td>
-				<td class="text-center"><?= !empty($totalPanengudang[$key]['total']) ? $totalPanengudang[$key]['total'] : "0";?></td>
-			</tr>
-		<?php } ?>
-	</tbody>
-</table>
+	</div>
 
 </div>
+</div>
+
 
 <?php
-	Yii::app()->clientScript->registerScript('showNotif','
-		$("#add").click(function (e) {
-		toastr.error("Please Add Warehose Name First!!!", pesan);
-		e.preventDefault();
-	});
-	');
-?>
-<script type="text/javascript">
-	function printData()
-	{
-	 var divToPrint=document.getElementById("printTable");
-	 newWin= window.open("");
-	 newWin.document.write(divToPrint.outerHTML);
-	 newWin.print();
-	 //newWin.close();
-	}
+	Yii::app()->clientScript->registerScript('graph', '
 
-	$('#cetak').on('click',function(){
-	printData();
-})
-</script>
+		$(document).ready(function(){
+
+			$("label[for=daterangepicker_start]").text("Mulai");
+			$("label[for=daterangepicker_end]").text("Sampai");
+			$(".applyBtn").text("Cek");
+			$(".cancelBtn").text("Batal"); 
+
+			$("#line-chart-demo").html("");
+			$("div.num").html("0");
+
+			$.ajax({
+				type: "POST",
+				url: "/kospermindo/laporan/chartgudang",
+				data:{
+					"id_gudang" : $("#gudang").val(),
+					"start" : $("input[name=daterangepicker_start]").val(),
+					"end" : $("input[name=daterangepicker_end]").val(),
+				},
+				success: function(data){
+					msg = $.parseJSON(data);
+					colorHex = [];
+					$.each(msg[0].ykeys, function(k, v){
+						colorHex.push($("#"+v).attr("data-color-hex"));
+					});
+					var line_chart_demo = $("#line-chart-demo");
+
+					var line_chart = Morris.Line({
+						element: "line-chart-demo",
+						data: msg[0].data,
+						xkey: "y",
+						ykeys: msg[0].ykeys,
+						labels: msg[0].label,
+						yLabelFormat: function(y) { return y.toString() + " Ton"; },
+						redraw: true,
+						lineColors : colorHex
+					});
+					
+					line_chart_demo.parent().attr("style", "");
+					$("#petani").html(msg[0].petani + " Orang");
+					$("#total_panen").html(msg[0].hasil_panen + " TON");
+					var jenis = msg[0].count_jenis;
+					$.each(jenis, function(key, value){
+						$.each(value, function(keys, val) {
+							$("#"+keys).html(val);
+						});
+
+					});
+	
+				}
+			});
+
+			$(".applyBtn").on("click", function(){
+				$("#line-chart-demo").html("");
+				$("div.num").html("0");
+				$.ajax({
+					type: "POST",
+					url: "/kospermindo/laporan/chartgudang",
+					data:{
+						"id_gudang" : $("#gudang").val(),
+						"start" : $("input[name=daterangepicker_start]").val(),
+						"end" : $("input[name=daterangepicker_end]").val(),
+					},
+					success: function(data){
+						msg = $.parseJSON(data);
+						colorHex = [];
+						$.each(msg[0].ykeys, function(k, v){
+							colorHex.push($("#"+v).attr("data-color-hex"));
+						});
+
+						var line_chart_demo = $("#line-chart-demo");
+						var line_chart = Morris.Line({
+							element: "line-chart-demo",
+							data: msg[0].data,
+							xkey: "y",
+							ykeys: msg[0].ykeys,
+							labels: msg[0].label,
+							yLabelFormat: function(y) { return y.toString() + " Ton"; },
+							redraw: true,
+							lineColors : colorHex
+						});
+						
+						line_chart_demo.parent().attr("style", "");
+						$("#petani").html(msg[0].petani + " Orang");
+						$("#total_panen").html(msg[0].hasil_panen + " TON");
+						var jenis = msg[0].count_jenis;
+						$.each(jenis, function(key, value){
+							$.each(value, function(keys, val) {
+								$("#"+keys).html(val);
+							});
+
+						});
+
+
+					}
+				});
+			});
+			
+			$("#gudang").on("change", function(){
+				$.ajax({
+					type: "POST",
+					url: "/kospermindo/laporan/getgudang",
+					data:{
+						"id_gudang" : $("#gudang").val(),
+						"id_jenis_gudang" : $("#jenis_gudang").val(),
+						"start" : $("input[name=daterangepicker_start]").val(),
+						"end" : $("input[name=daterangepicker_end]").val(),
+					},
+					success: function(data){
+						msg = $.parseJSON(data);
+						window.location.reload(true);
+
+					}
+				});
+			});
+
+		});
+		
+
+	', CClientScript::POS_END);
+?>

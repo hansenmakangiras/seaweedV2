@@ -29,7 +29,7 @@ class KController extends CController
     {
       Helper::setTimeZone('Asia/Makassar');
 
-      //Yii::app()->clientScript->registerCoreScript('jquery');
+//      Yii::app()->clientScript->registerCoreScript('jquery');
 //      Yii::app()->clientScript->registerCoreScript('yii');
 
       // Tweaks for Ajax Requests

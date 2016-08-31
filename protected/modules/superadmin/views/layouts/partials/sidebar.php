@@ -44,98 +44,19 @@
     </button>
     <?php echo CHtml::endForm() ?>
   </li>
-  <!--  --><?php //Helper::dd(Rights::getAssignedRoles(Yii::app()->user->id))?>
+  <?php //Helper::dd(Rights::getAssignedRoles(Yii::app()->user->id))?>
   <li class="<?= $active == 'beranda' ? 'active' : ''; ?>">
     <a href="<?= SAdmin::getBaseUrl(); ?>">
       <i class="entypo-gauge"></i>
       <span>Beranda</span>
     </a>
   </li>
-  <li class="<?= ($active == 'petani' || $active == 'gudang' || $active == 'groups' || $active == 'warehouse' || $active == 'moderator') ? 'active opened active' : ''; ?>">
-
-    <?php //if (!Yii::app()->user->checkAccess('SuperAdmin')){ ?>
-    <a href="#">
-      <i class="entypo-database"></i>
-      <span>Manajemen Data</span>
-    </a>
-    <ul>
-      <li class="<?= $active == 'warehouse' ? 'active' : ''; ?>">
-        <a href="/superadmin/warehouse">
-          <span>Data Gudang </span>
-        </a>
-      </li>
-      <li class="<?= $active == 'groups' ? 'active' : ''; ?>">
-        <a href="/superadmin/groups">
-          <span>Data Kelompok</span>
-        </a>
-      </li>
-      <li class="<?= $active == 'petani' ? 'active' : ''; ?>">
-        <a href="/superadmin/petani">
-          <span>Data Petani</span>
-        </a>
-      </li>
-      <li class="<?= $active == 'moderator' ? 'active' : ''; ?>">
-        <a href="/superadmin/moderator">
-          <span>Data Moderator</span>
-        </a>
-      </li>
-    </ul>
-  </li>
-
-  <li class="<?= ($active == 'mgudang' || $active == 'mkelompok' || $active == 'mpetani' || $active == 'mmoderator' || $active =='mkomoditi') ? 'active opened active' : ''; ?>">
-
-    <a href="/superadmin/rights">
-      <i class="entypo-user-add"></i>
-      <span>Manajemen Pengguna</span>
-    </a>
-    <ul>
-      <li class="<?= $active == 'mgudang' ? 'active' : ''; ?>">
-        <a href="/superadmin/users/gudang">
-          <span>Manajemen Gudang</span>
-        </a>
-        <!--        <ul>-->
-        <!--          <li class="--><?php //echo $active == 'mkelompok' ? 'active' : ''; ?><!--">-->
-        <!--            <a href="--><?php //echo $this->baseUrl ?><!--/superadmin/gudang/stokmasuk">-->
-        <!--              <span>Stok Masuk</span>-->
-        <!--            </a>-->
-        <!--          </li>-->
-        <!--          <li class="--><?php //echo $active == 'mkelompok' ? 'active' : ''; ?><!--">-->
-        <!--            <a href="--><?php //echo $this->baseUrl ?><!--/superadmin/gudang/stokkeluar">-->
-        <!--              <span>Stok Keluar</span>-->
-        <!--            </a>-->
-        <!--          </li>-->
-        <!--        </ul>-->
-      </li>
-      <li class="<?php echo $active == 'mkelompok' ? 'active' : ''; ?>">
-        <a href="<?php echo $this->baseUrl ?>/superadmin/users/groups">
-          <span>Manajemen Kelompok</span>
-        </a>
-      </li>
-      <li class="<?= $active == 'mpetani' ? 'active' : ''; ?>">
-        <a href="/superadmin/users/petani">
-          <span>Manajemen Petani</span>
-        </a>
-      </li>
-      <li class="<?= $active == 'mmoderator' ? 'active' : ''; ?>">
-        <a href="/superadmin/users/moderator">
-          <span>Manajemen Moderator</span>
-        </a>
-      </li>
-      <li class="<?= $active == 'mkomoditi' ? 'active' : ''; ?>">
-        <a href="/superadmin/users/panen">
-          <span>Manajemen Komoditi</span>
-        </a>
-      </li>
-    </ul>
-  </li>
-  <!-- Report Menu -->
-  <li class="<?= $active == 'report' ? 'active opened active' : ''; ?>">
-    <a href="/superadmin/report">
-      <i class="entypo-docs"></i>
-      <span>Laporan</span>
+  <li class="<?= $active == 'users' ? 'active' : ''; ?>">
+    <a href="<?= SAdmin::getBaseUrl(); ?>/users">
+      <i class="entypo-users"></i>
+      <span>Managemen Pengguna</span>
     </a>
   </li>
-
 </ul>
 
 

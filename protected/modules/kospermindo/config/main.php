@@ -31,11 +31,19 @@
 //        'allowAutoLogin'      => true,
 //        'loginUrl'            => '/kospermindo/login',
 //        'authTimeout'         => 2592000,
+//        'autoRenewCookie'         => true,
 //        'absoluteAuthTimeout' => 2592000,
+//        'stateKeyPrefix' => 'admin',
 //      ),
+      'errorHandler' => array(
+        // use 'site/error' action to display errors
+        'errorAction' => YII_DEBUG ? null : '/kospermindo/error',
+      ),
       'clientScript' => array(
         'scriptMap' => array(
           'jquery.js' => false,
+          'jquery.ba-bbq.js' => true,
+          'jquery.yii.js' => true,
           'jquery.min.js'=>false,  //desable any others default implementation
           'core.css'=>false, //disable
           'styles.css'=>false,  //disable

@@ -131,7 +131,164 @@ body .page-container .sidebar-menu #main-menu li.active > a {
 	border-left: 2px solid #eee;
 	margin-bottom: 10px;
 }
-
+ 
 .sub-komoditi .checkbox {
 	margin-top: 5px;
+}
+
+.alert-view {
+	margin-bottom: 30px;
+}
+
+.alert-custom {
+	background: #3498db;
+	padding: 10px;
+	width: 100%;
+	margin-bottom: 10px;
+	color: #fff;
+	border-radius: 3px;
+}
+
+.alert-custom-success {
+	background: #2ecc71;
+}
+
+.alert-custom-success a {
+	color: #fff;
+	font-style: italic;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.alert-custom-danger {
+	background: #e74c3c;
+}
+
+#form_login .checkbox label {
+	color: #fff;
+}
+
+.sub-form {
+	background: #f5f5f5;
+	margin-left: 15px;
+	margin-bottom: 15px;
+	padding: 5px;
+	border-radius: 3px;
+}
+
+.sub-form .input-group {
+	margin-bottom: 5px;
+}
+
+.sub-form .col-md-12:last-child .input-group {
+	margin-bottom: 0;
+}
+
+.detail-val {
+	font-weight: bold;
+	color: #333;
+}
+
+.tile-stats, .morris-hover {
+	border-radius: 3px !important;
+}
+
+.tile-stats h2 {
+	font-size: 14px !important;
+}
+
+.tile-stats h2 b {
+	font-size: 30px;
+}
+
+.tile-stats:after {
+	content: "";
+	display: block;
+	background: #000;
+	width: 100%;
+	height: 30px;
+	position: absolute;
+	bottom: -25px;
+	margin-left: -20px;
+	opacity: 0.3;
+}
+
+.table-bordered {
+	border: 1px solid #ebebeb;
+}
+
+.table-bordered > thead {
+	border-top: 1px solid #e2e2e2;
+	border-bottom: 2px solid #e2e2e2;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+	border: 1px solid #e2e2e2;
+	vertical-align: middle;
+	color: #000;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+	background-color: #f5f5f5;
+	color: #999;
+}
+
+.table-bordered > thead > tr > th {
+	border-color: #e2e2e2;
+	background-color: #fff;
+}
+
+.count-footer th {
+	position: relative;
+	overflow: hidden;
+	background: transparent !important;
+}
+
+.count-footer th i {
+	float: left;
+	font-size: 60px;
+	position: absolute;
+	bottom: -25px;
+	right: 10px;
+	z-index: 0;
+	color: rgba(0,0,0,.3);
+}
+
+.mail-compose .select2 {
+	margin-bottom: 10px;
+}
+
+.mail-compose .form-control.select2-container .select2-choices {
+	padding-left: 0;
+}
+
+.mail-compose .form-control.select2-container.select2-dropdown-open {
+	border-color: #ebebeb !important;
+}
+
+.select2-search-choice-close {
+	display: none !important;
+}
+
+body .profile-info.dropdown .dropdown-menu > li {
+	border-bottom-color: #22a6ff !important;
+}
+
+body .profile-info.dropdown .dropdown-menu > .caret {
+	border-bottom-color: #3498db;
+	border-left-width: 10px;
+	border-right-width: 10px;
+	border-bottom-width: 10px;
+	top: -10px !important;
+}
+
+.profile-info.dropdown.pull-right .dropdown-menu {
+	background-color: #3498db !important;
+	border-color: #3498db !important;
+}
+
+body .profile-info.dropdown .dropdown-menu > li:hover,
+body .profile-info.dropdown .dropdown-menu > li:hover a {
+	background: #177dc1 !important;
+	border-radius: 0 !important;
 }

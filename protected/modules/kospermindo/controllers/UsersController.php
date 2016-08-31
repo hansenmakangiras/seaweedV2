@@ -27,7 +27,7 @@
         }
         for($i=0;$i<count($kelompok);$i++) {
           $findUsername[] = Pengguna::model()->findByAttributes(array('id'=>$kelompok[$i]));
-          $findGroup[] = TabelKelompok::model()->findByAttributes(array('id_user'=>$findUsername[$i]['username']));
+          $findGroup[] = Kelompok::model()->findByAttributes(array('ketua_kelompok'=>$findUsername[$i]['username']));
         }
         $komoditi = Komoditi::model()->findAllByAttributes(array('status'=>1));
         //Helper::dd($komoditi);
@@ -37,7 +37,7 @@
         }
 
         //for profile 2
-        $groupData = TabelKelompok::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
+        $groupData = Kelompok::model()->findAllByAttributes(array('ketua_kelompok'=>Yii::app()->user->id));
         $farmerData = Users::model()->findAllByAttributes(array('isadmin'=>0,'superuser'=>0,'status'=>1,'levelid'=>2,'groupid'=>0,'companyid'=>Yii::app()->user->id));
 
         //for profile 3
@@ -62,22 +62,7 @@
       if (isset($_GET['Users'])) {
         $dataProvider->attributes = $_GET['Users'];
       }
-//      $dataProvider = new CActiveDataProvider('Users', array(
-//        'criteria' => array(
-//          'condition' => 'status=1',
-//          'order' => 'id ASC'
-//        ),
-//        'countCriteria' => array(
-//          'condition' => 'status=1'
-//        ),
-//        'pagination' => array(
-//          'pageSize' => 10,
-//        )
-//      ));
 
-      // $this->render('groupManage',array(
-      //   'groupData' => $groupData,
-      //   'farmerData' =>$farmerData));
       $this->render('index', array(
         'data'     => $data,
         'dataUser' => $dataUser,
@@ -136,10 +121,10 @@
       $jenis_komoditi = 0;
       $komoditi = new Komoditi;
       $gudang = new Gudang;
-      $kelompok = new TabelKelompok;
+      $kelompok = new Kelompok;
       $petani = new TabelPetani;
       if(isset($_POST['Gudang'])){
-        if(isset($_POST['TabelKelompok'])){
+        if(isset($_POST['Kelompok'])){
           if(isset($_POST['TabelPetani'])){
             if(isset($_POST['Komoditi'])){
               //helper::dd($_POST['TabelPetani']['jenis_komoditi']);
@@ -175,37 +160,6 @@
         }
       }
 
-      // if(isset($_POST['Komoditi'])){
-      //   $komoditi->attributes = $_POST['Komoditi'];
-      //   $id_komoditi = $_POST['jenis_komoditi'];
-      //   if($id_komoditi=='1'){
-      //     $nama_komoditi = 'Gracilaria KW3';
-      //   }elseif ($id_komoditi=='2') {
-      //     $nama_komoditi = 'Gracilaria KW4';
-      //   }elseif ($id_komoditi=='3') {
-      //     $nama_komoditi = 'Gracilaria BS';
-      //   }elseif ($id_komoditi=='4') {
-      //     $nama_komoditi = 'Sango-Sango Laut';
-      //   }elseif ($id_komoditi=='5') {
-      //     $nama_komoditi = 'Euchema Cotoni';
-      //   }elseif ($id_komoditi=='6') {
-      //     $nama_komoditi = 'Spinosom';
-      //   }
-      //   $isFarmer = TabelPetani::model()->findByAttributes(array('nama_petani'=>$_POST['Komoditi']['id_user']));
-      //   $komoditi->id_user = (int)$isFarmer->id;
-      //   $jenis_komoditi = $_POST['jenis_komoditi'];
-      //   $komoditi->nama_komoditi = $nama_komoditi;
-      //   $komoditi->jenis_komoditi = $_POST['jenis_komoditi'];
-      //   $komoditi->status = $status;
-      //   if($komoditi->save()){
-      //     $pesan="Data Berhasil Di Simpan";
-      //     Yii::app()->user->setFlash('success','Data berhasil disimpan');
-      //     $this->redirect('/kospermindo/users/panen',array('pesan'=>$pesan));
-      //   }else{
-      //     $pesan = "Data Gagal Disimpan";
-      //     Yii::app()->user->setFlash('error','Data gagal disimpan');
-      //   }
-      // }
       $this->render('tambah',array(
         'komoditi' => $komoditi,
         'gudang'   => $gudang,
@@ -218,7 +172,7 @@
     public function actionListgudang(){
       $idGudang = $_POST['Gudang']['lokasi'];
       $isGudang = Gudang::model()->findByAttributes(array('lokasi'=>$idGudang));
-      $allKelompok = TabelKelompok::model()->findAll('idgudang = :idGudang', array(':idGudang'=>$isGudang->id));
+      $allKelompok = Kelompok::model()->findAll('id_gudang = :idGudang', array(':idGudang'=>$isGudang->id));
       $allKelompok = CHtml::listData($allKelompok,'id','nama_kelompok');
       echo CHtml::tag('option',array('value'=>''),'-- Pilih Nama Kelompok --', true);
       foreach($allKelompok as $value=>$nama){
@@ -226,8 +180,8 @@
       }
     }
     public function actionListKelompok(){
-      $idkelompok = $_POST['TabelKelompok']['nama_kelompok'];
-      $isKelompok = TabelKelompok::model()->findByAttributes(array('nama_kelompok'=>$idkelompok));
+      $idkelompok = $_POST['Kelompok']['nama_kelompok'];
+      $isKelompok = Kelompok::model()->findByAttributes(array('nama_kelompok'=>$idkelompok));
       $allPetani = TabelPetani::model()->findAll('idkelompok = :id_kelompok', array(':id_kelompok'=>$idkelompok));
       $allPetani = CHtml::listData($allPetani,'id','nama_petani');
       echo CHtml::tag('option',array('value'=>''),'-- Pilih Nama Petani --', true);
@@ -341,7 +295,7 @@
             $this->redirect('/kospermindo/users');
           }else{
             $pesan = "Missed to save data";
-            helper::dd($isUser);
+            Helper::dd($isUser);
           }
         }else{
           $pesan = "Username is already exist";
@@ -362,15 +316,15 @@
     public function actionUpdate($id)
     {
       $pesan = "";
-      $isGroups = TabelKelompok::model()->findByAttributes(array('id'=>$id));
+      $isGroups = Kelompok::model()->findByAttributes(array('id'=>$id));
       $isKomoditi = Komoditi::model()->findByAttributes(array('id'=>$id));
       if(!empty($isGroups)){
         $groupId = 2;
         $pesan = "";
         if($id){
           if(!empty($isGroups)){
-            if(isset($_POST['TabelKelompok'])){
-              $isFarmer=TabelPetani::model()->findByAttributes(array('id'=>$_POST['TabelKelompok']['ketua_kelompok']));
+            if(isset($_POST['Kelompok'])){
+              $isFarmer=TabelPetani::model()->findByAttributes(array('id'=>$_POST['Kelompok']['ketua_kelompok']));
               $isGroups->ketua_kelompok = $isFarmer->nama_petani;
               $isGroups->id = $id;
               if($isGroups->save()){
@@ -417,6 +371,25 @@
       
     }
     
+    public function actionCreateelastic(){
+    	$user = new Users;
+    	$user->groupid = 1;
+    	$user->companyid = 3;
+    	$user->komoditi = 20;
+    	$user->username = 'oche';
+    	$user->password = 'oche';
+    	$user->email = 'andri@dwiutomo';
+    	$user->no_handphone = '09876';
+    	$user->last_login = date('d-m-Y H:i:s');
+
+    	if($user->save()){
+    		var_dump("success");
+    	}else{
+    		var_dump("failed");
+    	}
+
+    }
+
     public function actionUpdatemoderator($id){
       $level = 1;
       $this->render('update',array('alert'=>$level));
@@ -546,7 +519,7 @@
         }
         for($i=0;$i<count($kelompok);$i++) {
           $findUsername[] = Pengguna::model()->findByAttributes(array('id'=>$kelompok[$i]));
-          $findGroup[] = TabelKelompok::model()->findByAttributes(array('id'=>$findUsername[$i]['id']));
+          $findGroup[] = Kelompok::model()->findByAttributes(array('id'=>$findUsername[$i]['id']));
         }
         $komoditi = Komoditi::model()->findAllByAttributes(array('status'=>1));
         //Helper::dd($komoditi);
@@ -556,7 +529,7 @@
         }
 
         //for profile 2
-        $groupData = TabelKelompok::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
+        $groupData = Kelompok::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
         $farmerData = Users::model()->findAllByAttributes(array('isadmin'=>0,'superuser'=>0,'status'=>1,'levelid'=>2,'groupid'=>0,'companyid'=>Yii::app()->user->id));
 
         //for profile 3
@@ -599,7 +572,7 @@
       }
 
       $pesan = '';
-      $dataProvider = new CActiveDataProvider('TabelKelompok', array(
+      $dataProvider = new CActiveDataProvider('Kelompok', array(
         'criteria' => array(
           'condition' => 'status=1',
           'order' => 'id ASC'
@@ -658,7 +631,7 @@
         }
         for($i=0;$i<count($kelompok);$i++) {
           $findUsername[] = Pengguna::model()->findByAttributes(array('id'=>$kelompok[$i]));
-          $findGroup[] = TabelKelompok::model()->findByAttributes(array('id_user'=>$findUsername[$i]['username']));
+          $findGroup[] = Kelompok::model()->findByAttributes(array('id_user'=>$findUsername[$i]['username']));
         }
         $komoditi = Komoditi::model()->findAllByAttributes(array('status'=>1));
         //Helper::dd($komoditi);
@@ -668,7 +641,7 @@
         }
 
         //for profile 2
-        $groupData = TabelKelompok::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
+        $groupData = Kelompok::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
         $farmerData = Users::model()->findAllByAttributes(array('isadmin'=>0,'superuser'=>0,'status'=>1,'levelid'=>2,'groupid'=>0,'companyid'=>Yii::app()->user->id));
 
         //for profile 3
@@ -760,7 +733,7 @@
         }
         for($i=0;$i<count($kelompok);$i++) {
           $findUsername[] = Pengguna::model()->findByAttributes(array('id'=>$kelompok[$i]));
-          $findGroup[] = TabelKelompok::model()->findByAttributes(array('id_user'=>$findUsername[$i]['username']));
+          $findGroup[] = Kelompok::model()->findByAttributes(array('ketua_kelompok'=>$findUsername[$i]['username']));
         }
         $komoditi = Komoditi::model()->findAllByAttributes(array('status'=>1));
         $apa[]=0;
@@ -769,11 +742,11 @@
         }
 
         //for profile 2
-        $groupData = TabelKelompok::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
+        $groupData = Kelompok::model()->findAllByAttributes(array('ketua_kelompok'=>Yii::app()->user->id));
         $farmerData = Users::model()->findAllByAttributes(array('isadmin'=>0,'superuser'=>0,'status'=>1,'levelid'=>2,'groupid'=>0,'companyid'=>Yii::app()->user->id));
 
         //for profile 3
-        $warehouseData = Gudang::model()->findAllByAttributes(array('id_perusahaan'=>Yii::app()->user->id));
+        $warehouseData = Gudang::model()->findAllByAttributes(array('id_gudang'=>Yii::app()->user->id));
         $farmerData = Users::model()->findAllByAttributes(array('isadmin'=>0,'superuser'=>0,'status'=>1,'levelid'=>2,'groupid'=>0,'companyid'=>Yii::app()->user->id));
         $farmer = Pengguna::model()->findAllByAttributes(array('levelid'=>3));
         $moderator = Pengguna::model()->findAllByAttributes(array('levelid'=>3,'is_moderator'=>1));

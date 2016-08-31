@@ -30,12 +30,12 @@
  */
 class PetaniHistory extends CActiveRecord
 {
-  public function behaviors()
+/*  public function behaviors()
   {
     return array(
       'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
     );
-  }
+  }*/
 	/**
 	 * @return string the associated database table name
 	 */
@@ -53,15 +53,14 @@ class PetaniHistory extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('', 'required'),
-			array('id_petani, id_gudang, id_kelompok, id_perusahaan, luas_lahan, jumlah_bentangan, status_login, status_hapus, created_by', 'numerical', 'integerOnly'=>true),
-			array('nama_petani, provinsi, kabupaten, tempat_lahir', 'length', 'max'=>100),
-			array('nik, jenis_komoditi', 'length', 'max'=>20),
-			array('jenis_komoditi', 'length', 'max'=>50),
+			array('id_petani, id_perusahaan, status_login, status_hapus, created_by', 'numerical', 'integerOnly'=>true),
+			array('nama_petani, tempat_lahir', 'length', 'max'=>100),
+			array('nik', 'length', 'max'=>20),
 			array('username', 'length', 'max'=>50),
 			array('no_telp', 'length', 'max'=>25),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, id_petani, id_gudang, id_kelompok, id_perusahaan, nama_petani, nik, alamat, provinsi, kabupaten, no_telp, tempat_lahir, tgl_lahir, luas_lahan, jumlah_bentangan, jenis_komoditi, url_foto, username, password, device_id, status_login, status_hapus, created_date, created_by', 'safe', 'on'=>'search'),
+			array('id, id_petani, kode_petani, kode_jenis_gudang, kode_gudang, kode_kelompok, id_perusahaan, nama_petani, nik, alamat, provinsi, kabupaten, no_telp, tempat_lahir, tgl_lahir, luas_lahan, jumlah_bentangan, jenis_komoditi, url_foto, username, password, device_id, status_login, status_hapus, created_date, created_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,8 +83,10 @@ class PetaniHistory extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'id_petani' => 'Id Petani',
-			'id_gudang' => 'Id Gudang',
-			'id_kelompok' => 'Id Kelompok',
+			'kode_petani' => 'Kode Petani',
+			'kode_jenis_gudang' => 'Kode Jenis Gudang',
+			'kode_gudang' => 'Kode Gudang',
+			'kode_kelompok' => 'Kode Kelompok',
 			'id_perusahaan' => 'Id Perusahaan',
 			'nama_petani' => 'Nama Petani',
 			'nik' => 'Nik',
@@ -129,8 +130,10 @@ class PetaniHistory extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('id_petani',$this->id_petani);
-		$criteria->compare('id_gudang',$this->id_gudang);
-		$criteria->compare('id_kelompok',$this->id_kelompok);
+		$criteria->compare('kode_petani',$this->kode_petani);
+		$criteria->compare('kode_jenis_gudang',$this->kode_jenis_gudang);
+		$criteria->compare('kode_gudang',$this->kode_gudang);
+		$criteria->compare('kode_kelompok',$this->kode_kelompok);
 		$criteria->compare('id_perusahaan',$this->id_perusahaan);
 		$criteria->compare('nama_petani',$this->nama_petani,true);
 		$criteria->compare('nik',$this->nik,true);

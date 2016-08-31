@@ -43,7 +43,7 @@ var kospermindoForgotPassword = kospermindoForgotPassword || {};
                 $(element).closest('.input-group').removeClass('validate-has-error');
             },
 
-            submitHandler: function(ev)
+/*            submitHandler: function(ev)
             {
                 $(".login-page").addClass('logging-in');
 
@@ -55,7 +55,7 @@ var kospermindoForgotPassword = kospermindoForgotPassword || {};
                     {
                         // Send data to the server
                         $.ajax({
-                            url: baseurl + '/kospermindo/forgot/sentemail',
+                            url: baseurl + '/kospermindo/lupasandi/sentemail',
                             method: 'POST',
                             dataType: 'json',
                             data: {
@@ -67,9 +67,6 @@ var kospermindoForgotPassword = kospermindoForgotPassword || {};
                             },
                             success: function(response)
                             {
-                                // From response you can fetch the data object retured
-                                var email = response.submitted_data.email;
-
 
                                 // Form is fully completed, we update the percentage
                                 kospermindoForgotPassword.setPercentage(100);
@@ -86,9 +83,9 @@ var kospermindoForgotPassword = kospermindoForgotPassword || {};
                                     {
                                         // Remove loging-in state
                                         $(".login-page").removeClass('logging-in');
-
                                         // Now we show the success message
                                         $(".form-forgotpassword-success").slideDown('normal');
+                                        $(".form-forgotpassword-success").css("background-color", "rgb(227, 96, 88)");
 
                                         // You can use the data returned from response variable
                                     });
@@ -98,7 +95,7 @@ var kospermindoForgotPassword = kospermindoForgotPassword || {};
                         });
                     });
                 });
-            }
+            }*/
         });
 
         // Steps Handler

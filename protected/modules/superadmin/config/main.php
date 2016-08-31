@@ -38,13 +38,17 @@
     'components' => array(
 //      'user'         => array(
 //        //'class'          => 'superadmin.modules.rights.components.RWebUser',
-//        'class'          => 'SAdminWebUser',
+//        //'class'          => 'SAdminWebUser',
 //        // enable cookie-based authentication
 //        'allowAutoLogin'      => true,
 //        'loginUrl'            => '/superadmin/login',
 //        'authTimeout'         => 2592000,
 //        //'absoluteAuthTimeout' => 2592000,
-//        'stateKeyPrefix' => '_superadmin',
+//        'stateKeyPrefix' => 'superadmin',
+//      ),
+//      'errorHandler' => array(
+//        // use 'site/error' action to display errors
+//        'errorAction' => YII_DEBUG ? null : '/superadmin/error',
 //      ),
       'urlManager' => array(
         'rules' => array(

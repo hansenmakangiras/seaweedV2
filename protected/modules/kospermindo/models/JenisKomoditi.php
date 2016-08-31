@@ -1,110 +1,137 @@
 <?php
 
-/**
- * This is the model class for table "jenis_komoditi".
- *
- * The followings are the available columns in table 'jenis_komoditi':
- * @property integer $id_komoditi
- * @property integer $parent_id
- * @property string $jenis
- * @property integer $status
- */
-class JenisKomoditi extends CActiveRecord
-{
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'jenis_komoditi';
-	}
+  /**
+   * This is the model class for table "jenis_komoditi".
+   *
+   * The followings are the available columns in table 'jenis_komoditi':
+   * @property integer $id_komoditi
+   * @property integer $parent_id
+   * @property string  $jenis
+   * @property string  $kode_komoditi
+   * @property integer $status
+   */
+  class JenisKomoditi extends CActiveRecord
+  {
+    public static function getListSeaweed()
+    {
+      $model = JenisKomoditi::model()->findAllByAttributes(array('status' => 0));
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('parent_id, jenis, status', 'required'),
-			array('parent_id, status', 'numerical', 'integerOnly'=>true),
-			array('jenis', 'length', 'max'=>75),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id_komoditi, parent_id, jenis, status', 'safe', 'on'=>'search'),
-		);
-	}
+      return CHtml::listData($model, 'id_komoditi', 'jenis');
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+      return 'jenis_komoditi';
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id_komoditi' => 'Id Komoditi',
-			'parent_id' => 'Parent',
-			'jenis' => 'Jenis',
-			'status' => 'Status',
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+      // NOTE: you should only define rules for those attributes that
+      // will receive user inputs.
+      return array(
+        // array('parent_id, jenis, kode_komoditi, status', 'required'),
+        array('parent_id, status', 'numerical', 'integerOnly' => true),
+        array('jenis', 'length', 'max' => 75),
+        array('kode_komoditi', 'length', 'max' => 10),
+        // The following rule is used by search().
+        // @todo Please remove those attributes that should not be searched.
+        array('id_komoditi, parent_id, jenis, kode_komoditi, status', 'safe', 'on' => 'search'),
+      );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+      // NOTE: you may need to adjust the relation name and the related
+      // class name for the relations automatically generated below.
+      return array();
+    }
 
-		$criteria=new CDbCriteria;
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+      return array(
+        'id_komoditi'   => 'Id Komoditi',
+        'parent_id'     => 'Parent',
+        'jenis'         => 'Jenis',
+        'kode_komoditi' => 'Kode Komoditi',
+        'status'        => 'Status',
+      );
+    }
 
-		$criteria->compare('id_komoditi',$this->id_komoditi);
-		$criteria->compare('parent_id',$this->parent_id);
-		$criteria->compare('jenis',$this->jenis,true);
-		$criteria->compare('status',$this->status);
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search()
+    {
+      // @todo Please modify the following code to remove attributes that should not be searched.
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+      $criteria = new CDbCriteria;
 
-	public function scopes(){
-		return array(
-			'lastRecord' => array(
-				'order'=>'id_komoditi DESC',
-				'limit'=>1
-			)
-		);
-	}
+      $criteria->compare('id_komoditi', $this->id_komoditi);
+      $criteria->compare('parent_id', $this->parent_id);
+      $criteria->compare('jenis', $this->jenis, true);
+      $criteria->compare('kode_komoditi', $this->kode_komoditi, true);
+      $criteria->compare('status', $this->status);
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return JenisKomoditi the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-}
+      return new CActiveDataProvider($this, array(
+        'criteria' => $criteria,
+      ));
+    }
+
+    public function scopes()
+    {
+      return array(
+        'lastRecord' => array(
+          'order' => 'id_komoditi DESC',
+          'limit' => 1,
+        ),
+      );
+    }
+
+    public function getJenisKomoditiharga($id)
+    {
+      $query = JenisKomoditi::model()->findByPk($id);
+
+      return $query->jenis;
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     *
+     * @param string $className active record class name.
+     *
+     * @return JenisKomoditi the static model class
+     */
+    public static function model($className = __CLASS__)
+    {
+      return parent::model($className);
+    }
+
+    public function getJenisKomoditi($id)
+    {
+      $query = JenisKomoditi::model()->findByAttributes(array('id_komoditi' => $id));
+
+      return $query;
+    }
+  }

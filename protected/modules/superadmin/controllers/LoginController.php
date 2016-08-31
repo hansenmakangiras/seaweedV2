@@ -1,77 +1,74 @@
 <?php
-  /**
-   * Created by PhpStorm.
-   * User: hanse
-   * Date: 7/19/2016
-   * Time: 9:45 PM
-   */
 
-  class LoginController extends SController
-  {
-    public function actionIndex()
-    {
-      $this->layout = '/layouts/singlepage';
-      # Response data array
-      $resp = array();
-      $login_status = 'invalid';
-      $pesan = '';
+	class LoginController extends SController
+	{
+		public function actionIndex()
+		{
+			$this->layout = '/layouts/singlepage';
+			# Response data array
+			$resp = array();
+			$login_status = 'invalid';
+			$pesan = '';
 
-      $model = new SuperadminLoginForm;
-      $token = !empty($_POST['token']) ? $_POST['token'] : '';
+			$model = new SuperadminLoginForm;
+			$token = !empty($_POST['token']) ? $_POST['token'] : '';
 
-      // Make sure the request is POST.
-      $request = Yii::app()->request->getIsPostRequest();
-      $ajax = Yii::app()->request->getIsAjaxRequest();
-      if ($request) {
-        // Fields Submitted Data
-        $username = Yii::app()->request->getPost('username');
-        $remember = Yii::app()->request->getPost('rememberMe');
+			// Make sure the request is POST.
+			$request = Yii::app()->request->getIsPostRequest();
+			$ajax = Yii::app()->request->getIsAjaxRequest();
+			if ($request) {
+				// Fields Submitted Data
+				$username = Yii::app()->request->getPost('username');
+				$remember = Yii::app()->request->getPost('rememberMe');
 
-        $resp['submitted_data'] = $_POST;
+				$resp['submitted_data'] = $_POST;
 
-        /* Find user in database */
-        $finduser = Users::model()->findByAttributes(array('username' => $username, 'superuser' => 1));
+				/* Find user in database */
+				$finduser = Users::model()->findByAttributes(array('username' => $username, 'su_akses' => 0, 'status'=>0));
 
-        if ($finduser) {
-          $model->attributes = $_POST;
-          if (!empty($remember)) {
-            $rememberMe = ($remember === 'on') ? 1 : 0;
-            $model->rememberMe = $rememberMe;
-          }
-          if ($model->validate() && $model->login()) {
-            $pesan = 'success';
-            $login_status = 'success';
-          } else {
-            //Helper::dd($model->getErrors());
-            if ($model->getError('username')) {
-              $pesan = $model->getError('username');
-            } else {
-              if ($model->getError('password')) {
-                $pesan = $model->getError('password');
-              }
-            }
-            $login_status = 'invalid';
-          }
-        } else {
-          $pesan = 'Username: ' . $username . ' not found.';
-          $login_status = 'invalid';
-        }
-        $resp['login_status'] = $login_status;
+				if ($finduser) {
+					$model->attributes = $_POST;
+					if (!empty($remember)) {
+						$rememberMe = ($remember === 'on') ? 1 : 0;
+						$model->rememberMe = $rememberMe;
+					}
+					if ($model->validate() && $model->login()) {
+						
 
-        if ($login_status === 'success') {
-          $resp['redirect_url'] = $this->redirect("/superadmin");
-        }
+						$pesan = 'success';
+						$login_status = 'success';
 
-        $resp['pesan'] = $pesan;
+					} else {
+						//Helper::dd($model->getErrors());
+						if ($model->getError('username')) {
+							$pesan = $model->getError('username');
+						} else {
+							if ($model->getError('password')) {
+								$pesan = $model->getError('password');
+							}
+						}
+						$login_status = 'invalid';
+					}
+				} else {
+					$pesan = 'Username: ' . $username . ' not found.';
+					$login_status = 'invalid';
+				}
+				$resp['login_status'] = $login_status;
 
-        echo CJSON::encode($resp);
-        Yii::app()->end();
-      }else{
-        $this->render('index', array(
-          'model' => $model,
-          'pesan' => $pesan,
-        ));
-      }
+				if ($login_status === 'success') {
+					$resp['redirect_url'] = $this->redirect("/superadmin");
+				}
 
-    }
-  }
+				$resp['pesan'] = $pesan;
+
+				echo CJSON::encode($resp);
+				Yii::app()->end();
+			}else{
+				$this->render('index', array(
+					'model' => $model,
+					'pesan' => $pesan,
+				));
+			}
+
+		}
+	}

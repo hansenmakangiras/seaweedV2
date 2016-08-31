@@ -50,39 +50,40 @@
                 if (resp.message === 'success') {
                     window.location = resp.redirect_url;
                 } else {
-                    setTimeout(function () {
-                        // var opts = {
-                        //     "closeButton": true,
-                        //     "debug": false,
-                        //     "positionClass": rtl() || public_vars.$pageContainer.hasClass('right-sidebar') ? "toast-top-left" : "toast-top-right",
-                        //     "toastClass": "black",
-                        //     "onclick": null,
-                        //     "showDuration": "300",
-                        //     "hideDuration": "1000",
-                        //     "timeOut": "5000",
-                        //     "extendedTimeOut": "1000",
-                        //     "showEasing": "swing",
-                        //     "hideEasing": "linear",
-                        //     "showMethod": "fadeIn",
-                        //     "hideMethod": "fadeOut"
-                        // };
-                        var opts = {
-                            "closeButton": false,
-                            "debug": false,
-                            "positionClass": "toast-top-right",
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        };
-
-                        toastr.error(resp.alert, resp.status, opts);
-                    }, 3000);
+                    window.location = resp.redirect_url;
+                    // setTimeout(function () {
+                    //     // var opts = {
+                    //     //     "closeButton": true,
+                    //     //     "debug": false,
+                    //     //     "positionClass": rtl() || public_vars.$pageContainer.hasClass('right-sidebar') ? "toast-top-left" : "toast-top-right",
+                    //     //     "toastClass": "black",
+                    //     //     "onclick": null,
+                    //     //     "showDuration": "300",
+                    //     //     "hideDuration": "1000",
+                    //     //     "timeOut": "5000",
+                    //     //     "extendedTimeOut": "1000",
+                    //     //     "showEasing": "swing",
+                    //     //     "hideEasing": "linear",
+                    //     //     "showMethod": "fadeIn",
+                    //     //     "hideMethod": "fadeOut"
+                    //     // };
+                    //     var opts = {
+                    //         "closeButton": false,
+                    //         "debug": false,
+                    //         "positionClass": "toast-top-right",
+                    //         "onclick": null,
+                    //         "showDuration": "300",
+                    //         "hideDuration": "1000",
+                    //         "timeOut": "5000",
+                    //         "extendedTimeOut": "1000",
+                    //         "showEasing": "swing",
+                    //         "hideEasing": "linear",
+                    //         "showMethod": "fadeIn",
+                    //         "hideMethod": "fadeOut"
+                    //     };
+                    //
+                    //     toastr.error(resp.alert, resp.status, opts);
+                    // }, 3000);
                 }
 
                 $modalDiv.modal('hide').removeClass('loading');

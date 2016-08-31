@@ -15,12 +15,6 @@
  */
 class KelompokHistory extends CActiveRecord
 {
-  public function behaviors()
-  {
-    return array(
-      'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
-    );
-  }
 	/**
 	 * @return string the associated database table name
 	 */
@@ -38,11 +32,11 @@ class KelompokHistory extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			//array('id_kelompok, nama_kelompok, ketua_kelompok, id_gudang, status, created_date, created_by', 'required'),
-			array('id_kelompok, ketua_kelompok, id_gudang, status', 'numerical', 'integerOnly'=>true),
+			array('id_kelompok, ketua_kelompok, status', 'numerical', 'integerOnly'=>true),
 			array('nama_kelompok, created_by', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, id_kelompok, nama_kelompok, ketua_kelompok, id_gudang, status, created_date, created_by', 'safe', 'on'=>'search'),
+			array('id, id_kelompok, nama_kelompok, ketua_kelompok, kode_jenis_gudang, status, created_date, created_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,7 +61,7 @@ class KelompokHistory extends CActiveRecord
 			'id_kelompok' => 'Id Kelompok',
 			'nama_kelompok' => 'Nama Kelompok',
 			'ketua_kelompok' => 'Ketua Kelompok',
-			'id_gudang' => 'Id Gudang',
+			'kode_jenis_gudang' => 'Kode Jenis Gudang',
 			'status' => 'Status',
 			'created_date' => 'Created Date',
 			'created_by' => 'Created By',
@@ -96,7 +90,7 @@ class KelompokHistory extends CActiveRecord
 		$criteria->compare('id_kelompok',$this->id_kelompok);
 		$criteria->compare('nama_kelompok',$this->nama_kelompok,true);
 		$criteria->compare('ketua_kelompok',$this->ketua_kelompok);
-		$criteria->compare('id_gudang',$this->id_gudang);
+		$criteria->compare('kode_jenis_gudang',$this->kode_jenis_gudang);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('created_date',$this->created_date,true);
 		$criteria->compare('created_by',$this->created_by,true);

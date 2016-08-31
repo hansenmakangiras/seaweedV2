@@ -9,12 +9,6 @@
  */
 class Provinsi extends CActiveRecord
 {
-  public function behaviors()
-  {
-    return array(
-      'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
-    );
-  }
 	/**
 	 * @return string the associated database table name
 	 */

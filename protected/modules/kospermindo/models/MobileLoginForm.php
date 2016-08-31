@@ -12,13 +12,6 @@
 
     private $_identity;
 
-    public function behaviors()
-    {
-      return array(
-        'LoggableBehavior' => 'application.modules.auditTrail.behaviors.LoggableBehavior',
-      );
-    }
-
     /**
      * Declares the validation rules.
      * The rules state that username and password are required,
@@ -64,8 +57,8 @@
         //$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
         Yii::app()->user->login($this->_identity);
         return true;
-      }
-      else
+      } else{
         return false;
+      }
     }
   }
